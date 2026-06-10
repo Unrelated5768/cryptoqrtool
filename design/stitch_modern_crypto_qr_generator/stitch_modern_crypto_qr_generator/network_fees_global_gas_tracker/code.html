@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FeeTrack Pro | Network Fee Comparison</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Be+Vietnam+Pro:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#b7c4ff",
+                        "on-primary": "#002682",
+                        "on-surface": "#e1e1ef",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary": "#3f008e",
+                        "inverse-primary": "#004ced",
+                        "surface-container-lowest": "#0c0e17",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#e1e1ef",
+                        "on-tertiary-fixed": "#25005a",
+                        "tertiary": "#d2bbff",
+                        "on-background": "#e1e1ef",
+                        "surface-dim": "#11131c",
+                        "inverse-on-surface": "#2e303a",
+                        "secondary": "#b7c8e1",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-container": "#7b39ec",
+                        "on-surface-variant": "#c3c5d9",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary-fixed": "#dde1ff",
+                        "surface-bright": "#373943",
+                        "surface-container": "#1d1f29",
+                        "on-secondary-container": "#a9bad3",
+                        "outline": "#8d90a2",
+                        "surface-container-highest": "#32343f",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-container": "#0052ff",
+                        "on-secondary": "#213145",
+                        "surface-container-low": "#191b25",
+                        "on-tertiary-container": "#ecdfff",
+                        "surface-variant": "#32343f",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "secondary-container": "#3a4a5f",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-container-high": "#282934",
+                        "error-container": "#93000a",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "surface-tint": "#b7c4ff",
+                        "on-primary-container": "#dfe3ff",
+                        "on-primary-fixed": "#001452",
+                        "background": "#11131c",
+                        "outline-variant": "#434656",
+                        "surface": "#11131c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "12px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "container-padding-desktop": "40px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body": ["Geist", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(29, 31, 41, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0c0e17;
+            color: #e1e1ef;
+            font-family: 'Geist', sans-serif;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<div class="relative flex min-h-screen w-full bg-[#0f1624] group/design-root overflow-x-hidden" style='font-family: "Be Vietnam Pro", "Noto Sans", sans-serif;'>
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container border-r border-outline-variant/30 shadow-lg flex flex-col py-6 px-4 gap-base">
+<div class="flex flex-col px-2 mb-6">
+<div class="flex items-center gap-3 mb-1">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary">FeeTrack Pro</h2>
+</div>
+<p class="text-on-surface-variant text-xs">Network: Global Mesh</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="font-body-md text-body-md">Node Registry</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-md text-body-md">Market Prices</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">speed</span>
+<span class="font-body-md text-body-md">Network Fees</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-body-md text-body-md">Exchange Directory</span>
+</a>
+</nav>
+<div class="mb-6 px-2">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-on-primary font-bold rounded-lg active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-sm">security</span>
+<span>System Status</span>
+</button>
+</div>
+<div class="flex flex-col gap-1 border-t border-outline-variant/20 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">shield_lock</span>
+<span class="font-body-md text-body-md">Security Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 ml-64 flex flex-col">
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 left-64 h-16 z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-gutter">
+<div class="flex items-center gap-6">
+<div class="flex gap-6 items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Analytics</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Nodes</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative w-64">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-[#202e4b] border-none rounded-lg py-1.5 pl-10 pr-4 text-sm text-white placeholder:text-[#8da1ce] focus:ring-1 focus:ring-primary" placeholder="Search networks..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+<span class="material-symbols-outlined">monitoring</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="size-8 rounded-full bg-cover bg-center border border-outline-variant/30" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnwiEuTsCEN8TPQASaLMP2U43e1556XFY-dzHsxfnfQ-55aDCS4QnhHct_WjC50dHfV2G4nG7pOPdaR0E1ZQAoKTf5fFmihPkAAazvOfSmgie7oKic9ericilal69U5KpJFU9kELDvl5XJsh8OI7QsZFC240ed5jzxviNpdy129LSlMRi891zSlkI6yUoqkPfQCAuo1DQLYORXqwUT6nwBE_41rsxDO1YUmHOfLJgbaAy6Yuzd_TYzrG4Pm0KddVdlGTQq_FnDgTwC');"></div>
+</div>
+</header>
+<main class="flex-1 px-10 py-8 mt-16">
+<!-- Hero Section -->
+<div class="flex flex-col gap-6 mb-10">
+<div class="flex justify-between items-end">
+<div class="max-w-2xl">
+<h1 class="text-on-surface text-4xl font-black leading-tight tracking-[-0.033em] mb-3">Global Gas Explorer</h1>
+<p class="text-on-surface-variant text-lg">Compare real-time transaction costs and network health across the multi-chain ecosystem. Optimize execution with data-driven network selection.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-sm font-bold border border-green-500/20">
+<span class="material-symbols-outlined text-[18px]">online_prediction</span> Network Status: Healthy
+                            </span>
+</div>
+</div>
+<!-- Rapid Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">Market Average</span>
+<span class="text-white text-2xl font-bold font-mono">28.4 Gwei</span>
+<span class="text-error text-xs font-bold">+4.2% (1h)</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1 border-primary/20 bg-primary-container/5">
+<span class="text-primary text-sm font-medium">Lowest Fee (L1)</span>
+<span class="text-white text-2xl font-bold font-mono">$0.00025</span>
+<span class="text-primary text-xs font-bold">Solana</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">L2 Leader</span>
+<span class="text-white text-2xl font-bold font-mono">$0.012</span>
+<span class="text-tertiary text-xs font-bold">Base (Optimism)</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">ETH Priority Gas</span>
+<span class="text-white text-2xl font-bold font-mono">1.5 Gwei</span>
+<span class="text-green-400 text-xs font-bold">Optimal</span>
+</div>
+</div>
+</div>
+<!-- Table Controls -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-bold shadow-lg shadow-primary/10">All Networks</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Layer 1</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Layer 2</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Testnets</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant text-sm">Sort by:</span>
+<select class="bg-surface-container border-outline-variant text-on-surface text-sm rounded-lg py-2 pl-3 pr-8 focus:ring-primary focus:border-primary">
+<option>Transaction Fee (Lowest)</option>
+<option>Gas Price (Lowest)</option>
+<option>Network Speed</option>
+</select>
+</div>
+</div>
+<!-- Main Data Table -->
+<div class="glass-panel rounded-xl overflow-hidden border border-outline-variant/30">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/30">
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Asset Comparison</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Current Gas Price</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Avg. Tx Fee (USD)</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Confirmation Time</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Congestion Level</th>
+<th class="px-6 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Bitcoin Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#f7931a]/10 flex items-center justify-center text-[#f7931a]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">currency_bitcoin</span>
+</div>
+<div>
+<p class="text-white font-bold">Bitcoin</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">BTC Mainnet</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">42 sat/vB</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$3.12</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~10 mins</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[75%] h-full bg-yellow-500"></div>
+</div>
+<span class="text-yellow-400 text-xs font-bold uppercase">Moderate</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Ethereum Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#627eea]/10 flex items-center justify-center text-[#627eea]">
+<span class="material-symbols-outlined">diamond</span>
+</div>
+<div>
+<p class="text-white font-bold">Ethereum</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">ERC-20</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">18 Gwei</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$1.45</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~15 secs</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[30%] h-full bg-green-500"></div>
+</div>
+<span class="text-green-400 text-xs font-bold uppercase">Low</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Solana Row -->
+<tr class="hover:bg-white/5 transition-colors group relative bg-primary-container/10 border-l-4 border-l-primary">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#14f195]/10 flex items-center justify-center text-[#14f195]">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-white font-bold">Solana</p>
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase border border-primary/30">Cost Efficient</span>
+</div>
+<p class="text-on-surface-variant text-xs font-mono uppercase">SOL Mainnet</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">0.000005 SOL</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-primary text-xl font-bold">$0.0002</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>&lt; 1 sec</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[85%] h-full bg-error"></div>
+</div>
+<span class="text-error text-xs font-bold uppercase">High Congestion</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Live Monitoring Map -->
+<div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 glass-panel rounded-xl p-8 relative overflow-hidden min-h-[400px]">
+<div class="relative z-10">
+<h3 class="text-white text-xl font-bold mb-2">Network Propagation Map</h3>
+<p class="text-on-surface-variant text-sm mb-6">Visualizing global transaction relay delay across major node clusters.</p>
+<div class="flex gap-4 mb-8">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium text-on-surface-variant uppercase">Fastest Relay</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium text-on-surface-variant uppercase">Target Nodes</span>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 z-0">
+
+</div>
+<div class="absolute bottom-6 right-6 z-10 flex flex-col items-end">
+<span class="text-primary font-mono text-2xl font-bold">142ms</span>
+<span class="text-on-surface-variant text-xs uppercase tracking-widest">Global P50 Latency</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-8 flex flex-col justify-between">
+<div>
+<h3 class="text-white text-xl font-bold mb-4">Gas Saving Alerts</h3>
+<div class="space-y-4">
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-l-tertiary">
+<span class="material-symbols-outlined text-tertiary">lightbulb</span>
+<div>
+<p class="text-sm font-bold text-white">Bridge Optimization</p>
+<p class="text-xs text-on-surface-variant">Ethereum gas is currently at a 24-hour low. Optimal window for L1 to L2 bridging operations.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-l-yellow-500">
+<span class="material-symbols-outlined text-yellow-500">warning</span>
+<div>
+<p class="text-sm font-bold text-white">Solana Congestion</p>
+<p class="text-xs text-on-surface-variant">Heavy trading volume on DEX clusters is causing transaction delays. Adjust priority fees.</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 rounded-lg bg-primary text-on-primary font-bold transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                            Setup Smart Alerts
+                        </button>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-8 border-t border-outline-variant/20 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-desktop max-w-7xl mx-auto">
+<div class="flex items-center gap-2 mb-4 md:mb-0">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">FeeTrack Pro</span>
+</div>
+<div class="flex gap-8 text-on-surface-variant font-label-sm text-label-sm">
+<a class="hover:text-on-surface underline transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="hover:text-on-surface underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="hover:text-on-surface underline transition-opacity duration-200" href="#">Security Audit</a>
+<a class="hover:text-on-surface underline transition-opacity duration-200" href="#">API Status</a>
+</div>
+<div class="text-on-surface-variant font-label-sm text-label-sm mt-4 md:mt-0">
+                        © 2024 CryptoGen Security Solutions
+                    </div>
+</div>
+</footer>
+</div>
+</div>
+<script>
+        setInterval(() => {
+            const fontMonoElements = document.querySelectorAll('.font-mono');
+            const randomIdx = Math.floor(Math.random() * fontMonoElements.length);
+            const target = fontMonoElements[randomIdx];
+            
+            target.classList.add('text-primary');
+            setTimeout(() => {
+                target.classList.remove('text-primary');
+            }, 1000);
+        }, 3000);
+    </script>
+</body></html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CryptoGen Dashboard | Secure QR Generation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .qr-glow {
+            box-shadow: 0 0 40px rgba(0, 82, 255, 0.15);
+        }
+        body {
+            background-color: #11131c;
+            color: #e1e1ef;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #11131c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #32343f;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#2e303a",
+                    "secondary": "#b7c8e1",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-error": "#690005",
+                    "tertiary-container": "#7b39ec",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "primary-fixed": "#dde1ff",
+                    "on-surface-variant": "#c3c5d9",
+                    "surface-container": "#1d1f29",
+                    "surface-bright": "#373943",
+                    "on-secondary-container": "#a9bad3",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "primary-container": "#0052ff",
+                    "surface-container-highest": "#32343f",
+                    "outline": "#8d90a2",
+                    "primary": "#b7c4ff",
+                    "on-surface": "#e1e1ef",
+                    "on-primary": "#002682",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary": "#3f008e",
+                    "inverse-primary": "#004ced",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0c0e17",
+                    "tertiary": "#d2bbff",
+                    "inverse-surface": "#e1e1ef",
+                    "on-tertiary-fixed": "#25005a",
+                    "on-background": "#e1e1ef",
+                    "surface-dim": "#11131c",
+                    "surface-tint": "#b7c4ff",
+                    "on-primary-container": "#dfe3ff",
+                    "on-primary-fixed": "#001452",
+                    "outline-variant": "#434656",
+                    "background": "#11131c",
+                    "surface": "#11131c",
+                    "on-secondary": "#213145",
+                    "surface-container-low": "#191b25",
+                    "on-tertiary-container": "#ecdfff",
+                    "surface-variant": "#32343f",
+                    "secondary-container": "#3a4a5f",
+                    "on-tertiary-fixed-variant": "#5a00c6",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#eaddff",
+                    "error-container": "#93000a",
+                    "surface-container-high": "#282934",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "tertiary-fixed-dim": "#d2bbff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "12px",
+                    "gutter": "24px",
+                    "container-padding-desktop": "40px",
+                    "base": "8px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "container-padding-mobile": "20px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "label-sm": ["Geist"],
+                    "address-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "address-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- TopNavBar (Synchronized from COMPONENTS_3) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm h-16 flex items-center">
+<div class="flex justify-between items-center px-gutter w-full max-w-[1400px] mx-auto">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">CryptoGen</span>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<nav class="flex gap-6 font-body-md text-body-md">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 active:scale-95 transition-transform" href="#">Generator</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 transition-transform" href="#">Market Prices</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 transition-transform" href="#">Network Fees</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 transition-transform" href="#">Exchange Directory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:text-primary transition-colors active:scale-95 transition-transform">account_balance_wallet</button>
+<button class="material-symbols-outlined text-primary hover:text-primary transition-colors active:scale-95 transition-transform">notifications</button>
+<button class="material-symbols-outlined text-primary hover:text-primary transition-colors active:scale-95 transition-transform">settings</button>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Synchronized from COMPONENTS_3) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container border-r border-outline-variant/30 shadow-lg flex flex-col py-6 px-4 gap-base pt-24">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3 mb-1">
+<span class="font-body-md font-semibold text-on-surface">System Active</span>
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+</div>
+<p class="text-label-sm text-on-surface-variant">Local Generation Enabled</p>
+</div>
+<nav class="flex flex-col gap-2 flex-grow font-body-md text-body-md">
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span>Generator</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 rounded-lg active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span>Market Prices</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 rounded-lg active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">speed</span>
+<span>Network Fees</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant/50 rounded-lg active:opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span>Exchange Directory</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/30 pt-6 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">shield_lock</span>
+<span>Security Logs</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 min-h-screen px-container-padding-mobile md:px-gutter lg:px-container-padding-desktop pb-stack-lg max-w-[1400px]">
+<div class="mb-stack-md">
+<h1 class="font-headline-lg text-on-surface mb-2">QR Code Generator</h1>
+<p class="text-on-surface-variant font-body-md">Generate institutional-grade payment codes for secure asset transfers.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Input Panel -->
+<div class="lg:col-span-7 flex flex-col gap-gutter">
+<div class="glass-panel rounded-xl p-8 flex flex-col gap-6">
+<!-- Cryptocurrency Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-label-sm uppercase text-primary tracking-widest px-1">Select Cryptocurrency</label>
+<div class="relative group">
+<div class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-4 flex items-center justify-between cursor-pointer group-hover:border-primary/50 transition-all">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">currency_bitcoin</span>
+</div>
+<span class="font-body-md font-semibold">Bitcoin (BTC)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Payment Address -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center px-1">
+<label class="text-label-sm uppercase text-primary tracking-widest">Address</label>
+<div class="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+<span class="material-symbols-outlined text-[14px] text-emerald-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[10px] font-bold text-emerald-400 uppercase tracking-tighter">Address Verified</span>
+</div>
+</div>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg pl-4 pr-16 py-4 font-address-mono text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all" type="text" value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"/>
+<button class="absolute right-3 px-3 py-1.5 bg-secondary-container text-on-secondary-container rounded-md text-label-sm font-bold hover:bg-primary transition-colors active:scale-95">PASTE</button>
+</div>
+</div>
+<!-- Amount -->
+<div class="flex flex-col gap-2">
+<label class="text-label-sm uppercase text-primary tracking-widest px-1">Amount (Optional)</label>
+<div class="flex gap-4">
+<div class="relative flex-grow">
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-4 font-body-md text-on-surface focus:border-primary outline-none transition-all" placeholder="0.00" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">BTC</span>
+</div>
+<div class="flex items-center gap-2 px-4 bg-surface-container-high rounded-lg border border-outline-variant/10 text-on-surface-variant">
+<span class="text-label-sm font-bold">≈ $0.00</span>
+</div>
+</div>
+</div>
+<!-- Security Info -->
+<div class="bg-primary/5 border border-primary/10 rounded-lg p-4 flex gap-4">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">
+                            Generating a QR code with a specified amount helps ensure payment accuracy. Ensure the receiving address is correct to prevent permanent loss of funds.
+                        </p>
+</div>
+</div>
+<!-- Recent Transactions (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="glass-panel rounded-xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-body-md font-semibold">Network Fee</span>
+<span class="text-primary font-bold">~0.0001 BTC</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-primary"></div>
+</div>
+<p class="text-label-sm text-on-surface-variant">Optimized for "Standard" priority.</p>
+</div>
+<div class="glass-panel rounded-xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-body-md font-semibold">Transaction Privacy</span>
+<span class="text-emerald-400 font-bold">Level 4/5</span>
+</div>
+<div class="flex gap-1">
+<div class="h-1 flex-grow bg-emerald-500 rounded-full"></div>
+<div class="h-1 flex-grow bg-emerald-500 rounded-full"></div>
+<div class="h-1 flex-grow bg-emerald-500 rounded-full"></div>
+<div class="h-1 flex-grow bg-emerald-500 rounded-full"></div>
+<div class="h-1 flex-grow bg-surface-container-highest rounded-full"></div>
+</div>
+<p class="text-label-sm text-on-surface-variant">SegWit enabled address type detected.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Output Panel -->
+<div class="lg:col-span-5">
+<div class="sticky top-28 flex flex-col gap-6">
+<div class="glass-panel rounded-2xl p-stack-lg flex flex-col items-center gap-8 qr-glow border-t-2 border-primary/20">
+<!-- QR Container -->
+<div class="relative group">
+<div class="bg-white p-6 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
+<img alt="Secure Bitcoin QR Code" class="w-64 h-64 md:w-80 md:h-80 object-contain" data-alt="A high-contrast, modern QR code displayed prominently in the center of a sleek UI component. The QR code is rendered in deep indigo on a crisp, pure white rounded-square canvas, ensuring perfect scannability. Subtle geometric patterns in the background suggest high-tech encryption and blockchain security. The lighting is focused and clean, casting a soft professional glow around the QR container within a dark, premium financial dashboard environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDomFXeB0pbaY4YVy4wgZpv-wTvgMxuaU_e8I68qczk4nOdRl0TLmhQVBv3wRGWRNR8TOow-5MfF1y9p6Z_U9al-UkZvkgUGWrYnEZagjI5mniFfHt8XptSdt06Mfbv0Rgz4s8mOeiqA91lcnIv5pEvwNDMbD1iGr0YRXojzVMo2pzb9YpL3PjZolLqOnawgZAmMixJU5XoWXRcO7FqFl2PmlAFKWfNF678uHTirBOJ7pjiTMtakwjK-uwF6l9sGZEMZxdxhl8UkDtI"/>
+</div>
+<!-- Corner Accents -->
+<div class="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-primary"></div>
+<div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-primary"></div>
+<div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-primary"></div>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-primary"></div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<p class="text-label-sm uppercase text-on-surface-variant tracking-[0.2em]">Scannable Address</p>
+<span class="font-address-mono text-body-md text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">bc1qxy...0wlh</span>
+</div>
+<div class="w-full grid grid-cols-1 gap-3">
+<button class="w-full bg-primary-container text-on-primary-container py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-primary-container/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined">download</span>
+                                Download Image
+                            </button>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-container-high border border-outline-variant/30 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-surface-bright transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">share</span>
+                                    Share
+                                </button>
+<button class="bg-surface-container-high border border-outline-variant/30 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-surface-bright transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+                                    Copy
+                                </button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center gap-4 py-4 px-6 glass-panel rounded-xl">
+<span class="material-symbols-outlined text-emerald-400" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-label-sm font-semibold text-on-surface-variant">End-to-end encrypted generation. Access keys are never stored.</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+<div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-tertiary/5 rounded-full blur-[120px]"></div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('click', function(e) {
+                if (this.classList.contains('active:scale-95')) return;
+                this.classList.add('active:scale-95');
+                setTimeout(() => this.classList.remove('active:scale-95'), 150);
+            });
+        });
+
+        // Simple mock for amount conversion
+        const amountInput = document.querySelector('input[type="number"]');
+        const conversionLabel = document.querySelector('.flex.items-center.gap-2.px-4.bg-surface-container-high span');
+        
+        if (amountInput) {
+            amountInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                if(val > 0) {
+                    const btcPrice = 64520; // Static mock price
+                    conversionLabel.innerText = `≈ $${(val * btcPrice).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                } else {
+                    conversionLabel.innerText = '≈ $0.00';
+                }
+            });
+        }
+    </script>
+</body></html>

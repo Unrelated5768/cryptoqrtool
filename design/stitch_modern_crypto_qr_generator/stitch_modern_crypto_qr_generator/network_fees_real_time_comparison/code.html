@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FeeTrack Pro | Network Fee Comparison</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Be+Vietnam+Pro:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#b7c4ff",
+                        "on-primary": "#002682",
+                        "on-surface": "#e1e1ef",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary": "#3f008e",
+                        "inverse-primary": "#004ced",
+                        "surface-container-lowest": "#0c0e17",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#e1e1ef",
+                        "on-tertiary-fixed": "#25005a",
+                        "tertiary": "#d2bbff",
+                        "on-background": "#e1e1ef",
+                        "surface-dim": "#11131c",
+                        "inverse-on-surface": "#2e303a",
+                        "secondary": "#b7c8e1",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-container": "#7b39ec",
+                        "on-surface-variant": "#c3c5d9",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary-fixed": "#dde1ff",
+                        "surface-bright": "#373943",
+                        "surface-container": "#1d1f29",
+                        "on-secondary-container": "#a9bad3",
+                        "outline": "#8d90a2",
+                        "surface-container-highest": "#32343f",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-container": "#0052ff",
+                        "on-secondary": "#213145",
+                        "surface-container-low": "#191b25",
+                        "on-tertiary-container": "#ecdfff",
+                        "surface-variant": "#32343f",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "secondary-container": "#3a4a5f",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-container-high": "#282934",
+                        "error-container": "#93000a",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "surface-tint": "#b7c4ff",
+                        "on-primary-container": "#dfe3ff",
+                        "on-primary-fixed": "#001452",
+                        "background": "#11131c",
+                        "outline-variant": "#434656",
+                        "surface": "#11131c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "12px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "container-padding-desktop": "40px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body": ["Geist", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(29, 31, 41, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0c0e17;
+            color: #e1e1ef;
+            font-family: 'Geist', sans-serif;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-[#0f1624] group/design-root overflow-x-hidden" style='font-family: "Be Vietnam Pro", "Noto Sans", sans-serif;'>
+<div class="layout-container flex h-full grow flex-col">
+<!-- Shared Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#202e4b] px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-white">
+<div class="size-4">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">FeeTrack</h2>
+</div>
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-[#8da1ce] flex border-none bg-[#202e4b] items-center justify-center pl-4 rounded-l-lg border-r-0" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-[#202e4b] focus:border-none h-full placeholder:text-[#8da1ce] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search networks..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Analytics</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Nodes</a>
+</div>
+<div class="flex gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#202e4b] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<div class="text-white" data-icon="Bell" data-size="20px" data-weight="regular">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#202e4b] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<div class="text-white" data-icon="Gear" data-size="20px" data-weight="regular">
+<span class="material-symbols-outlined">settings</span>
+</div>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="A professional headshot of a software engineer with a modern, clean tech aesthetic. The lighting is soft and natural, emphasizing the person's friendly and competent expression. The background is a blurred office interior with cool blue and grey tones, fitting the institutional and innovative crypto branding." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDnwiEuTsCEN8TPQASaLMP2U43e1556XFY-dzHsxfnfQ-55aDCS4QnhHct_WjC50dHfV2G4nG7pOPdaR0E1ZQAoKTf5fFmihPkAAazvOfSmgie7oKic9ericilal69U5KpJFU9kELDvl5XJsh8OI7QsZFC240ed5jzxviNpdy129LSlMRi891zSlkI6yUoqkPfQCAuo1DQLYORXqwUT6nwBE_41rsxDO1YUmHOfLJgbaAy6Yuzd_TYzrG4Pm0KddVdlGTQq_FnDgTwC");'></div>
+</div>
+</header>
+<main class="flex-1 px-10 py-8">
+<!-- Hero Section -->
+<div class="flex flex-col gap-6 mb-10">
+<div class="flex justify-between items-end">
+<div class="max-w-2xl">
+<h1 class="text-on-surface text-4xl font-black leading-tight tracking-[-0.033em] mb-3">Global Gas Explorer</h1>
+<p class="text-on-surface-variant text-lg">Compare real-time transaction costs and network health across the multi-chain ecosystem. Optimize your trades with data-driven network selection.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-sm font-bold border border-green-500/20">
+<span class="material-symbols-outlined text-[18px]">online_prediction</span> Live Updates Active
+                            </span>
+</div>
+</div>
+<!-- Rapid Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">Market Average</span>
+<span class="text-white text-2xl font-bold font-mono">28.4 Gwei</span>
+<span class="text-error text-xs font-bold">+4.2% (1h)</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1 border-primary/20 bg-primary-container/5">
+<span class="text-primary text-sm font-medium">Lowest Fee (L1)</span>
+<span class="text-white text-2xl font-bold font-mono">$0.00025</span>
+<span class="text-primary text-xs font-bold">Solana</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">L2 Leader</span>
+<span class="text-white text-2xl font-bold font-mono">$0.012</span>
+<span class="text-tertiary text-xs font-bold">Base (Optimism)</span>
+</div>
+<div class="glass-panel p-5 rounded-xl flex flex-col gap-1">
+<span class="text-on-surface-variant text-sm font-medium">ETH Priority Gas</span>
+<span class="text-white text-2xl font-bold font-mono">1.5 Gwei</span>
+<span class="text-green-400 text-xs font-bold">Optimal</span>
+</div>
+</div>
+</div>
+<!-- Table Controls -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-bold shadow-lg shadow-primary/10">All Networks</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Layer 1</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Layer 2</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm font-bold border border-outline-variant hover:bg-surface-container-high transition-colors">Testnets</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant text-sm">Sort by:</span>
+<select class="bg-surface-container border-outline-variant text-on-surface text-sm rounded-lg py-2 pl-3 pr-8 focus:ring-primary focus:border-primary">
+<option>Transaction Fee (Lowest)</option>
+<option>Gas Price (Lowest)</option>
+<option>Network Speed</option>
+</select>
+</div>
+</div>
+<!-- Main Data Table -->
+<div class="glass-panel rounded-xl overflow-hidden border border-outline-variant/30">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/30">
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Blockchain</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Current Gas Price</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Avg. Tx Fee (USD)</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Confirmation Time</th>
+<th class="px-6 py-4 text-on-surface-variant text-sm font-bold uppercase tracking-wider">Congestion Level</th>
+<th class="px-6 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Bitcoin Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#f7931a]/10 flex items-center justify-center text-[#f7931a]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">currency_bitcoin</span>
+</div>
+<div>
+<p class="text-white font-bold">Bitcoin</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">BTC Mainnet</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">42 sat/vB</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$3.12</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~10 mins</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[75%] h-full bg-yellow-500"></div>
+</div>
+<span class="text-yellow-400 text-xs font-bold uppercase">Moderate</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Ethereum Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#627eea]/10 flex items-center justify-center text-[#627eea]">
+<span class="material-symbols-outlined">diamond</span>
+</div>
+<div>
+<p class="text-white font-bold">Ethereum</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">ERC-20</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">18 Gwei</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$1.45</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~15 secs</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[30%] h-full bg-green-500"></div>
+</div>
+<span class="text-green-400 text-xs font-bold uppercase">Low</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Solana Row (Winner) -->
+<tr class="hover:bg-white/5 transition-colors group relative bg-primary-container/10 border-l-4 border-l-primary">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#14f195]/10 flex items-center justify-center text-[#14f195]">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-white font-bold">Solana</p>
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase border border-primary/30">Cost Efficient</span>
+</div>
+<p class="text-on-surface-variant text-xs font-mono uppercase">SOL Mainnet</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">0.000005 SOL</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-primary text-xl font-bold">$0.0002</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>&lt; 1 sec</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[85%] h-full bg-error"></div>
+</div>
+<span class="text-error text-xs font-bold uppercase">High Congestion</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Polygon Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#8247e5]/10 flex items-center justify-center text-[#8247e5]">
+<span class="material-symbols-outlined">layers</span>
+</div>
+<div>
+<p class="text-white font-bold">Polygon</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">PoS Chain</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">65 Gwei</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$0.015</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~2 secs</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[15%] h-full bg-green-500"></div>
+</div>
+<span class="text-green-400 text-xs font-bold uppercase">Optimal</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Avalanche Row -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-[#e84142]/10 flex items-center justify-center text-[#e84142]">
+<span class="material-symbols-outlined">mountain_flag</span>
+</div>
+<div>
+<p class="text-white font-bold">Avalanche</p>
+<p class="text-on-surface-variant text-xs font-mono uppercase">C-Chain</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-on-surface">25 nAVAX</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-mono text-white text-lg">$0.08</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span>~1.5 secs</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-24 h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="w-[25%] h-full bg-green-500"></div>
+</div>
+<span class="text-green-400 text-xs font-bold uppercase">Low</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Live Monitoring Map/Animation -->
+<div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 glass-panel rounded-xl p-8 relative overflow-hidden min-h-[400px]">
+<div class="relative z-10">
+<h3 class="text-white text-xl font-bold mb-2">Network Propagation Map</h3>
+<p class="text-on-surface-variant text-sm mb-6">Visualizing global transaction relay delay across major node clusters.</p>
+<div class="flex gap-4 mb-8">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium text-on-surface-variant uppercase">Fastest Relay</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium text-on-surface-variant uppercase">Target Nodes</span>
+</div>
+</div>
+</div>
+<!-- Animation Placeholder -->
+<div class="absolute inset-0 z-0">
+<webgl-shader class="w-full h-full opacity-60" src="{{DATA:ANIMATION:ANIMATION_1}}"></webgl-shader>
+</div>
+<!-- Decorative Labels -->
+<div class="absolute bottom-6 right-6 z-10 flex flex-col items-end">
+<span class="text-primary font-mono text-2xl font-bold">142ms</span>
+<span class="text-on-surface-variant text-xs uppercase tracking-widest">Global P50 Latency</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-8 flex flex-col justify-between">
+<div>
+<h3 class="text-white text-xl font-bold mb-4">Gas Saving Alerts</h3>
+<div class="space-y-4">
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-l-tertiary">
+<span class="material-symbols-outlined text-tertiary">lightbulb</span>
+<div>
+<p class="text-sm font-bold text-white">Bridge Now</p>
+<p class="text-xs text-on-surface-variant">Ethereum gas is currently at a 24-hour low. Best time for L1 to L2 bridging.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-l-yellow-500">
+<span class="material-symbols-outlined text-yellow-500">warning</span>
+<div>
+<p class="text-sm font-bold text-white">Solana Congestion</p>
+<p class="text-xs text-on-surface-variant">Heavy trading volume on JUP is causing transaction failures. Increase priority fees.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-l-green-500">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+<div>
+<p class="text-sm font-bold text-white">Polygon Reorg Resolved</p>
+<p class="text-xs text-on-surface-variant">Network stability has returned to 99.9%. Average block time: 2.1s.</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 rounded-lg bg-primary text-on-primary font-bold transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                            Setup Smart Alerts
+                        </button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shared Logic -->
+<footer class="border-t border-outline-variant/30 px-10 py-6 mt-12 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="text-white font-bold">FeeTrack Pro</span>
+</div>
+<div class="flex gap-8 text-on-surface-variant text-sm font-medium">
+<a class="hover:text-primary" href="#">Terms of Service</a>
+<a class="hover:text-primary" href="#">API Documentation</a>
+<a class="hover:text-primary" href="#">Status Page</a>
+<a class="hover:text-primary" href="#">Contact Support</a>
+</div>
+<div class="text-on-surface-variant text-xs font-mono">
+                        © 2024 DEEP TRUST CRYPTO. v4.2.0-STABLE
+                    </div>
+</div>
+</footer>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple mock for real-time updates effect
+        setInterval(() => {
+            const fontMonoElements = document.querySelectorAll('.font-mono');
+            const randomIdx = Math.floor(Math.random() * fontMonoElements.length);
+            const target = fontMonoElements[randomIdx];
+            
+            target.classList.add('text-primary');
+            setTimeout(() => {
+                target.classList.remove('text-primary');
+            }, 1000);
+        }, 3000);
+    </script>
+</body></html>

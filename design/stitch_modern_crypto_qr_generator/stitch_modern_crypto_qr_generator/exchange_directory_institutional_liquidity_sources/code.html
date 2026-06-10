@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Exchange Directory | CryptoGen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #11131c;
+            color: #e1e1ef;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(29, 31, 41, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(183, 196, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 82, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b7c4ff",
+                        "tertiary-container": "#7b39ec",
+                        "outline": "#8d90a2",
+                        "on-primary-fixed": "#001452",
+                        "surface-container-low": "#191b25",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-dim": "#11131c",
+                        "outline-variant": "#434656",
+                        "surface": "#11131c",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#e1e1ef",
+                        "on-surface-variant": "#c3c5d9",
+                        "surface-container-high": "#282934",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "error": "#ffb4ab",
+                        "on-primary": "#002682",
+                        "inverse-primary": "#004ced",
+                        "surface-container": "#1d1f29",
+                        "primary-fixed": "#dde1ff",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "error-container": "#93000a",
+                        "primary-container": "#0052ff",
+                        "on-primary-container": "#dfe3ff",
+                        "inverse-on-surface": "#2e303a",
+                        "background": "#11131c",
+                        "on-secondary-container": "#a9bad3",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#32343f",
+                        "surface-tint": "#b7c4ff",
+                        "tertiary": "#d2bbff",
+                        "primary": "#b7c4ff",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "secondary-container": "#3a4a5f",
+                        "on-tertiary-fixed": "#25005a",
+                        "secondary": "#b7c8e1",
+                        "on-tertiary": "#3f008e",
+                        "on-error": "#690005",
+                        "on-secondary": "#213145",
+                        "surface-container-lowest": "#0c0e17",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-container": "#ecdfff",
+                        "on-background": "#e1e1ef",
+                        "inverse-surface": "#e1e1ef",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-variant": "#32343f",
+                        "surface-bright": "#373943"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "gutter": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "address-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "address-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body-md text-body-md min-h-screen bg-background text-on-background">
+<!-- TopNavBar (from COMPONENTS_3) -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-surface cursor-pointer active:scale-95 transition-transform">CryptoGen</span>
+<div class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Generator</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Exchanges</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Portfolio</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Security</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:block relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="bg-surface-container-lowest border border-outline-variant/30 rounded-full py-1.5 pl-10 pr-4 text-label-sm focus:outline-none focus:border-primary transition-all w-48 lg:w-64" placeholder="Search..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined">account_balance_wallet</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-95"><span class="material-symbols-outlined">settings</span></button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant overflow-hidden ml-2">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ0oqiP8p6UENSRx0I-OrnDqjg3-IDj8dDWcPGZv83Ig9R8IiDbj9tGeQlzlABj4vIhwFsxmmQmSo93rLX-jAxtMXCmx4rTdUKVPd5wBYiLxKpY8qYfGd7-Jdkr_2sQ8r6rMu9mW87d3lKOamnmAfRm2wvfsXPYYYt0_c1DpZ67i68rnLnT-axC8GC0yKJuRevtttVfKaZdkNbyFnMLRe5UZSw5Cls8Isbdj0F3DmZhWewjgu9vpxWZnehbaafjNyQg9FqvT95skUL"/>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar (from COMPONENTS_3) -->
+<aside class="hidden lg:flex fixed left-0 top-0 h-full w-64 z-40 bg-surface-container dark:bg-surface-container border-r border-outline-variant/30 shadow-lg flex-col py-6 px-4 gap-base pt-20">
+<div class="flex items-center gap-3 px-2 mb-6">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-body-md leading-none">CryptoGen Pro</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter mt-1">Network: Ethereum Mainnet</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all group active:opacity-80" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="font-medium">Generator</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all group active:opacity-80" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-medium">Market Prices</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all group active:opacity-80" href="#">
+<span class="material-symbols-outlined">speed</span>
+<span class="font-medium">Network Fees</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold shadow-sm active:opacity-80" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="">Exchange Directory</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 border-t border-outline-variant/10 pt-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold mb-4 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">Secure Wallet</button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined">shield_lock</span>
+<span class="font-medium">Security Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pt-24 lg:ml-64 pb-12 px-container-padding-mobile md:px-container-padding-desktop max-w-[1440px]">
+<!-- Header Section (Informational Only) -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Exchange Directory</h1>
+<p class="text-on-surface-variant max-w-2xl font-body-md">Index of major cryptocurrency trading platforms. All data points are updated based on public exchange reporting and on-chain liquidity monitoring.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-surface-container border border-outline-variant rounded-full px-4 py-1.5 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-label-sm font-label-sm text-on-surface">Live Data Feed</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Search & Filters -->
+<section class="glass-card rounded-2xl p-6 mb-8 flex flex-col lg:flex-row gap-6 items-center">
+<div class="relative w-full lg:flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all text-on-surface font-body-md" id="directorySearch" placeholder="Filter by exchange name or asset..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+<div class="flex p-1 bg-surface-container-lowest border border-outline-variant/30 rounded-xl">
+<button class="px-4 py-2 rounded-lg bg-secondary-container text-on-secondary-container text-label-sm font-semibold">All</button>
+<button class="px-4 py-2 rounded-lg hover:bg-surface-variant text-on-surface-variant text-label-sm transition-all">CEX</button>
+<button class="px-4 py-2 rounded-lg hover:bg-surface-variant text-on-surface-variant text-label-sm transition-all">DEX</button>
+</div>
+<select class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-2.5 text-label-sm text-on-surface-variant focus:outline-none focus:border-primary appearance-none cursor-pointer">
+<option>Global Regions</option>
+<option>North America</option>
+<option>Europe</option>
+<option>Asia-Pacific</option>
+</select>
+<button class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-2.5 text-label-sm text-on-surface-variant hover:border-primary transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span>Advanced</span>
+</button>
+</div>
+</section>
+<!-- Directory Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Exchange Card 1: Binance -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Binance" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMvHgQnPd5Vj2iGmXGdfbvvH7P5IAxNIVI0cbkaFlaxeH3Rllmsi1mB_QSkYK6MpR5NU37ZnZHJhIyTy0B_9AkJ2MxbktMlI4fzWjf-2cH7zPhegnjCg_wpKPEOmbWnCPjfzheJkcdsMvRvvBQE_bf27rZqh4A8Vuy7vMb0s93DqlHV8EbPj1wbCYReK1thTDaBnOQORO5lObOvO6V1THFlEuIECJ9ap2VHB_xm0qgHFgWetSlwvbkOqzeYcQff3Qm7_bN5psdMLtP"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Binance</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm text-on-surface-variant">Centralized Exchange</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-primary font-bold text-[24px]">9.8</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">350+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Fee Structure</span>
+<span class="text-on-surface font-semibold">0.10% T/M</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">International</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-primary-container hover:brightness-110 text-on-primary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Exchange Card 2: Coinbase -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Coinbase" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrAFqG1yibQ7QmlzRAgRIdPLmswR_1pIl0fMVmkMZASUjMlmalZHrnh1dMF8FV7__Qg5egnPxJlTKQv0OaW4drw6iTCa4PNk62cX5-FoSU6rQnV20XaZ_kTNOTGSdynvcVt3zhCtCnDhHkPlJYbyq6UpAJrKqHVwXbdvxW37ByQ_74wfHuoNEHO5Ws0CUP0kSsuqgImUFuu7638EZwGzEUTdQ7ZuocZ5TOWj9nEhUfbcUi9Fbpll6sCuTLYIJQ7Uel4dsONAA3Ol65"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Coinbase</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm text-on-surface-variant">Public Entity</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-primary font-bold text-[24px]">9.9</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">240+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Fee Structure</span>
+<span class="text-on-surface font-semibold">0.60% / 0.40%</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">United States</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-primary-container hover:brightness-110 text-on-primary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Exchange Card 3: Kraken -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Kraken" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1-YW7ljTqVaDOZbAp_jAHFhNyu0BnfAtCSssEGyZ1MjUDGkmc_AbQZEZL0GX4-1hw1Jf-DiJbUG_S009FxMbNPUVBHLQhGIgRQpnxc_9I2KBeaSZWncplUsKOQBih6ADQCODhzJflcx2VHZXMwir8lJS6fAVXwJOcKgnAiplgcsSdmDKNUlXxf1zHOo6iliFoSVC4rxftzyCqkYD86ankEVVzWu8bcQsLltWGedoSL9iWzni3M-FEN03IWDO588jnT198pnYlleb5"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Kraken</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm text-on-surface-variant">Centralized Exchange</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-primary font-bold text-[24px]">9.7</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">180+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Fee Structure</span>
+<span class="text-on-surface font-semibold">0.16% / 0.26%</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">EU / USA</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-primary-container hover:brightness-110 text-on-primary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Exchange Card 4: Uniswap -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Uniswap" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaO4Ehgy5IuFNt5n3_OtQJ950fkzTf9Ka1qe3aW3QfnZi49LeEPgt-59NZAu8LT3xRnipfZZd1-qIQ27HhJr6tcnN-ilMVJB2W3ErikbyT_EjPzdWyWjqoNPI_KzdNMPsLronxEDtnAyguHg6a50RX9yRsJ2Y-BZqmkvnz6WjIS-beZv2BxdE84PDqKw5pPSpFT6lBaqYeY-Hkef7Xi-IAov3fmnE1Wfz3K88hb-a02owny85XfuAspiCQjouwpUAotGrmYH0CmcMR"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Uniswap</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="text-label-sm text-on-surface-variant">Decentralized Protocol</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-tertiary font-bold text-[24px]">9.5</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">1,000+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Swap Fee</span>
+<span class="text-on-surface font-semibold">0.30% Flat</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">On-Chain</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-tertiary-container hover:brightness-110 text-on-tertiary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Exchange Card 5: Crypto.com -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Crypto.com" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKbxQgtCfK_Z1u9TVwQN37Scx60nT4kcMgy96u08MzqlsFDsSXGdelveiiASb0V_6VY9jOObcfklVUewRsK3INXa44yMR-QQGxgE-joB_1DqBFGaQfnSyDI4IGK0VVx6pXy2xg63569E-nYqhYnvB6fxbecpL3JlDd5PM9Uh79PyOCTmnifb3seyhDl2OkYXpq2TqRpqAkRVL5E7Wh3ri3hS6pAcYztyGbGm95cEY_cOEEd0ayNN2nJRoQzgzxcycTArqCG_ySs8jO"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Crypto.com</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm text-on-surface-variant">Retail Exchange</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-primary font-bold text-[24px]">9.4</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">250+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Fee Structure</span>
+<span class="text-on-surface font-semibold">0.075% T/M</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">International</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-primary-container hover:brightness-110 text-on-primary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Exchange Card 6: Bybit -->
+<div class="glass-card rounded-2xl p-stack-md flex flex-col h-full group">
+<div class="flex items-start justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center border border-outline-variant/50 overflow-hidden">
+<img alt="Bybit" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUWqd-Sxl6uSXpul6OF0r0xU4eNl4SxTCf53b9ecM-3TX_D4GwJHoKP0vvvIo5YmZC9hvI_EQMrvkng752VwhmbL9DWCUtRUYPtHRJcuvvAQLnnA71pqUjrQmibNyim5kh2q4tQZwm4LVcBQRoJd8h3whweyjTZ6R6Br6atIvXW726uALk4cxsIitARbf2Q-ssihxWgGKHRsdoo32F8ClMa9r_DnvycIXUjvwTP52cbWsb_WyeH0XblfB9mvqphjioA71VSxjjFCAf"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Bybit</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm text-on-surface-variant">Derivatives Leader</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-primary font-bold text-[24px]">9.3</div>
+<span class="text-[10px] text-outline uppercase tracking-wider">Score</span>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Listed Assets</span>
+<span class="text-on-surface font-semibold">220+</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-on-surface-variant text-body-md">Fee Structure</span>
+<span class="text-on-surface font-semibold">0.10% Flat</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant text-body-md">Jurisdiction</span>
+<span class="text-on-surface font-semibold">International</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-primary-container hover:brightness-110 text-on-primary-container py-3 rounded-xl font-bold transition-all active:scale-[0.98]">Data Sheet</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant/30 rounded-xl hover:bg-surface-variant transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Pagination -->
+<div class="mt-12 flex justify-center">
+<button class="bg-surface-container-high hover:bg-surface-variant text-on-surface px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 group border border-outline-variant/20 shadow-lg">
+<span>Load Additional Records</span>
+<span class="material-symbols-outlined group-hover:translate-y-1 transition-transform">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Footer (from COMPONENTS_3) -->
+<footer class="w-full py-8 border-t border-outline-variant/20 bg-surface-container-lowest dark:bg-surface-container-lowest mt-12 lg:ml-64 lg:w-[calc(100%-16rem)]">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding-desktop max-w-7xl mx-auto gap-4">
+<div class="flex flex-col md:flex-row items-center gap-6">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">CryptoGen</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 CryptoGen Security Solutions</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Security Audit</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">API Status</a>
+</div>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface-container/90 backdrop-blur-lg border-t border-outline-variant/10 z-50">
+<div class="flex justify-around items-center py-3">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Gen</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Directory</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Market</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Settings</span>
+</div>
+</div>
+</nav>
+<script>
+    const searchInput = document.getElementById('directorySearch');
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.grid > div');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            if (title.includes(term)) {
+                card.style.display = 'flex';
+                card.style.opacity = '1';
+            } else {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+            }
+        });
+    });
+</script>
+</body></html>

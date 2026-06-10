@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Market Data | CryptoGen Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b7c4ff",
+                        "tertiary-container": "#7b39ec",
+                        "outline": "#8d90a2",
+                        "on-primary-fixed": "#001452",
+                        "surface-container-low": "#191b25",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-dim": "#11131c",
+                        "outline-variant": "#434656",
+                        "surface": "#11131c",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#e1e1ef",
+                        "on-surface-variant": "#c3c5d9",
+                        "surface-container-high": "#282934",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "error": "#ffb4ab",
+                        "on-primary": "#002682",
+                        "inverse-primary": "#004ced",
+                        "surface-container": "#1d1f29",
+                        "primary-fixed": "#dde1ff",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "error-container": "#93000a",
+                        "primary-container": "#0052ff",
+                        "on-primary-container": "#dfe3ff",
+                        "inverse-on-surface": "#2e303a",
+                        "background": "#11131c",
+                        "on-secondary-container": "#a9bad3",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#32343f",
+                        "surface-tint": "#b7c4ff",
+                        "tertiary": "#d2bbff",
+                        "primary": "#b7c4ff",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "secondary-container": "#3a4a5f",
+                        "on-tertiary-fixed": "#25005a",
+                        "secondary": "#b7c8e1",
+                        "on-tertiary": "#3f008e",
+                        "on-error": "#690005",
+                        "on-secondary": "#213145",
+                        "surface-container-lowest": "#0c0e17",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-container": "#ecdfff",
+                        "on-background": "#e1e1ef",
+                        "inverse-surface": "#e1e1ef",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-variant": "#32343f",
+                        "surface-bright": "#373943"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "gutter": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "address-mono": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "address-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617;
+            color: #e1e1ef;
+            font-family: 'Geist', sans-serif;
+        }
+        .glass-card {
+            background: rgba(25, 27, 37, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sparkline {
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- SideNavBar (from components_3) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container dark:bg-surface-container border-r border-outline-variant/30 shadow-lg flex flex-col py-6 px-4 gap-base hidden md:flex">
+<div class="mb-8 px-2">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">CryptoGen Pro</h1>
+<p class="text-on-surface-variant text-xs opacity-70">Network: Ethereum Mainnet</p>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="font-body-md text-body-md">Generator</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 bg-secondary-container text-on-secondary-container rounded-lg transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-md text-body-md font-bold">Market Prices</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">speed</span>
+<span class="font-body-md text-body-md">Network Fees</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-body-md text-body-md">Exchange Directory</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/20 pt-6">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">shield_lock</span>
+<span class="font-label-sm text-label-sm">Security Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+<button class="mt-4 w-full bg-primary text-on-primary font-bold py-2 rounded-lg text-xs hover:opacity-90 active:scale-[0.98] transition-all">
+                Secure Terminal
+            </button>
+</div>
+</aside>
+<!-- TopNavBar (from components_3) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-gutter h-16 md:pl-[18rem]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style='font-variation-settings: "FILL" 1;'>security</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Market Data</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex bg-surface-container-low border border-outline-variant/30 rounded-full px-4 py-1.5 items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-label-sm">Node Connection Active</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95">account_balance</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-2 relative active:scale-95">
+                    notifications
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-2 active:scale-95">settings</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center ml-2 overflow-hidden border border-primary/20">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7PB4EVRCiqtkFR0eAa5Es5c6mEkRY-K_bXQvIrZ26AmECuiasT_kjEwoH8ffWTcHToMYdVsl9p_CyuthJk7CGQTv1bHVqU1HyMP1EeZ836sGC4rZsaM9gmTOwg_1cDPCqH1VoJE7Tt9A47X9KxOApkSPXgbqewpgtspphgDX9wqpOsy9YUoUyt9KzLCHW_Ba2g0lo9t15Txfw7wFdEY6hyvfnnotpP3m_4XglhM-mL6PcKTe1GYz1DcyK7yPGQXXW-0p5_5ChajXm"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-24 pb-12 px-gutter md:ml-64 transition-all min-h-screen relative">
+<div class="max-w-7xl mx-auto relative z-10 flex flex-col gap-stack-lg">
+<!-- Conversion Section -->
+<section class="glass-card rounded-xl p-8 md:p-10 border border-outline-variant/20 overflow-hidden relative">
+<div class="grid lg:grid-cols-2 gap-10 items-center">
+<div>
+<div class="inline-flex items-center px-3 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 mb-4">
+<span class="material-symbols-outlined text-sm mr-2">database</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Oracle Feed: Active</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Asset Valuation Engine</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-md">Calculated valuations based on institutional-grade aggregate price feeds for audit-ready documentation.</p>
+</div>
+<div class="bg-surface-container-highest/40 p-6 rounded-lg border border-outline-variant/20">
+<div class="flex flex-col gap-4">
+<div class="flex flex-col md:flex-row gap-4">
+<div class="flex-1">
+<label class="block font-label-sm text-label-sm mb-2 text-on-surface-variant uppercase">Base Asset</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-4 font-headline-md text-headline-md text-on-surface focus:border-primary transition-colors" type="number" value="1.00"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-surface-variant px-3 py-1.5 rounded-md border border-outline-variant/30">
+<span class="font-bold text-sm">BTC</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center">
+<button class="bg-secondary-container p-3 rounded-full hover:rotate-180 transition-transform duration-500 shadow-sm active:scale-90">
+<span class="material-symbols-outlined">swap_horiz</span>
+</button>
+</div>
+<div class="flex-1">
+<label class="block font-label-sm text-label-sm mb-2 text-on-surface-variant uppercase">Target Currency</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-4 font-headline-md text-headline-md text-primary cursor-default" readonly="" type="text" value="64,281.90"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-surface-variant px-3 py-1.5 rounded-md border border-outline-variant/30">
+<span class="font-bold text-sm">USD</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center text-xs text-on-surface-variant px-1 mt-2">
+<span class="flex items-center gap-1 font-address-mono">
+                                    1 BTC = 64,281.90 USD (Ref: XBX)
+                                </span>
+<span class="opacity-50">Sync Interval: 1s</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Asset Table -->
+<section class="flex flex-col gap-stack-sm">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 px-2">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Market Aggregator</h3>
+<p class="text-on-surface-variant text-sm">Global cryptocurrency performance metrics by market capitalization</p>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container rounded-lg p-1 border border-outline-variant/20 flex gap-1">
+<button class="px-4 py-1.5 rounded-md bg-secondary-container text-on-secondary-container text-xs font-bold transition-all">Assets</button>
+<button class="px-4 py-1.5 rounded-md hover:bg-surface-variant/50 text-on-surface-variant text-xs font-bold transition-all">Exchanges</button>
+<button class="px-4 py-1.5 rounded-md hover:bg-surface-variant/50 text-on-surface-variant text-xs font-bold transition-all">DeFi Protocols</button>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/20">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/20">
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Asset Designation</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Price (USD)</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">24h Variance</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Market Cap</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-center">7d Trend</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Operations</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- BTC -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<span class="text-xs text-on-surface-variant font-address-mono w-4">01</span>
+<div class="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 font-bold">₿</div>
+<div>
+<div class="font-bold text-on-surface">Bitcoin</div>
+<div class="text-xs text-on-surface-variant font-address-mono uppercase">BTC</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-address-mono font-bold text-on-surface">$64,281.90</td>
+<td class="px-6 py-5 text-right">
+<span class="inline-flex items-center gap-1 text-green-500 text-sm font-bold bg-green-500/10 px-2 py-0.5 rounded-sm">
+                                            +2.45%
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right font-address-mono text-sm text-on-surface-variant">$1.27T</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<svg class="w-24 h-8 overflow-visible"><polyline class="sparkline stroke-green-500" points="0,20 10,25 20,15 30,22 40,10 50,12 60,5 70,18 80,10 90,2 100,8"></polyline></svg>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="bg-primary/10 text-primary border border-primary/30 px-3 py-1.5 rounded-md text-xs font-bold hover:bg-primary/20 transition-all ml-auto">
+                                            Generate Entry
+                                        </button>
+</td>
+</tr>
+<!-- ETH -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<span class="text-xs text-on-surface-variant font-address-mono w-4">02</span>
+<div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold">Ξ</div>
+<div>
+<div class="font-bold text-on-surface">Ethereum</div>
+<div class="text-xs text-on-surface-variant font-address-mono uppercase">ETH</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-address-mono font-bold text-on-surface">$3,492.11</td>
+<td class="px-6 py-5 text-right">
+<span class="inline-flex items-center gap-1 text-error text-sm font-bold bg-error/10 px-2 py-0.5 rounded-sm">
+                                            -1.12%
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right font-address-mono text-sm text-on-surface-variant">$419.5B</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<svg class="w-24 h-8 overflow-visible"><polyline class="sparkline stroke-error" points="0,5 10,12 20,8 30,18 40,15 50,25 60,20 70,28 80,22 90,30 100,25"></polyline></svg>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="bg-primary/10 text-primary border border-primary/30 px-3 py-1.5 rounded-md text-xs font-bold hover:bg-primary/20 transition-all ml-auto">
+                                            Generate Entry
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-surface-container-high/30 px-6 py-4 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-xs text-on-surface-variant">Inventory Index: 1-10 of 5,429</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-variant/50 text-on-surface-variant transition-colors text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-variant/50 text-on-surface-variant transition-colors text-xs">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Metrics Grid -->
+<section class="grid md:grid-cols-3 gap-6">
+<div class="glass-card p-6 rounded-xl flex flex-col gap-4 border border-outline-variant/20 relative overflow-hidden group">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-md">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<h4 class="font-bold text-on-surface">Market Sentiment Index</h4>
+</div>
+<div class="mt-2">
+<div class="flex justify-between items-end mb-2">
+<span class="text-4xl font-bold text-green-500">72.0</span>
+<span class="text-xs font-bold text-green-500 uppercase tracking-widest mb-1">Risk-On</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 w-[72%]"></div>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col gap-4 border border-outline-variant/20 relative overflow-hidden group">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-md">
+<span class="material-symbols-outlined text-primary">gas_meter</span>
+</div>
+<h4 class="font-bold text-on-surface">Network Computation Cost</h4>
+</div>
+<div class="mt-2 grid grid-cols-3 gap-2">
+<div class="bg-surface-container-low p-2 rounded-md text-center border border-outline-variant/10">
+<div class="text-[10px] text-on-surface-variant uppercase">Low</div>
+<div class="font-bold text-sm">12 Gw</div>
+</div>
+<div class="bg-secondary-container/30 p-2 rounded-md text-center border border-secondary-container/50">
+<div class="text-[10px] text-on-primary-container uppercase">Avg</div>
+<div class="font-bold text-sm">15 Gw</div>
+</div>
+<div class="bg-surface-container-low p-2 rounded-md text-center border border-outline-variant/10">
+<div class="text-[10px] text-on-surface-variant uppercase">High</div>
+<div class="font-bold text-sm">18 Gw</div>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col gap-4 border border-outline-variant/20 relative overflow-hidden group">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-md">
+<span class="material-symbols-outlined text-primary">assignment</span>
+</div>
+<h4 class="font-bold text-on-surface">System Advisories</h4>
+</div>
+<ul class="text-xs space-y-2 mt-2 font-body-md">
+<li class="flex gap-2 items-start text-on-surface-variant border-l-2 border-green-500 pl-2">
+<span>BTC technical confirmation: Resistance at $64,000 breached on high volume.</span>
+</li>
+<li class="flex gap-2 items-start text-on-surface-variant border-l-2 border-primary pl-2">
+<span>Compliance Update: Revised regulatory documentation requirements for Ethereum ETFs.</span>
+</li>
+</ul>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer (from components_3) -->
+<footer class="md:ml-64 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant/20 w-full py-8">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-desktop max-w-7xl mx-auto gap-6">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">CryptoGen</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 CryptoGen Security Solutions</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">Security Audit</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface underline transition-opacity duration-200" href="#">API Status</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="p-2 rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</div>
+<div class="p-2 rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+</div>
+</div>
+</div>
+</footer>
+<!-- Mobile Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 bg-surface-container border-t border-outline-variant/30 flex justify-around items-center z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="text-[10px]">Generator</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>trending_up</span>
+<span class="text-[10px] font-bold">Market</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">speed</span>
+<span class="text-[10px]">Fees</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-[10px]">Directory</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions simulation
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => btn.classList.add('transition-all'));
+        });
+
+        // Price polling simulation
+        setInterval(() => {
+            const rowOnePrice = document.querySelector('tbody tr:first-child .font-address-mono.text-on-surface');
+            if (rowOnePrice) {
+                const base = 64281.90;
+                const jitter = (Math.random() - 0.5) * 2;
+                rowOnePrice.textContent = '$' + (base + jitter).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }, 5000);
+    </script>
+</body></html>
