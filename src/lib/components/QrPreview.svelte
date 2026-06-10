@@ -3,6 +3,7 @@
   import { Download, Share2 } from 'lucide-svelte';
   import type { QrStyle } from '$lib/qrStyle';
   import { getContrastWarning, logoDataUrl } from '$lib/qrStyle';
+  import { productName } from '$lib/seo';
 
   export let payload = '';
   export let style: QrStyle;
@@ -74,7 +75,7 @@
 
   async function download(extension: 'png' | 'svg') {
     await renderQr();
-    await qr?.download({ name: `cryptogen-${Date.now()}`, extension });
+    await qr?.download({ name: `crypto-qr-${Date.now()}`, extension });
   }
 
   async function copyPayload() {
@@ -86,7 +87,7 @@
 
   async function sharePayload() {
     if (!navigator.share || !payload) return;
-    await navigator.share({ title: 'CryptoGen QR payload', text: payload });
+    await navigator.share({ title: `${productName} QR payload`, text: payload });
   }
 </script>
 

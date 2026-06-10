@@ -1,4 +1,4 @@
-import { organizationJsonLd, routeMeta } from '$lib/seo';
+import { organizationJsonLd, productName, routeMeta } from '$lib/seo';
 
 export function load() {
   return {
@@ -15,7 +15,7 @@ export function load() {
               name: 'Where are saved addresses stored?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Saved addresses are stored in browser local storage under a versioned CryptoGen app key.'
+                text: `Saved addresses are stored in browser local storage under a versioned ${productName} app key.`
               }
             },
             {

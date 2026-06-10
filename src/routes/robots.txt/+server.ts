@@ -4,6 +4,6 @@ export function GET() {
   return text(`User-agent: *
 Allow: /
 
-Sitemap: https://cryptogen.local/sitemap.xml
+Sitemap: https://cryptoqrtool.com/sitemap.xml
 `);
 }

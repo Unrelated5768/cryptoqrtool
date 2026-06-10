@@ -1,0 +1,39 @@
+# syntax=docker/dockerfile:1.7
+
+ARG BUN_VERSION=1.3.13
+ARG NODE_VERSION=22-alpine
+
+FROM oven/bun:${BUN_VERSION}-alpine AS deps
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+  bun install --frozen-lockfile
+
+FROM deps AS build
+WORKDIR /app
+COPY . .
+RUN bun run check
+RUN bun run test
+RUN bun run build
+
+FROM oven/bun:${BUN_VERSION}-alpine AS production-deps
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+  bun install --frozen-lockfile --production
+
+FROM node:${NODE_VERSION} AS runtime
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=3000
+
+WORKDIR /app
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --from=production-deps --chown=app:app /app/node_modules ./node_modules
+COPY --from=build --chown=app:app /app/build ./build
+COPY --from=build --chown=app:app /app/package.json ./package.json
+
+USER app
+EXPOSE 3000
+CMD ["node", "build"]

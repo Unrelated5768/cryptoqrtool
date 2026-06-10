@@ -1,6 +1,16 @@
 import { text } from '@sveltejs/kit';
+import { coinLandingPages, siteUrl } from '$lib/seo';
 
-const routes = ['/', '/generate', '/saved', '/markets', '/fees', '/exchanges', '/security'];
+const routes = [
+  '/',
+  '/generate',
+  '/saved',
+  '/markets',
+  '/fees',
+  '/exchanges',
+  '/security',
+  ...coinLandingPages.map((page) => `/${page.slug}`)
+];
 
 export function GET() {
   const body = `<?xml version="1.0" encoding="UTF-8"?>
@@ -8,7 +18,7 @@ export function GET() {
 ${routes
   .map(
     (route) => `  <url>
-    <loc>https://cryptogen.local${route}</loc>
+    <loc>${siteUrl}${route}</loc>
   </url>`
   )
   .join('\n')}

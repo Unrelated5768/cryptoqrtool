@@ -1,4 +1,4 @@
-import { organizationJsonLd, routeMeta } from '$lib/seo';
+import { organizationJsonLd, productName, routeMeta } from '$lib/seo';
 
 export function load() {
   return {
@@ -12,7 +12,7 @@ export function load() {
           mainEntity: [
             {
               '@type': 'Question',
-              name: 'Does CryptoGen store crypto addresses?',
+              name: `Does ${productName} store crypto addresses?`,
               acceptedAnswer: {
                 '@type': 'Answer',
                 text: 'Saved addresses and QR style presets are stored only in browser local storage.'
@@ -23,7 +23,7 @@ export function load() {
               name: 'Which networks are supported?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'CryptoGen supports Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT in v1.'
+                text: `${productName} supports Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT in v1.`
               }
             }
           ]

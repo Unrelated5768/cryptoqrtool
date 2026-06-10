@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ArrowRight, Brush, DatabaseZap, QrCode, ShieldCheck, WalletCards } from 'lucide-svelte';
+  import { coinLandingPages, productName } from '$lib/seo';
 
   const features = [
     {
@@ -25,13 +26,13 @@
     <div class="max-w-2xl">
       <div class="mb-5 inline-flex items-center gap-2 rounded border border-outline-variant bg-surface-high px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">
         <DatabaseZap size={16} />
-        Local crypto QR utility
+        Browser-local crypto QR utility
       </div>
       <h1 class="text-4xl font-bold leading-tight text-on-surface md:text-6xl">
-        CryptoGen
+        Crypto QR Code Generator
       </h1>
       <p class="mt-5 text-lg leading-8 text-on-surface-variant">
-        Generate scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20
+        {productName} generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20
         stablecoins like USDC and USDT. Customize logos, colors, dot styles, and saved presets without sending
         addresses or uploaded logos to a server.
       </p>
@@ -75,5 +76,24 @@
         <p class="mt-3 text-sm leading-6 text-on-surface-variant">{feature.body}</p>
       </article>
     {/each}
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
+    <div class="surface-panel rounded-card p-6">
+      <h2 class="text-2xl font-semibold text-on-surface">Crypto QR generators by coin</h2>
+      <p class="mt-2 text-sm text-on-surface-variant">
+        Dedicated pages for each supported wallet address format and payment payload.
+      </p>
+      <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {#each coinLandingPages as item}
+          <a
+            class="rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
+            href={`/${item.slug}`}
+          >
+            {item.name} QR Code Generator
+          </a>
+        {/each}
+      </div>
+    </div>
   </section>
 </main>

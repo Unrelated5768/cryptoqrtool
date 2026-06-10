@@ -1,5 +1,6 @@
 <script lang="ts">
   import { FileLock2, HardDrive, ShieldCheck, WifiOff } from 'lucide-svelte';
+  import { productName } from '$lib/seo';
 
   const items = [
     {
@@ -30,7 +31,7 @@
     <p class="label mb-2">Trust and privacy</p>
     <h1 class="text-3xl font-bold text-on-surface md:text-5xl">No account, no wallet connection, no server vault</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      CryptoGen is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses,
+      {productName} is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses,
       saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.
     </p>
   </div>
