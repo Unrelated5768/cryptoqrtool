@@ -18,6 +18,8 @@ test-results/
 .env.*
 !.env.example
 .direnv/
+.secrets/
+wallet-stack/out/
 
 # Logs
 *.log
