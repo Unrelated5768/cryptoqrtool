@@ -40,6 +40,7 @@
   let style: QrStyle = { ...defaultQrStyle, logo: 'xmr' };
   let customLogoDataUrl: string | undefined;
   let lastTrackedPayload = '';
+  let lastTrackedConversion = '';
 
   $: selectedMarketId = getMarketSelectionId(network);
   $: selectedMarketAsset = selectedMarketId
@@ -114,6 +115,19 @@
   } else if (browser && !payload && lastTrackedPayload) {
     lastTrackedPayload = '';
   }
+  $: if (browser && mode === 'guided' && amount.trim() && price) {
+    const conversionKey = `${selectedTicker}:${$defaultCurrency}`;
+    if (conversionKey !== lastTrackedConversion) {
+      lastTrackedConversion = conversionKey;
+      trackEvent('price_conversion_used', {
+        network: selectedMarketId ? 'market' : effectiveNetwork,
+        ticker: selectedTicker,
+        currency: $defaultCurrency
+      });
+    }
+  } else if (browser && !amount.trim() && lastTrackedConversion) {
+    lastTrackedConversion = '';
+  }
 
   onMount(async () => {
     const params = $page.url.searchParams;
@@ -160,6 +174,17 @@
 
   function getMarketSelectionId(value: NetworkSelection): string | null {
     return isMarketSelection(value) ? value.slice('market:'.length) : null;
+  }
+
+  function trackNetworkSelection(value: NetworkSelection) {
+    const marketId = getMarketSelectionId(value);
+    const selectedMarket = marketId ? marketAssets.find((asset) => asset.id === marketId) : undefined;
+    const selectedOption = isNetworkId(value) ? getNetwork(value) : undefined;
+
+    trackEvent('network_selected', {
+      network: marketId ? 'market' : value,
+      ticker: selectedMarket?.symbol ?? selectedOption?.ticker ?? (value === 'automatic' ? 'AUTO' : undefined)
+    });
   }
 
   async function pasteAddress() {
@@ -270,11 +295,7 @@
                 id="network"
                 class="field"
                 bind:value={network}
-                on:change={() =>
-                  trackEvent('network_selected', {
-                    network: selectedMarketId ? 'market' : network,
-                    ticker: selectedTicker
-                  })}
+                on:change={(event) => trackNetworkSelection(event.currentTarget.value as NetworkSelection)}
               >
                 <option value="automatic">Automatic from address</option>
                 <optgroup label="Supported payment networks">
