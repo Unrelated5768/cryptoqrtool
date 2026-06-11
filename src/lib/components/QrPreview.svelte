@@ -22,7 +22,7 @@
 
   async function renderQr(currentPayload = payload, currentStyle = style, currentCustomLogoDataUrl = customLogoDataUrl) {
     const { default: QRCodeStyling } = await import('qr-code-styling');
-    const image = logoDataUrl(currentStyle.logo, currentCustomLogoDataUrl);
+    const image = logoDataUrl(currentStyle.logo, currentCustomLogoDataUrl, currentStyle.logoVariant);
     const options = {
       width: 320,
       height: 320,

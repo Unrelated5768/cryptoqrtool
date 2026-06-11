@@ -1,11 +1,15 @@
+import { cryptoIconPath, hasCryptoIcon, type CryptoIconVariant } from './cryptoIcons';
+
 export type DotStyle = 'square' | 'rounded' | 'dots' | 'classy' | 'extra-rounded';
 export type CornerSquareStyle = 'square' | 'dot' | 'extra-rounded';
 export type CornerDotStyle = 'square' | 'dot';
-export type LogoChoice = 'none' | 'xmr' | 'btc' | 'eth' | 'sol' | 'ltc' | 'usdc' | 'usdt' | 'custom';
+export type LogoChoice = 'none' | 'custom' | (string & {});
+export type LogoVariant = CryptoIconVariant;
 export type ColorMode = 'solid' | 'gradient' | 'preset';
 
 export interface QrStyle {
   logo: LogoChoice;
+  logoVariant: LogoVariant;
   dots: DotStyle;
   cornersSquare: CornerSquareStyle;
   cornersDot: CornerDotStyle;
@@ -29,6 +33,7 @@ export interface StylePreset {
 
 export const defaultQrStyle: QrStyle = {
   logo: 'none',
+  logoVariant: 'color',
   dots: 'rounded',
   cornersSquare: 'extra-rounded',
   cornersDot: 'dot',
@@ -131,10 +136,12 @@ export function serializeStyle(style: QrStyle): string {
 export function parseStyle(value: string): QrStyle {
   const parsed = JSON.parse(value) as Partial<QrStyle>;
   const logo = normalizeLogoChoice(parsed.logo);
+  const logoVariant = normalizeLogoVariant(parsed.logoVariant);
   return {
     ...defaultQrStyle,
     ...parsed,
     logo,
+    logoVariant,
     margin: clamp(Number(parsed.margin ?? defaultQrStyle.margin), 8, 48),
     logoSize: clamp(Number(parsed.logoSize ?? defaultQrStyle.logoSize), 0.12, 0.32)
   };
@@ -169,31 +176,25 @@ export function validateLogoFile(file: File): string | null {
   return null;
 }
 
-export function logoDataUrl(choice: LogoChoice, customLogoDataUrl?: string): string | undefined {
+export function logoDataUrl(
+  choice: LogoChoice,
+  customLogoDataUrl?: string,
+  variant: LogoVariant = 'color'
+): string | undefined {
   if (choice === 'custom') return customLogoDataUrl;
   if (choice === 'none') return undefined;
-
-  const logos: Record<Exclude<LogoChoice, 'none' | 'custom'>, string> = {
-    xmr: logoSvg('XMR', '#ff6600'),
-    btc: logoSvg('BTC', '#f7931a'),
-    eth: logoSvg('ETH', '#627eea'),
-    sol: logoSvg('SOL', '#14f195'),
-    ltc: logoSvg('LTC', '#345d9d'),
-    usdc: logoSvg('USDC', '#2775ca'),
-    usdt: logoSvg('USDT', '#26a17b')
-  };
-
-  return logos[choice];
+  return cryptoIconPath(choice, variant);
 }
 
-function normalizeLogoChoice(value: unknown): LogoChoice {
-  const logos: LogoChoice[] = ['none', 'xmr', 'btc', 'eth', 'sol', 'ltc', 'usdc', 'usdt', 'custom'];
-  return typeof value === 'string' && logos.includes(value as LogoChoice) ? (value as LogoChoice) : 'none';
+export function normalizeLogoChoice(value: unknown): LogoChoice {
+  if (value === 'none' || value === 'custom') return value;
+  if (typeof value !== 'string') return 'none';
+  const normalized = value.toLowerCase();
+  return hasCryptoIcon(normalized) ? normalized : 'none';
 }
 
-function logoSvg(label: string, color: string): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" rx="64" fill="${color}"/><text x="64" y="73" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#fff">${label}</text></svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+function normalizeLogoVariant(value: unknown): LogoVariant {
+  return value === 'black' || value === 'white' || value === 'color' ? value : 'color';
 }
 
 function hexToRgb(hex: string): [number, number, number] {

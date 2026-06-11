@@ -23,6 +23,7 @@
         "@testing-library/svelte": "^5.2.4",
         "@types/node": "^22.10.2",
         "autoprefixer": "^10.4.20",
+        "cryptocurrency-icons": "0.18.1",
         "jsdom": "^25.0.1",
         "postcss": "^8.4.49",
         "svelte-check": "^4.1.1",
@@ -409,6 +410,8 @@
     "cookie-signature": ["cookie-signature@1.0.7", "", {}, "sha512-NXdYc3dLr47pBkpUCHtKSwIOQXLVn8dZEuywboCOJY/osA0wFSLlSawr3KN8qXJEyX66FcONTH8EIlVuK0yyFA=="],
 
     "crypto-random-string": ["crypto-random-string@2.0.0", "", {}, "sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA=="],
+
+    "cryptocurrency-icons": ["cryptocurrency-icons@0.18.1", "", {}, "sha512-dvR5O8JOmav3559Yb0Igpkia+3vpt/aeNvMu5ZIVUG2Bzpq9wNcOJRIQas49XJrPjtZ98GAEn3aDQO+w7uhS2w=="],
 
     "csp_evaluator": ["csp_evaluator@1.1.1", "", {}, "sha512-N3ASg0C4kNPUaNxt1XAvzHIVuzdtr8KLgfk1O8WDyimp1GisPAHESupArO2ieHk9QWbrJ/WkQODyh21Ps/xhxw=="],
 

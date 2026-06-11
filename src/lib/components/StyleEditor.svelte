@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import { Upload } from 'lucide-svelte';
+  import { cryptoIcons, getCryptoIcon, type CryptoIconVariant } from '$lib/cryptoIcons';
   import {
     builtInPresets,
     defaultQrStyle,
@@ -11,15 +13,44 @@
   export let style: QrStyle = { ...defaultQrStyle };
   export let customLogoDataUrl: string | undefined = undefined;
 
+  const dispatch = createEventDispatcher<{
+    logoChanged: void;
+    presetApplied: void;
+  }>();
+  const logoVariants: Array<{ value: CryptoIconVariant; label: string }> = [
+    { value: 'color', label: 'Color' },
+    { value: 'black', label: 'Black' },
+    { value: 'white', label: 'White' }
+  ];
+
   let fileWarning = '';
+  let logoSearch = '';
   $: contrastWarning = getContrastWarning(style);
+  $: selectedIcon = style.logo === 'none' || style.logo === 'custom' ? undefined : getCryptoIcon(style.logo);
+  $: filteredIcons = cryptoIcons
+    .filter((icon) => {
+      const query = logoSearch.trim().toLowerCase();
+      return !query || icon.symbol.includes(query) || icon.name.toLowerCase().includes(query);
+    })
+    .slice(0, 36);
 
   function applyStyle(next: Partial<QrStyle>) {
     style = { ...style, ...next };
+    dispatch('presetApplied');
   }
 
   function commitStyle() {
     style = { ...style };
+  }
+
+  function chooseLogo(logo: QrStyle['logo']) {
+    style = { ...style, logo };
+    dispatch('logoChanged');
+  }
+
+  function chooseLogoVariant(logoVariant: CryptoIconVariant) {
+    style = { ...style, logoVariant };
+    dispatch('logoChanged');
   }
 
   async function handleLogoUpload(event: Event) {
@@ -37,6 +68,7 @@
 
     customLogoDataUrl = await readFile(file);
     style = { ...style, logo: 'custom' };
+    dispatch('logoChanged');
   }
 
   function readFile(file: File) {
@@ -72,19 +104,72 @@
       </div>
     </div>
 
-    <div>
-      <label class="label mb-2 block" for="logo">Logo</label>
-      <select id="logo" data-testid="logo-select" class="field" bind:value={style.logo} on:change={commitStyle}>
-        <option value="none">None</option>
-        <option value="xmr">Monero XMR</option>
-        <option value="btc">Bitcoin BTC</option>
-        <option value="eth">Ethereum ETH</option>
-        <option value="sol">Solana SOL</option>
-        <option value="ltc">Litecoin LTC</option>
-        <option value="usdc">USD Coin USDC</option>
-        <option value="usdt">Tether USDT</option>
-        <option value="custom">Custom uploaded logo</option>
-      </select>
+    <div class="grid gap-3">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <label class="label mb-2 block" for="logo-search">Logo</label>
+          <p class="text-sm text-on-surface-variant">
+            {#if style.logo === 'none'}
+              No embedded logo selected.
+            {:else if style.logo === 'custom'}
+              Custom uploaded logo selected.
+            {:else if selectedIcon}
+              {selectedIcon.name} ({selectedIcon.symbol.toUpperCase()}) selected.
+            {:else}
+              Catalog logo selected.
+            {/if}
+          </p>
+        </div>
+        <div class="grid grid-cols-3 rounded-lg border border-outline-variant bg-surface-low p-1" data-testid="logo-variant-control">
+          {#each logoVariants as option}
+            <button
+              type="button"
+              class={`rounded-md px-3 py-2 text-sm font-semibold transition ${
+                style.logoVariant === option.value
+                  ? 'bg-primary-action text-white'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+              aria-pressed={style.logoVariant === option.value}
+              on:click={() => chooseLogoVariant(option.value)}
+            >
+              {option.label}
+            </button>
+          {/each}
+        </div>
+      </div>
+
+      <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
+        <input
+          id="logo-search"
+          data-testid="logo-search"
+          class="field"
+          placeholder="Search by symbol or name"
+          bind:value={logoSearch}
+        />
+        <button type="button" data-testid="logo-none" class="btn-secondary" on:click={() => chooseLogo('none')}>None</button>
+        <button type="button" data-testid="logo-custom" class="btn-secondary" on:click={() => chooseLogo('custom')}>Custom</button>
+      </div>
+
+      <div class="grid max-h-72 grid-cols-2 gap-2 overflow-y-auto rounded-lg border border-outline-variant bg-surface-low p-2 sm:grid-cols-3">
+        {#each filteredIcons as icon}
+          <button
+            type="button"
+            data-testid="catalog-logo-option"
+            class={`flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm transition ${
+              style.logo === icon.symbol
+                ? 'border-primary bg-primary-container text-on-primary-container'
+                : 'border-outline-variant bg-surface-high text-on-surface hover:border-primary'
+            }`}
+            on:click={() => chooseLogo(icon.symbol)}
+          >
+            <img class="h-6 w-6 shrink-0" src={icon.variants[style.logoVariant] ?? icon.variants.color} alt="" />
+            <span class="min-w-0">
+              <span class="block truncate font-semibold">{icon.symbol.toUpperCase()}</span>
+              <span class="block truncate text-xs opacity-75">{icon.name}</span>
+            </span>
+          </button>
+        {/each}
+      </div>
     </div>
 
     <label class="btn-secondary cursor-pointer">

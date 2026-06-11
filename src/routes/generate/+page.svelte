@@ -9,6 +9,7 @@
   import { trackEvent } from '$lib/analytics';
   import { defaultCurrency, type FiatCurrency } from '$lib/currency';
   import { productName } from '$lib/seo';
+  import { logoForMarketSymbol, logoForNetwork } from '$lib/networkLogos';
   import {
     buildQrPayload,
     detectNetwork,
@@ -49,6 +50,8 @@
   let customLogoDataUrl: string | undefined;
   let lastTrackedPayload = '';
   let lastTrackedConversion = '';
+  let manualLogoOverride = false;
+  let lastAutoLogoKey = '';
 
   $: selectedMarketId = getMarketSelectionId(network);
   $: selectedMarketAsset = selectedMarketId
@@ -67,6 +70,19 @@
   $: caip19AssetOnly = tokenNetworkSelected && tokenPayloadFormat === 'caip19';
   $: selectedName = selectedMarketAsset?.name ?? (selectedMarketId ? 'Selected market asset' : selectedNetwork.name);
   $: selectedTicker = selectedMarketAsset?.symbol ?? (selectedMarketId ? selectedMarketId.toUpperCase() : selectedNetwork.ticker);
+  $: autoLogoKey = selectedMarketAsset
+    ? `market:${selectedMarketAsset.symbol}`
+    : network === 'automatic'
+      ? detectedNetwork
+        ? `network:${detectedNetwork}`
+        : ''
+      : isNetworkId(network)
+        ? `network:${network}`
+        : '';
+  $: if (browser && autoLogoKey && autoLogoKey !== lastAutoLogoKey) {
+    lastAutoLogoKey = autoLogoKey;
+    applyAutoLogoDefault();
+  }
   $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} address` : selectedNetwork.placeholder;
   $: paymentInputLabel = effectiveNetwork === 'lightning' ? 'Lightning invoice' : 'Recipient address';
   $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount && !caip19AssetOnly;
@@ -224,6 +240,37 @@
       network: marketId ? 'market' : value,
       ticker: selectedMarket?.symbol ?? selectedOption?.ticker ?? (value === 'automatic' ? 'AUTO' : undefined)
     });
+
+    applyAutoLogoDefault(value);
+  }
+
+  function applyAutoLogoDefault(selection: NetworkSelection = network) {
+    if (manualLogoOverride) return;
+
+    const marketId = getMarketSelectionId(selection);
+    const marketLogo = marketId
+      ? logoForMarketSymbol(marketAssets.find((asset) => asset.id === marketId)?.symbol ?? '')
+      : null;
+    const networkLogo =
+      !marketId && selection === 'automatic' && detectedNetwork
+        ? logoForNetwork(detectedNetwork)
+        : !marketId && isNetworkId(selection)
+          ? logoForNetwork(selection)
+          : null;
+    const logo = marketLogo ?? networkLogo;
+
+    if (logo) {
+      style = { ...style, logo };
+    }
+  }
+
+  function markLogoManuallyChanged() {
+    manualLogoOverride = true;
+  }
+
+  function markPresetApplied() {
+    manualLogoOverride = false;
+    lastAutoLogoKey = autoLogoKey;
   }
 
   async function pasteAddress() {
@@ -478,7 +525,12 @@
         </div>
       </section>
 
-      <StyleEditor bind:style bind:customLogoDataUrl />
+      <StyleEditor
+        bind:style
+        bind:customLogoDataUrl
+        on:logoChanged={markLogoManuallyChanged}
+        on:presetApplied={markPresetApplied}
+      />
 
       <section class="glass-panel rounded-card p-5 md:p-6">
         <h2 class="text-xl font-semibold">Save current style</h2>
