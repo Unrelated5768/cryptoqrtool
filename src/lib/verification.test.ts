@@ -42,6 +42,20 @@ describe('payment URI parsing', () => {
       amount: '1000000'
     });
   });
+
+  it('parses native ERC-681 payloads with pay-prefix and chain id', () => {
+    expect(parsePaymentUri(`ethereum:pay-${evmAddress}@8453?value=250000000000000000`)).toMatchObject({
+      scheme: 'ethereum',
+      target: evmAddress,
+      amount: '250000000000000000',
+      normalized: `ethereum:${evmAddress}@8453?value=250000000000000000`
+    });
+  });
+
+  it('rejects malformed ERC-681 numeric values', () => {
+    expect(parsePaymentUri(`ethereum:${evmAddress}@1?value=0.1`)).toBeNull();
+    expect(parsePaymentUri(`ethereum:${evmAddress}@1/transfer?address=${evmAddress}&uint256=1.2`)).toBeNull();
+  });
 });
 
 describe('transaction hash validation and explorer links', () => {

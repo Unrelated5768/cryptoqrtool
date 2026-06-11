@@ -66,7 +66,7 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
           : network.id === 'lightning'
             ? 'lnbc2500u1p...'
             : network.id === 'ethereum'
-              ? 'ethereum:0x742d...?value=0.25'
+              ? 'ethereum:0x742d...?value=250000000000000000'
               : network.id === 'solana'
                 ? 'solana:7XSY...?amount=2.5'
                 : network.id === 'litecoin'
@@ -264,7 +264,7 @@ export const searchLandingPages: LandingPage[] = [
       'Create Ethereum QR codes for 0x wallet addresses and optional ETH payment values. The generator validates common EVM address format and keeps QR payloads local in your browser.',
     ctaLabel: 'Generate Ethereum QR code',
     generatorHref: coinGenerateHref('ethereum'),
-    payloadExample: 'ethereum:0x742d...?value=0.25',
+    payloadExample: 'ethereum:0x742d...?value=250000000000000000',
     chips: ['ETH', 'EVM', '0x address', 'Value'],
     benefits: [
       {
@@ -273,7 +273,7 @@ export const searchLandingPages: LandingPage[] = [
       },
       {
         title: 'ETH payment payloads',
-        body: 'Add an optional ETH value and encode it in an ethereum: payment URI for compatible wallets.'
+        body: 'Add an optional ETH value and encode it in an EIP-681 ethereum: payment URI with chain id and wei-denominated value.'
       },
       {
         title: 'Reusable QR presets',
@@ -287,7 +287,7 @@ export const searchLandingPages: LandingPage[] = [
       },
       {
         question: 'Can Ethereum QR codes include an ETH amount?',
-        answer: 'Yes. Enter an amount and the tool builds an ethereum: URI with a value parameter.'
+        answer: 'Yes. Enter an amount and the tool builds an EIP-681 ethereum: URI with chain id and a wei-denominated value parameter.'
       }
     ]
   },
@@ -564,7 +564,7 @@ function checkerLandingPage(network: (typeof networks)[number], type: 'address' 
             : network.id === 'ethereum'
               ? type === 'transaction'
                 ? '0x5e2b...64 hex chars'
-                : 'ethereum:0x742d...?value=0.25'
+                : 'ethereum:0x742d...?value=250000000000000000'
               : network.id === 'solana'
                 ? type === 'transaction'
                   ? '5J7s...base58 signature'

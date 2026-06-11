@@ -61,9 +61,11 @@
   $: effectiveNetwork = detectedNetwork ?? 'monero';
   $: selectedNetwork = getNetwork(effectiveNetwork);
   $: selectedTokenNetwork = !selectedMarketId && isTokenNetwork(effectiveNetwork) ? effectiveNetwork : null;
+  $: nativeEvmChainSelected = !selectedMarketId && network !== 'automatic' && effectiveNetwork === 'ethereum';
   $: tokenNetworkSelected = Boolean(selectedTokenNetwork);
-  $: tokenChainOptions = selectedTokenNetwork ? getTokenChainOptions(selectedTokenNetwork) : [];
-  $: if (tokenNetworkSelected && !tokenChainOptions.some((option) => option.id === tokenChainId)) {
+  $: chainSelectionEnabled = nativeEvmChainSelected || tokenNetworkSelected;
+  $: tokenChainOptions = selectedTokenNetwork ? getTokenChainOptions(selectedTokenNetwork) : nativeEvmChainSelected ? tokenChains : [];
+  $: if (chainSelectionEnabled && !tokenChainOptions.some((option) => option.id === tokenChainId)) {
     tokenChainId = tokenChainOptions[0]?.id ?? 'ethereum';
   }
   $: selectedTokenChain = getTokenChain(tokenChainId);
@@ -147,7 +149,7 @@
     network: selectedMarketId ? 'market' : effectiveNetwork,
     ticker: selectedTicker,
     has_amount: mode === 'guided' && Boolean(amount.trim()),
-    token_chain: tokenNetworkSelected ? selectedTokenChain.caip2 : undefined,
+    token_chain: chainSelectionEnabled ? selectedTokenChain.caip2 : undefined,
     payload_standard: caip19AssetOnly ? 'caip19' : 'payment',
     custom_logo: Boolean(customLogoDataUrl),
     color_mode: style.colorMode
@@ -405,29 +407,33 @@
               {/if}
             </div>
 
-            {#if tokenNetworkSelected}
+            {#if chainSelectionEnabled}
               <div class="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label class="label mb-2 block" for="token-chain">Token chain</label>
+                  <label class="label mb-2 block" for="token-chain">{tokenNetworkSelected ? 'Token chain' : 'EVM chain'}</label>
                   <select id="token-chain" class="field" bind:value={tokenChainId}>
                     {#each tokenChainOptions as option}
                       <option value={option.id}>{option.name} ({option.caip2})</option>
                     {/each}
                   </select>
                 </div>
-                <div>
-                  <label class="label mb-2 block" for="payload-standard">Payload standard</label>
-                  <select id="payload-standard" class="field" bind:value={tokenPayloadFormat}>
-                    <option value="payment">Payment URI</option>
-                    <option value="caip19">CAIP-19 asset ID</option>
-                  </select>
-                </div>
+                {#if tokenNetworkSelected}
+                  <div>
+                    <label class="label mb-2 block" for="payload-standard">Payload standard</label>
+                    <select id="payload-standard" class="field" bind:value={tokenPayloadFormat}>
+                      <option value="payment">Payment URI</option>
+                      <option value="caip19">CAIP-19 asset ID</option>
+                    </select>
+                  </div>
+                {/if}
               </div>
               <p class="rounded-lg border border-outline-variant bg-surface-low px-3 py-2 text-sm text-on-surface-variant">
-                {#if caip19AssetOnly}
+                {#if tokenNetworkSelected && caip19AssetOnly}
                   The QR code encodes the CAIP-19 asset type for {selectedTicker} on {selectedTokenChain.name}. It does not include a recipient or transfer amount.
-                {:else}
+                {:else if tokenNetworkSelected}
                   Payment URI mode uses the selected chain's token contract and EIP-155 chain id for the ERC-20 transfer payload.
+                {:else}
+                  Native Ethereum/EVM payment URIs use the selected EIP-155 chain id and encode the value in wei per EIP-681.
                 {/if}
               </p>
             {/if}

@@ -234,30 +234,37 @@ function parseSimplePaymentUri(value: string, network: NetworkId, amountParam: s
 
 function parseEthereumUri(value: string): ParsedPaymentUri | null {
   const rest = value.slice('ethereum:'.length);
-  const [path = '', query = ''] = rest.split('?');
+  const normalizedRest = rest.toLowerCase().startsWith('pay-') ? rest.slice('pay-'.length) : rest;
+  const [path = '', query = ''] = normalizedRest.split('?');
   const [targetWithChain = '', operation = ''] = path.split('/');
-  const target = targetWithChain.split('@')[0] ?? '';
+  const [target = '', chainId = ''] = targetWithChain.split('@');
   if (!target) return null;
+  if (chainId && !/^\d+$/.test(chainId)) return null;
 
   const params = new URLSearchParams(query);
   if (operation === 'transfer') {
     const tokenNetwork = tokenNetworkForContract(target);
     const recipient = params.get('address') ?? undefined;
+    const amount = params.get('uint256') ?? undefined;
+    if (!recipient || (amount && !isValidEip681Numeric(amount))) return null;
     return {
       scheme: tokenNetwork ?? 'ethereum',
       target,
       recipient,
       tokenNetwork,
       normalized: `ethereum:${path}${query ? `?${params.toString()}` : ''}`,
-      amount: params.get('uint256') ?? undefined
+      amount
     };
   }
+
+  const amount = params.get('value') ?? undefined;
+  if (amount && !isValidEip681Numeric(amount)) return null;
 
   return {
     scheme: 'ethereum',
     target,
     normalized: `ethereum:${path}${query ? `?${params.toString()}` : ''}`,
-    amount: params.get('value') ?? undefined
+    amount
   };
 }
 
@@ -296,4 +303,15 @@ function normalizeForNetwork(network: NetworkId, value: string) {
   if (network === 'ethereum' || isTokenNetwork(network)) return value.toLowerCase();
   if (network === 'lightning') return value.toLowerCase();
   return value.trim();
+}
+
+function isValidEip681Numeric(value: string): boolean {
+  if (!/^\d+(?:\.\d+)?(?:e\d+)?$/i.test(value)) return false;
+
+  const [mantissa, exponentText] = value.toLowerCase().split('e');
+  const exponent = exponentText ? Number(exponentText) : 0;
+  if (!Number.isInteger(exponent) || exponent < 0) return false;
+
+  const [, fraction = ''] = mantissa.split('.');
+  return fraction.length === 0 || exponent >= fraction.length;
 }

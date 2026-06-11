@@ -18,6 +18,17 @@ describe('QR API generator', () => {
     expect(result.svg).toContain('/crypto-icons/black/btc.svg');
   });
 
+  it('generates native Ethereum payloads with EIP-155 chain id and wei value', async () => {
+    const result = await generateApiQr({
+      network: 'ethereum',
+      address: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+      amount: '0.25',
+      tokenChainId: 'base'
+    });
+
+    expect(result.payload).toBe('ethereum:0x742d35Cc6634C0532925a3b844Bc454e4438f44e@8453?value=250000000000000000');
+  });
+
   it('generates custom payload JSON responses', async () => {
     const result = await generateApiQr({
       mode: 'custom',

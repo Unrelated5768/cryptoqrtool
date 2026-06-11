@@ -49,7 +49,7 @@ describe('QR payload builders', () => {
     expect(buildQrPayload('monero', '84PqAddress', '1.23')).toBe('monero:84PqAddress?tx_amount=1.23');
     expect(buildQrPayload('bitcoin', 'bc1qaddress', '0.5')).toBe('bitcoin:bc1qaddress?amount=0.5');
     expect(buildQrPayload('lightning', lightningInvoice, '0.5')).toBe(lightningInvoice);
-    expect(buildQrPayload('ethereum', '0xabc', '2')).toBe('ethereum:0xabc?value=2');
+    expect(buildQrPayload('ethereum', '0xabc', '2')).toBe('ethereum:0xabc@1?value=2000000000000000000');
     expect(buildQrPayload('solana', 'SolAddress', '3')).toBe('solana:SolAddress?amount=3');
     expect(buildQrPayload('litecoin', 'ltc1address', '4')).toBe('litecoin:ltc1address?amount=4');
     expect(buildQrPayload('usdc', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', '1.23')).toBe(
@@ -78,6 +78,14 @@ describe('QR payload builders', () => {
     ).toBe(
       'ethereum:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913@8453/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=2500000'
     );
+  });
+
+  it('builds native EIP-681 payloads on selected EVM chains', () => {
+    expect(
+      buildQrPayload('ethereum', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', '0.25', {
+        tokenChainId: 'base'
+      })
+    ).toBe('ethereum:0x742d35Cc6634C0532925a3b844Bc454e4438f44e@8453?value=250000000000000000');
   });
 
   it('ignores invalid amount input', () => {

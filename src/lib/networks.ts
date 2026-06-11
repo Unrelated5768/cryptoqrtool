@@ -117,6 +117,8 @@ export interface TokenDeployment {
   bridged?: boolean;
 }
 
+const nativeEvmDecimals = 18;
+
 export const tokenChains = [
   { id: 'ethereum', name: 'Ethereum', shortName: 'ETH', caip2: 'eip155:1', eip155: 1 },
   { id: 'polygon', name: 'Polygon PoS', shortName: 'POL', caip2: 'eip155:137', eip155: 137 },
@@ -359,7 +361,7 @@ export function buildQrPayload(
     case 'bitcoin':
       return `bitcoin:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
     case 'ethereum':
-      return `ethereum:${cleanAddress}?value=${encodeURIComponent(cleanAmount)}`;
+      return buildNativeEvmPayload(cleanAddress, cleanAmount, options.tokenChainId);
     case 'solana':
       return `solana:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
     case 'litecoin':
@@ -388,6 +390,12 @@ function buildErc20TransferPayload(
   const chain = getTokenChain(token.chainId);
   const units = decimalToUnits(amount, token.decimals);
   return `ethereum:${token.contractAddress}@${chain.eip155}/transfer?address=${encodeURIComponent(address)}&uint256=${units}`;
+}
+
+function buildNativeEvmPayload(address: string, amount: string, chainId?: TokenChainId): string {
+  const chain = getTokenChain(chainId ?? 'ethereum');
+  const value = decimalToUnits(amount, nativeEvmDecimals);
+  return `ethereum:${address}@${chain.eip155}?value=${value}`;
 }
 
 export function normalizeAmount(amount?: string): string {

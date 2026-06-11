@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { ArrowRight, Brush, DatabaseZap, QrCode, ShieldCheck, WalletCards } from 'lucide-svelte';
+  import { ArrowRight, DatabaseZap, Heart, QrCode, ShieldCheck, WifiOff } from 'lucide-svelte';
   import { coinLandingPages, productName, searchLandingPages } from '$lib/seo';
 
   const features = [
     {
       icon: ShieldCheck,
-      title: 'Browser-local generation',
-      body: 'Addresses, amounts, logos, and presets are processed in the client. There is no account or server-side address vault.'
+      title: '100% Client-Side Processing',
+      body: 'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.'
     },
     {
-      icon: WalletCards,
-      title: 'Monero first-class',
-      body: 'XMR sits beside BTC, ETH, and SOL in validation, QR payloads, saved addresses, market modules, and product copy.'
+      icon: DatabaseZap,
+      title: 'Zero Data Collection',
+      body: 'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.'
     },
     {
-      icon: Brush,
-      title: 'Scan-safe customization',
-      body: 'Use embedded crypto logos, dot styles, palettes, and custom logos while preserving quiet zones and contrast warnings.'
+      icon: WifiOff,
+      title: 'Works Completely Offline',
+      body: 'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.'
     }
   ];
 </script>
@@ -32,9 +32,17 @@
         Crypto QR Code Generator
       </h1>
       <p class="mt-5 text-lg leading-8 text-on-surface-variant">
-        {productName} generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20
-        stablecoins like USDC and USDT. Customize logos, colors, dot styles, and saved presets without sending
-        addresses or uploaded logos to a server.
+        Your data never leaves your browser. {productName} generates scannable payment QR codes for Monero, Bitcoin,
+        Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses,
+        uploaded logos, or saved presets to a server.
+      </p>
+      <div class="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+        <ShieldCheck size={16} />
+        <span>Your data never leaves your browser</span>
+      </div>
+      <p class="mt-4 flex items-center gap-2 text-sm text-on-surface-variant">
+        <Heart size={16} class="text-error" />
+        <span>Made with love for privacy and zero data collection.</span>
       </p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a class="btn-primary" href="/generate">Open generator <ArrowRight size={18} /></a>

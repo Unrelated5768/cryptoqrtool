@@ -57,6 +57,15 @@ describe('AppShell', () => {
     expect(screen.getAllByRole('link', { name: /security/i }).some((link) => link.getAttribute('href') === '/security')).toBe(true);
   });
 
+  it('shows the footer privacy badge and tagline', () => {
+    render(AppShell);
+
+    expect(screen.getByText('Your data never leaves your browser')).toBeInTheDocument();
+    expect(screen.getByText(/zero data collection/i)).toBeInTheDocument();
+    expect(screen.getByText('Made with')).toBeInTheDocument();
+    expect(screen.getByText('for privacy.')).toBeInTheDocument();
+  });
+
   it('closes the more menu after a navigation link is clicked', async () => {
     const { container } = render(AppShell);
     const desktopMoreMenu = container.querySelector('nav[aria-label="Primary navigation"] details') as HTMLDetailsElement;
