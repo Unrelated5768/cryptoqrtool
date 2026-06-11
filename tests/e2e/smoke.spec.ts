@@ -103,6 +103,8 @@ test.beforeEach(async ({ page }) => {
 test('generates and copies a payment QR payload', async ({ page }) => {
   await page.goto('/generate');
 
+  await expect(page.locator('script[src*="umami"], script[src*="analytics.cryptoqrtool.com"]')).toHaveCount(0);
+
   await page.getByTestId('network-select').selectOption('bitcoin');
   await page.getByTestId('address-input').fill(bitcoinAddress);
   await page.getByTestId('amount-input').fill('0.1');
