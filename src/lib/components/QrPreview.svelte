@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { Download, Share2 } from 'lucide-svelte';
+  import { trackEvent, type AnalyticsProperties } from '$lib/analytics';
   import type { QrStyle } from '$lib/qrStyle';
   import { getContrastWarning, logoDataUrl } from '$lib/qrStyle';
   import { productName } from '$lib/seo';
@@ -8,6 +9,7 @@
   export let payload = '';
   export let style: QrStyle;
   export let customLogoDataUrl: string | undefined = undefined;
+  export let analyticsContext: AnalyticsProperties = {};
 
   let host: HTMLDivElement;
   let qr: import('qr-code-styling').default | undefined;
@@ -76,6 +78,7 @@
   async function download(extension: 'png' | 'svg') {
     await renderQr();
     await qr?.download({ name: `crypto-qr-${Date.now()}`, extension });
+    trackEvent('qr_downloaded', { ...analyticsContext, format: extension });
   }
 
   async function copyPayload() {
@@ -83,11 +86,13 @@
     await navigator.clipboard.writeText(payload);
     copied = true;
     setTimeout(() => (copied = false), 1600);
+    trackEvent('qr_payload_copied', analyticsContext);
   }
 
   async function sharePayload() {
     if (!navigator.share || !payload) return;
     await navigator.share({ title: `${productName} QR payload`, text: payload });
+    trackEvent('qr_payload_shared', analyticsContext);
   }
 </script>
 

@@ -10,6 +10,10 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
   bun install --frozen-lockfile
 
 FROM deps AS build
+ARG APP_VERSION
+ARG APP_COMMIT
+ENV APP_VERSION=${APP_VERSION}
+ENV APP_COMMIT=${APP_COMMIT}
 WORKDIR /app
 COPY . .
 RUN bun run check

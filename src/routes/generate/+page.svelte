@@ -6,6 +6,7 @@
   import QrPreview from '$components/QrPreview.svelte';
   import StatusBadge from '$components/StatusBadge.svelte';
   import StyleEditor from '$components/StyleEditor.svelte';
+  import { trackEvent } from '$lib/analytics';
   import { defaultCurrency, type FiatCurrency } from '$lib/currency';
   import { productName } from '$lib/seo';
   import {
@@ -38,6 +39,7 @@
   let loadedMarketCurrency = '';
   let style: QrStyle = { ...defaultQrStyle, logo: 'xmr' };
   let customLogoDataUrl: string | undefined;
+  let lastTrackedPayload = '';
 
   $: selectedMarketId = getMarketSelectionId(network);
   $: selectedMarketAsset = selectedMarketId
@@ -98,6 +100,20 @@
     (asset) => !networks.some((option) => option.coingeckoId === asset.id || option.ticker === asset.symbol)
   );
   $: fiatEstimate = estimateFiat(amount, price, $defaultCurrency);
+  $: analyticsContext = {
+    mode,
+    network: selectedMarketId ? 'market' : effectiveNetwork,
+    ticker: selectedTicker,
+    has_amount: mode === 'guided' && Boolean(amount.trim()),
+    custom_logo: Boolean(customLogoDataUrl),
+    color_mode: style.colorMode
+  };
+  $: if (browser && payload && payload !== lastTrackedPayload) {
+    lastTrackedPayload = payload;
+    trackEvent('qr_generated', analyticsContext);
+  } else if (browser && !payload && lastTrackedPayload) {
+    lastTrackedPayload = '';
+  }
 
   onMount(async () => {
     const params = $page.url.searchParams;
@@ -177,12 +193,19 @@
       network: effectiveNetwork,
       address: address.trim()
     });
+    trackEvent('address_saved', { network: effectiveNetwork, ticker: selectedTicker });
     savedMessage = 'Saved locally in this browser.';
     setTimeout(() => (savedMessage = ''), 1800);
   }
 
   function persistStylePreset() {
     saveStylePreset(presetName.trim() || style.presetName || 'Custom QR style', style, customLogoDataUrl);
+    trackEvent('style_preset_saved', {
+      logo: style.logo,
+      dots: style.dots,
+      color_mode: style.colorMode,
+      custom_logo: Boolean(customLogoDataUrl)
+    });
     savedMessage = 'Style preset saved locally in this browser.';
     setTimeout(() => (savedMessage = ''), 1800);
   }
@@ -219,7 +242,10 @@
               class={`rounded-md px-4 py-2 text-sm font-semibold transition ${
                 mode === 'guided' ? 'bg-primary-action text-white' : 'text-on-surface-variant hover:text-on-surface'
               }`}
-              on:click={() => (mode = 'guided')}
+              on:click={() => {
+                mode = 'guided';
+                trackEvent('generator_mode_selected', { mode });
+              }}
             >
               Guided
             </button>
@@ -228,7 +254,10 @@
               class={`rounded-md px-4 py-2 text-sm font-semibold transition ${
                 mode === 'custom' ? 'bg-primary-action text-white' : 'text-on-surface-variant hover:text-on-surface'
               }`}
-              on:click={() => (mode = 'custom')}
+              on:click={() => {
+                mode = 'custom';
+                trackEvent('generator_mode_selected', { mode });
+              }}
             >
               Custom payload
             </button>
@@ -237,7 +266,16 @@
           {#if mode === 'guided'}
             <div>
               <label class="label mb-2 block" for="network">Network</label>
-              <select id="network" class="field" bind:value={network}>
+              <select
+                id="network"
+                class="field"
+                bind:value={network}
+                on:change={() =>
+                  trackEvent('network_selected', {
+                    network: selectedMarketId ? 'market' : network,
+                    ticker: selectedTicker
+                  })}
+              >
                 <option value="automatic">Automatic from address</option>
                 <optgroup label="Supported payment networks">
                   {#each networks as option}
@@ -352,6 +390,6 @@
       </section>
     </div>
 
-    <QrPreview {payload} {style} {customLogoDataUrl} />
+    <QrPreview {payload} {style} {customLogoDataUrl} {analyticsContext} />
   </div>
 </main>

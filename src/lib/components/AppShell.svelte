@@ -1,6 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { Landmark, LockKeyhole, QrCode, Save, ShieldCheck, TrendingUp, WalletCards, Zap } from 'lucide-svelte';
+  import { trackEvent } from '$lib/analytics';
+  import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
   import { coinLandingPages, productName } from '$lib/seo';
 
@@ -46,7 +48,10 @@
         class="h-10 rounded-lg border border-outline-variant bg-surface-low px-2 text-sm font-semibold text-on-surface outline-none transition focus:border-primary"
         title="Default currency"
         bind:value={$defaultCurrency}
-        on:change={(event) => setDefaultCurrency(event.currentTarget.value)}
+        on:change={(event) => {
+          setDefaultCurrency(event.currentTarget.value);
+          trackEvent('currency_selected', { currency: event.currentTarget.value });
+        }}
       >
         {#each fiatCurrencies as option}
           <option value={option.code}>{option.label}</option>
@@ -84,9 +89,12 @@
         {/each}
       </div>
     </div>
-    <div class="flex items-center gap-2 text-primary">
-      <WalletCards size={16} />
-      <span>No accounts. No wallet connection.</span>
+    <div class="flex flex-col gap-2 md:items-end">
+      <div class="flex items-center gap-2 text-primary">
+        <WalletCards size={16} />
+        <span>No accounts. No wallet connection.</span>
+      </div>
+      <p class="text-xs text-on-surface-variant/70">Version {buildVersion}</p>
     </div>
   </div>
 </footer>
