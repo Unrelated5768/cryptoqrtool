@@ -16,6 +16,11 @@ const appCommit = process.env.APP_COMMIT?.trim() || gitCommit();
 
 export default {
   plugins: [sveltekit()],
+  resolve: process.env.VITEST
+    ? {
+        conditions: ['browser']
+      }
+    : undefined,
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
     __APP_COMMIT__: JSON.stringify(appCommit)

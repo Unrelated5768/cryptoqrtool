@@ -293,6 +293,7 @@
               <label class="label mb-2 block" for="network">Network</label>
               <select
                 id="network"
+                data-testid="network-select"
                 class="field"
                 bind:value={network}
                 on:change={(event) => trackNetworkSelection(event.currentTarget.value as NetworkSelection)}
@@ -324,13 +325,14 @@
               <div class="flex gap-2">
                 <textarea
                   id="address"
+                  data-testid="address-input"
                   class="field mono min-h-28"
                   placeholder={selectedPlaceholder}
                   bind:value={address}
                 ></textarea>
                 <div class="flex flex-col gap-2">
                   <button class="icon-button" type="button" title="Paste address" on:click={pasteAddress}><Clipboard size={18} /></button>
-                  <button class="icon-button" type="button" title="Copy address" on:click={copyAddress}><Copy size={18} /></button>
+                  <button class="icon-button" type="button" title="Copy address" data-testid="copy-address" on:click={copyAddress}><Copy size={18} /></button>
                 </div>
               </div>
               {#if copied}
@@ -341,11 +343,11 @@
             <div class="grid gap-4 md:grid-cols-2">
               <div>
                 <label class="label mb-2 block" for="amount">Optional amount</label>
-                <input id="amount" class="field" inputmode="decimal" placeholder="0.00" bind:value={amount} />
+                <input id="amount" data-testid="amount-input" class="field" inputmode="decimal" placeholder="0.00" bind:value={amount} />
               </div>
               <div>
                 <label class="label mb-2 block" for="label">Local save label</label>
-                <input id="label" class="field" placeholder={`${selectedTicker} treasury`} bind:value={label} />
+                <input id="label" data-testid="label-input" class="field" placeholder={`${selectedTicker} treasury`} bind:value={label} />
               </div>
             </div>
             {#if selectedMarketId}
@@ -360,7 +362,7 @@
                 <p class="text-sm text-on-surface-variant">Fiat estimate</p>
                 <p class="text-lg font-semibold text-on-surface">{fiatEstimate}</p>
               </div>
-              <button class="btn-primary" type="button" on:click={persistAddress} disabled={!canSaveAddress}>
+              <button class="btn-primary" data-testid="save-address" type="button" on:click={persistAddress} disabled={!canSaveAddress}>
                 <Save size={16} />
                 Save address
               </button>
@@ -405,8 +407,8 @@
           Custom logos are stored as browser-local data URLs only when you save a style preset.
         </p>
         <div class="mt-4 flex flex-col gap-3 sm:flex-row">
-          <input class="field" placeholder="Preset name" bind:value={presetName} />
-          <button class="btn-primary sm:w-52" type="button" on:click={persistStylePreset}>Save preset</button>
+          <input class="field" data-testid="preset-name-input" placeholder="Preset name" bind:value={presetName} />
+          <button class="btn-primary sm:w-52" data-testid="save-preset" type="button" on:click={persistStylePreset}>Save preset</button>
         </div>
       </section>
     </div>

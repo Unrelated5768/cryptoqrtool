@@ -9,6 +9,11 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
+    "test:unit": "vitest run src/lib/liveData.test.ts src/lib/networks.test.ts src/lib/qrStyle.test.ts src/lib/storage.test.ts",
+    "test:component": "vitest run src/lib/components/QrPreview.test.svelte.ts src/lib/components/StyleEditor.test.svelte.ts",
+    "test:e2e:smoke": "playwright test",
+    "test:ci": "bun run check && bun run test && bun run build && bun run test:e2e:smoke",
+    "test:release": "bun run test:ci && lhci autorun",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -26,6 +31,8 @@
     "@tailwindcss/forms": "^0.5.9",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/svelte": "^5.2.4",
+    "@playwright/test": "^1.54.0",
+    "@lhci/cli": "^0.14.0",
     "@types/node": "^22.10.2",
     "autoprefixer": "^10.4.20",
     "jsdom": "^25.0.1",

@@ -62,6 +62,7 @@
         {#each builtInPresets as preset}
           <button
             type="button"
+            data-testid="built-in-preset"
             class="rounded-lg border border-outline-variant bg-surface-high px-3 py-2 text-left text-sm text-on-surface transition hover:border-primary"
             on:click={() => applyStyle(preset.style)}
           >
@@ -73,7 +74,7 @@
 
     <div>
       <label class="label mb-2 block" for="logo">Logo</label>
-      <select id="logo" class="field" bind:value={style.logo} on:change={commitStyle}>
+      <select id="logo" data-testid="logo-select" class="field" bind:value={style.logo} on:change={commitStyle}>
         <option value="none">None</option>
         <option value="xmr">Monero XMR</option>
         <option value="btc">Bitcoin BTC</option>
@@ -89,7 +90,7 @@
     <label class="btn-secondary cursor-pointer">
       <Upload size={16} />
       Upload custom logo
-      <input class="sr-only" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" on:change={handleLogoUpload} />
+      <input data-testid="custom-logo-input" class="sr-only" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" on:change={handleLogoUpload} />
     </label>
     {#if fileWarning}
       <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{fileWarning}</p>
@@ -136,6 +137,7 @@
         <label class="label mb-2 block" for="foreground">Foreground</label>
         <input
           id="foreground"
+          data-testid="foreground-input"
           class="h-12 w-full rounded-lg border border-outline-variant bg-surface-low p-1"
           type="color"
           bind:value={style.foreground}
@@ -159,6 +161,7 @@
         <label class="label mb-2 block" for="background">Background</label>
         <input
           id="background"
+          data-testid="background-input"
           class="h-12 w-full rounded-lg border border-outline-variant bg-surface-low p-1"
           type="color"
           bind:value={style.background}

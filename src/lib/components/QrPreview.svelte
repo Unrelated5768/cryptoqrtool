@@ -103,15 +103,15 @@
       <p class="text-sm text-on-surface-variant">High-contrast output with quiet-zone enforcement.</p>
     </div>
     {#if warning}
-      <span class="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">Scan warning</span>
+      <span data-testid="qr-scan-status" class="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">Scan warning</span>
     {:else}
-      <span class="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold text-success">Scan safe</span>
+      <span data-testid="qr-scan-status" class="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold text-success">Scan safe</span>
     {/if}
   </div>
 
   <div class="rounded-xl bg-white p-5 shadow-glow">
     {#if payload}
-      <div bind:this={host} class="mx-auto flex min-h-[320px] items-center justify-center"></div>
+      <div bind:this={host} data-testid="qr-render-host" class="mx-auto flex min-h-[320px] items-center justify-center"></div>
     {:else}
       <div class="flex min-h-[320px] items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-500">
         Enter a valid address to generate a QR code.
@@ -125,7 +125,7 @@
 
   <div class="mt-4 rounded-lg border border-outline-variant bg-surface-low p-3">
     <p class="label mb-2">Payload</p>
-    <p class="mono break-all text-sm text-on-surface-variant">{payload || 'No payload yet'}</p>
+    <p class="mono break-all text-sm text-on-surface-variant" data-testid="qr-payload">{payload || 'No payload yet'}</p>
   </div>
 
   <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -135,7 +135,7 @@
     <button class="btn-secondary" on:click={() => download('svg')} disabled={!payload}>
       <Download size={16} /> SVG
     </button>
-    <button class="btn-secondary" on:click={copyPayload} disabled={!payload}>{copied ? 'Copied' : 'Copy'}</button>
+    <button class="btn-secondary" data-testid="copy-payload" on:click={copyPayload} disabled={!payload}>{copied ? 'Copied' : 'Copy'}</button>
     <button class="btn-secondary" on:click={sharePayload} disabled={!payload || !browser || !navigator.share}>
       <Share2 size={16} /> Share
     </button>

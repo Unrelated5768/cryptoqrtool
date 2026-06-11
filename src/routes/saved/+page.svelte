@@ -75,7 +75,7 @@
 
       <div class="grid gap-3">
         {#each filteredAddresses as item}
-          <article class="rounded-lg border border-outline-variant bg-surface-low p-4">
+          <article class="rounded-lg border border-outline-variant bg-surface-low p-4" data-testid="saved-address-row">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div class="min-w-0">
                 <p class="font-semibold text-on-surface">{item.label}</p>
@@ -83,7 +83,7 @@
                 <p class="mt-2 text-xs uppercase tracking-[0.12em] text-primary">{item.network}</p>
               </div>
               <div class="flex gap-2">
-                <a class="icon-button" href={`/generate?network=${item.network}&address=${encodeURIComponent(item.address)}`} title="Generate QR">
+                <a class="icon-button" data-testid="generate-saved-address" href={`/generate?network=${item.network}&address=${encodeURIComponent(item.address)}`} title="Generate QR">
                   <QrCode size={17} />
                 </a>
                 <button class="icon-button" on:click={() => copy(item.address)} title="Copy address"><Copy size={17} /></button>
@@ -111,7 +111,7 @@
       <h2 class="mb-5 text-xl font-semibold">Style presets</h2>
       <div class="grid gap-3">
         {#each presets as preset}
-          <article class="rounded-lg border border-outline-variant bg-surface-low p-4">
+          <article class="rounded-lg border border-outline-variant bg-surface-low p-4" data-testid="saved-preset-row">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <p class="font-semibold text-on-surface">{preset.name}</p>
@@ -120,7 +120,7 @@
                 </p>
               </div>
               <div class="flex gap-2">
-                <a class="icon-button" href={`/generate?preset=${preset.id}`} title="Apply preset"><QrCode size={17} /></a>
+                <a class="icon-button" data-testid="apply-saved-preset" href={`/generate?preset=${preset.id}`} title="Apply preset"><QrCode size={17} /></a>
                 <button class="icon-button" on:click={() => renamePreset(preset)} title="Edit preset name"><Pencil size={17} /></button>
                 <button
                   class="icon-button"
