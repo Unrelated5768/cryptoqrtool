@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ArrowRight, Brush, DatabaseZap, QrCode, ShieldCheck, WalletCards } from 'lucide-svelte';
-  import { coinLandingPages, productName } from '$lib/seo';
+  import { coinLandingPages, productName, searchLandingPages } from '$lib/seo';
 
   const features = [
     {
@@ -91,6 +91,17 @@
             href={`/${item.slug}`}
           >
             {item.name} QR Code Generator
+          </a>
+        {/each}
+      </div>
+      <h3 class="mt-8 text-lg font-semibold text-on-surface">Popular crypto QR searches</h3>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {#each searchLandingPages as item}
+          <a
+            class="rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
+            href={`/${item.slug}`}
+          >
+            {item.headline}
           </a>
         {/each}
       </div>

@@ -1,5 +1,5 @@
 import { text } from '@sveltejs/kit';
-import { coinLandingPages, siteUrl } from '$lib/seo';
+import { landingPages, siteUrl } from '$lib/seo';
 
 const routes = [
   '/',
@@ -9,7 +9,7 @@ const routes = [
   '/fees',
   '/exchanges',
   '/security',
-  ...coinLandingPages.map((page) => `/${page.slug}`)
+  ...landingPages.map((page) => `/${page.slug}`)
 ];
 
 export function GET() {

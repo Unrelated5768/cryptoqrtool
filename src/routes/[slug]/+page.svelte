@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ArrowRight, CheckCircle2, Palette, ShieldCheck, WalletCards } from 'lucide-svelte';
-  import { coinGenerateHref, coinLandingPages, type CoinLandingPage } from '$lib/seo';
+  import { coinLandingPages, type CoinLandingPage } from '$lib/seo';
 
   export let data: {
     landingPage: CoinLandingPage;
@@ -8,35 +8,18 @@
 
   $: page = data.landingPage;
   $: relatedPages = coinLandingPages.filter((item) => item.slug !== page.slug).slice(0, 6);
-
-  const benefits = [
-    {
-      icon: WalletCards,
-      title: 'Address and amount QR codes',
-      body: 'Generate wallet-address QR codes and supported payment request payloads from the same focused tool.'
-    },
-    {
-      icon: Palette,
-      title: 'Scan-safe styling',
-      body: 'Tune colors, dot styles, quiet zones, and crypto logos while keeping the QR preview readable.'
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Local by design',
-      body: 'QR payloads, saved addresses, custom logos, and presets stay in browser-local storage.'
-    }
-  ];
+  const benefitIcons = [WalletCards, Palette, ShieldCheck];
 </script>
 
 <main>
   <section class="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 px-5 py-14 md:grid-cols-[1.02fr_0.98fr] md:px-8">
     <div class="max-w-2xl">
-      <p class="label mb-3">{page.ticker} wallet QR tool</p>
+      <p class="label mb-3">{page.eyebrow}</p>
       <h1 class="text-4xl font-bold leading-tight text-on-surface md:text-6xl">{page.headline}</h1>
       <p class="mt-5 text-lg leading-8 text-on-surface-variant">{page.body}</p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a class="btn-primary" href={coinGenerateHref(page.networkId)}>
-          Generate {page.ticker} QR code <ArrowRight size={18} />
+        <a class="btn-primary" href={page.generatorHref}>
+          {page.ctaLabel} <ArrowRight size={18} />
         </a>
         <a class="btn-secondary" href="/security">Privacy model</a>
       </div>
@@ -61,24 +44,24 @@
       </div>
       <div class="mt-5 grid gap-3">
         <div class="flex items-center justify-between rounded-lg border border-outline-variant bg-surface-low px-4 py-3">
-          <span class="mono truncate text-sm text-on-surface-variant">{page.ticker.toLowerCase()}:wallet-address?amount=0.25</span>
+          <span class="mono truncate text-sm text-on-surface-variant">{page.payloadExample}</span>
           <span class="rounded px-2 py-1 text-xs font-bold text-slate-950" style={`background-color: ${page.accent}`}>
-            {page.ticker}
+            {page.ticker ?? 'QR'}
           </span>
         </div>
-        <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold text-on-surface-variant">
-          <span class="rounded bg-surface-high px-2 py-2">Address</span>
-          <span class="rounded bg-surface-high px-2 py-2">Amount</span>
-          <span class="rounded bg-surface-high px-2 py-2">Logo</span>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold text-on-surface-variant sm:grid-cols-4">
+          {#each page.chips as chip}
+            <span class="rounded bg-surface-high px-2 py-2">{chip}</span>
+          {/each}
         </div>
       </div>
     </div>
   </section>
 
   <section class="mx-auto grid max-w-7xl gap-5 px-5 pb-12 md:grid-cols-3 md:px-8">
-    {#each benefits as benefit}
+    {#each page.benefits as benefit, index}
       <article class="surface-panel rounded-card p-6">
-        <benefit.icon class="mb-5 text-primary" size={28} />
+        <svelte:component this={benefitIcons[index % benefitIcons.length]} class="mb-5 text-primary" size={28} />
         <h2 class="text-xl font-semibold text-on-surface">{benefit.title}</h2>
         <p class="mt-3 text-sm leading-6 text-on-surface-variant">{benefit.body}</p>
       </article>
