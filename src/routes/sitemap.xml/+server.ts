@@ -9,6 +9,7 @@ const routes = [
   '/fees',
   '/exchanges',
   '/security',
+  '/api-docs',
   ...landingPages.map((page) => `/${page.slug}`)
 ];
 

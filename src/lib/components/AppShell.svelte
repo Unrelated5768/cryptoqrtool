@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { Landmark, LockKeyhole, QrCode, Save, ShieldCheck, TrendingUp, WalletCards, Zap } from 'lucide-svelte';
+  import { Code2, Landmark, LockKeyhole, QrCode, Save, ShieldCheck, TrendingUp, WalletCards, Zap } from 'lucide-svelte';
   import { trackEvent } from '$lib/analytics';
   import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
@@ -12,6 +12,7 @@
     { href: '/markets', label: 'Markets', icon: TrendingUp },
     { href: '/fees', label: 'Fees', icon: Zap },
     { href: '/exchanges', label: 'Exchanges', icon: Landmark },
+    { href: '/api-docs', label: 'API', icon: Code2 },
     { href: '/security', label: 'Security', icon: ShieldCheck }
   ];
 

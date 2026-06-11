@@ -539,6 +539,11 @@ export function routeMeta(pathname: string) {
     '/security': {
       title: `${productName} Privacy And Security`,
       description: `Learn how ${productName} keeps QR generation, saved addresses, style presets, and custom logos browser-local.`
+    },
+    '/api-docs': {
+      title: `QR Code Generator API | ${productName}`,
+      description:
+        'Generate crypto QR code SVGs through a server-side API with guided network validation, custom payload support, styling, and local catalog logos.'
     }
   };
 

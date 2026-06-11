@@ -120,7 +120,7 @@ test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
 });
 
 test('public routes load on desktop and mobile viewports', async ({ page }) => {
-  for (const path of ['/', '/markets', '/fees', '/exchanges', '/security', '/crypto-qrcode-bitcoin-lightning']) {
+  for (const path of ['/', '/markets', '/fees', '/exchanges', '/api-docs', '/security', '/crypto-qrcode-bitcoin-lightning']) {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
   }
