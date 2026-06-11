@@ -10,7 +10,7 @@
     "sync:crypto-icons": "node scripts/sync-crypto-icons.mjs",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
-    "test:unit": "vitest run src/lib/liveData.test.ts src/lib/networks.test.ts src/lib/qrStyle.test.ts src/lib/storage.test.ts src/lib/server/qrApi.test.ts",
+    "test:unit": "vitest run src/lib/liveData.test.ts src/lib/networks.test.ts src/lib/verification.test.ts src/lib/qrStyle.test.ts src/lib/storage.test.ts src/lib/server/qrApi.test.ts",
     "test:component": "vitest run src/lib/components/QrPreview.test.svelte.ts src/lib/components/StyleEditor.test.svelte.ts",
     "test:e2e:smoke": "playwright test",
     "test:ci": "bun run check && bun run test && bun run build && bun run test:e2e:smoke",

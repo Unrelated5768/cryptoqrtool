@@ -2,7 +2,7 @@
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { Clipboard, Copy, Save } from 'lucide-svelte';
+  import { BadgeCheck, Clipboard, Copy, Save } from 'lucide-svelte';
   import QrPreview from '$components/QrPreview.svelte';
   import StatusBadge from '$components/StatusBadge.svelte';
   import StyleEditor from '$components/StyleEditor.svelte';
@@ -521,6 +521,18 @@
           {/if}
           {#if savedMessage}
             <p class="text-sm text-success">{savedMessage}</p>
+          {/if}
+          {#if payload}
+            <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-outline-variant bg-surface-low p-4">
+              <div>
+                <p class="text-sm font-semibold text-on-surface">Check before sharing</p>
+                <p class="text-sm text-on-surface-variant">Open this generated payload in the verifier.</p>
+              </div>
+              <a class="btn-secondary" href={`/verify?network=${selectedMarketId ? 'automatic' : effectiveNetwork}&q=${encodeURIComponent(payload)}`}>
+                <BadgeCheck size={16} />
+                Verify payload
+              </a>
+            </div>
           {/if}
         </div>
       </section>

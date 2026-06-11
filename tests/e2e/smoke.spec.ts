@@ -73,6 +73,31 @@ test.beforeEach(async ({ page }) => {
       })
     });
   });
+
+  await page.route('**/api/verify**', async (route) => {
+    const requestUrl = new URL(route.request().url());
+    const q = requestUrl.searchParams.get('q') ?? '';
+    const network = requestUrl.searchParams.get('network') ?? 'automatic';
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        state: 'fresh',
+        inputType: q.startsWith('0x') ? 'transaction' : q.startsWith('bitcoin:') ? 'payment-uri' : 'address',
+        network: network === 'automatic' ? 'bitcoin' : network,
+        validation: { status: 'valid', message: 'Valid test payload.' },
+        normalized: q,
+        lookup: {
+          state: 'fresh',
+          source: 'Mock explorer',
+          summary: 'Mock lookup returned current data.',
+          details: { confirmed: true }
+        },
+        explorerLinks: [{ label: 'Mock explorer', href: 'https://example.com/explorer' }],
+        updatedAt: new Date('2026-01-01T00:00:00.000Z').toISOString(),
+        message: 'Valid test payload.'
+      })
+    });
+  });
 });
 
 test('generates and copies a payment QR payload', async ({ page }) => {
@@ -119,8 +144,53 @@ test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
   await expect(page.getByTestId('qr-render-host').locator('svg')).toBeVisible();
 });
 
+test('verifies a Bitcoin address with mocked live lookup', async ({ page }) => {
+  await page.goto('/verify');
+
+  await page.getByTestId('verify-input').fill(bitcoinAddress);
+  await page.getByTestId('verify-submit').click();
+
+  await expect(page.getByTestId('verify-result')).toContainText('Bitcoin');
+  await expect(page.getByTestId('verify-result')).toContainText(bitcoinAddress);
+  await expect(page.getByText('Mock explorer').first()).toBeVisible();
+});
+
+test('verifies an Ethereum transaction hash with mocked live lookup', async ({ page }) => {
+  const txHash = `0x${'a'.repeat(64)}`;
+  await page.goto('/verify');
+  await page.getByTestId('verify-network').selectOption('ethereum');
+  await page.getByTestId('verify-input').fill(txHash);
+  await page.getByTestId('verify-submit').click();
+
+  await expect(page.getByTestId('verify-result')).toContainText('Ethereum');
+  await expect(page.getByTestId('verify-result')).toContainText(txHash);
+  await expect(page.getByText('Mock lookup returned current data.')).toBeVisible();
+});
+
+test('opens generated QR payloads in the verifier', async ({ page }) => {
+  await page.goto('/generate');
+
+  await page.getByTestId('network-select').selectOption('bitcoin');
+  await page.getByTestId('address-input').fill(bitcoinAddress);
+  await page.getByTestId('amount-input').fill('0.1');
+  await page.getByRole('link', { name: /verify payload/i }).click();
+
+  await expect(page).toHaveURL(/\/verify/);
+  await expect(page.getByTestId('verify-input')).toHaveValue(`bitcoin:${bitcoinAddress}?amount=0.1`);
+});
+
 test('public routes load on desktop and mobile viewports', async ({ page }) => {
-  for (const path of ['/', '/markets', '/fees', '/exchanges', '/api-docs', '/security', '/crypto-qrcode-bitcoin-lightning']) {
+  for (const path of [
+    '/',
+    '/markets',
+    '/fees',
+    '/verify',
+    '/exchanges',
+    '/api-docs',
+    '/security',
+    '/crypto-qrcode-bitcoin-lightning',
+    '/bitcoin-address-checker'
+  ]) {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
   }

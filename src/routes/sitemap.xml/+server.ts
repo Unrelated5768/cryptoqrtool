@@ -7,6 +7,7 @@ const routes = [
   '/saved',
   '/markets',
   '/fees',
+  '/verify',
   '/exchanges',
   '/security',
   '/api-docs',

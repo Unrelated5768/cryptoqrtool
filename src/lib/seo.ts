@@ -8,6 +8,7 @@ export type LandingPage = {
   slug: string;
   canonicalSlug?: string;
   networkId?: NetworkId;
+  purpose?: 'generator' | 'checker';
   name: string;
   ticker?: string;
   accent: string;
@@ -41,6 +42,7 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
   const isLightning = network.id === 'lightning';
   return {
     slug: `${network.id}-qr-code-generator`,
+    purpose: 'generator',
     networkId: network.id,
     name,
     ticker: network.ticker,
@@ -116,6 +118,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-monero',
     canonicalSlug: 'crypto-qrcode-monero',
+    purpose: 'generator',
     networkId: 'monero',
     name: 'Monero',
     ticker: 'XMR',
@@ -159,6 +162,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-bitcoin',
     canonicalSlug: 'crypto-qrcode-bitcoin',
+    purpose: 'generator',
     networkId: 'bitcoin',
     name: 'Bitcoin',
     ticker: 'BTC',
@@ -202,6 +206,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-bitcoin-lightning',
     canonicalSlug: 'crypto-qrcode-bitcoin-lightning',
+    purpose: 'generator',
     networkId: 'lightning',
     name: 'Bitcoin Lightning',
     ticker: 'BTC-LN',
@@ -245,6 +250,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-ethereum',
     canonicalSlug: 'crypto-qrcode-ethereum',
+    purpose: 'generator',
     networkId: 'ethereum',
     name: 'Ethereum',
     ticker: 'ETH',
@@ -288,6 +294,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-solana',
     canonicalSlug: 'crypto-qrcode-solana',
+    purpose: 'generator',
     networkId: 'solana',
     name: 'Solana',
     ticker: 'SOL',
@@ -331,6 +338,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-litecoin',
     canonicalSlug: 'crypto-qrcode-litecoin',
+    purpose: 'generator',
     networkId: 'litecoin',
     name: 'Litecoin',
     ticker: 'LTC',
@@ -374,6 +382,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-usdc',
     canonicalSlug: 'crypto-qrcode-usdc',
+    purpose: 'generator',
     networkId: 'usdc',
     name: 'USDC',
     ticker: 'USDC',
@@ -417,6 +426,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-qrcode-usdt',
     canonicalSlug: 'crypto-qrcode-usdt',
+    purpose: 'generator',
     networkId: 'usdt',
     name: 'USDT',
     ticker: 'USDT',
@@ -460,6 +470,7 @@ export const searchLandingPages: LandingPage[] = [
   {
     slug: 'crypto-generate-qrcode',
     canonicalSlug: 'crypto-generate-qrcode',
+    purpose: 'generator',
     name: 'Crypto QR Code',
     accent: genericAccent,
     title: `Crypto Generate QRCode | ${productName}`,
@@ -500,7 +511,111 @@ export const searchLandingPages: LandingPage[] = [
   }
 ];
 
-export const landingPages: LandingPage[] = [...searchLandingPages, ...coinLandingPages];
+const checkerNames: Record<NetworkId, string> = {
+  monero: 'Monero',
+  bitcoin: 'Bitcoin',
+  lightning: 'Bitcoin Lightning',
+  ethereum: 'Ethereum',
+  solana: 'Solana',
+  litecoin: 'Litecoin',
+  usdc: 'USDC',
+  usdt: 'USDT'
+};
+
+function checkerLandingPage(network: (typeof networks)[number], type: 'address' | 'transaction' | 'invoice'): LandingPage {
+  const name = checkerNames[network.id];
+  const isInvoice = type === 'invoice';
+  const isToken = network.id === 'usdc' || network.id === 'usdt';
+  const checkerLabel = isInvoice ? 'Invoice Checker' : type === 'address' ? 'Address Checker' : 'Transaction Checker';
+  const subject = isToken && type === 'address' ? `${name} EVM Recipient` : `${name} ${isInvoice ? 'Invoice' : type === 'address' ? 'Address' : 'Transaction'}`;
+  return {
+    slug: `${network.id}-${isInvoice ? 'invoice' : type}-checker`,
+    purpose: 'checker',
+    networkId: network.id,
+    name,
+    ticker: network.ticker,
+    accent: network.accent,
+    title: `${subject} Checker | ${productName}`,
+    description: isInvoice
+      ? `Validate Bitcoin Lightning BOLT11 invoice QR payloads before scanning or sharing them.`
+      : type === 'address'
+        ? `Check ${subject.toLowerCase()} formats, payment URI payloads, and trusted explorer links before using a crypto QR code.`
+        : `Check ${subject.toLowerCase()} hashes with local validation, trusted explorer links, and best-effort live lookup.`,
+    headline: `${subject} ${checkerLabel}`,
+    eyebrow: isInvoice ? 'BOLT11 invoice validation' : type === 'address' ? `${network.ticker} recipient verification` : `${network.ticker} transaction verification`,
+    body: isInvoice
+      ? `Paste a Bitcoin Lightning invoice to validate its BOLT11 shape before turning it into a QR code or sharing it with a payer.`
+      : isToken
+        ? `Paste a ${name} payment URI, EVM recipient address, or related EVM transaction hash to verify the payload shape and open trusted explorer links.`
+        : `Paste a ${name} ${type === 'address' ? 'address or payment URI' : 'transaction hash'} to check its format and inspect available explorer or live lookup data.`,
+    ctaLabel: `Open ${checkerLabel.toLowerCase()}`,
+    generatorHref: `/verify?network=${network.id}`,
+    payloadExample:
+      network.id === 'monero'
+        ? type === 'transaction'
+          ? 'b6f6991d...64 hex chars'
+          : 'monero:84Pq...?tx_amount=1.25'
+        : network.id === 'bitcoin'
+          ? type === 'transaction'
+            ? '4d3c2b1a...64 hex chars'
+            : 'bitcoin:bc1q...?amount=0.015'
+          : network.id === 'lightning'
+            ? 'lnbc2500u1p...'
+            : network.id === 'ethereum'
+              ? type === 'transaction'
+                ? '0x5e2b...64 hex chars'
+                : 'ethereum:0x742d...?value=0.25'
+              : network.id === 'solana'
+                ? type === 'transaction'
+                  ? '5J7s...base58 signature'
+                  : 'solana:7XSY...?amount=2.5'
+                : network.id === 'litecoin'
+                  ? type === 'transaction'
+                    ? '9f8e7d...64 hex chars'
+                    : 'litecoin:ltc1...?amount=1.5'
+                  : network.id === 'usdc'
+                    ? 'ethereum:USDC transfer to 0x742d...'
+                    : 'ethereum:USDT transfer to 0x742d...',
+    chips: isInvoice
+      ? ['Lightning', 'BOLT11', 'Invoice']
+      : type === 'address'
+        ? ['Address', 'Payment URI', 'Explorer']
+        : ['Transaction', 'Hash', 'Live lookup'],
+    benefits: [
+      {
+        title: 'Local format checks',
+        body: isInvoice
+          ? 'Validate the invoice prefix, length, and BOLT11-style character set before encoding or scanning it.'
+          : 'Identify supported address, transaction, and payment URI formats before opening a blockchain explorer.'
+      },
+      {
+        title: 'Trusted explorer links',
+        body: 'Open the matching public explorer for supported networks without guessing the correct URL pattern.'
+      },
+      {
+        title: 'No wallet connection',
+        body: 'The checker never asks for seed phrases, private keys, wallet login, or signing permissions.'
+      }
+    ],
+    faq: [
+      {
+        question: `Can I verify a ${subject.toLowerCase()} without connecting a wallet?`,
+        answer: `Yes. ${productName} checks public payload text and does not require a wallet connection.`
+      },
+      {
+        question: 'Should I paste my seed phrase into a crypto checker?',
+        answer: 'No. Only paste public addresses, transaction hashes, invoices, or payment URIs. Never paste seed phrases or private keys.'
+      }
+    ]
+  };
+}
+
+export const checkerLandingPages: LandingPage[] = networks.flatMap((network) => {
+  if (network.id === 'lightning') return [checkerLandingPage(network, 'invoice')];
+  return [checkerLandingPage(network, 'address'), checkerLandingPage(network, 'transaction')];
+});
+
+export const landingPages: LandingPage[] = [...searchLandingPages, ...coinLandingPages, ...checkerLandingPages];
 
 export type CoinLandingPage = LandingPage;
 
@@ -531,6 +646,11 @@ export function routeMeta(pathname: string) {
     '/fees': {
       title: `Network Fee Comparison | ${productName}`,
       description: 'Compare live and configured fee estimates for Bitcoin, Ethereum, Solana, and Monero availability.'
+    },
+    '/verify': {
+      title: `Crypto Address And Transaction Checker | ${productName}`,
+      description:
+        'Verify crypto addresses, transaction hashes, Lightning invoices, and payment URI QR payloads with local validation, trusted explorer links, and best-effort live lookup.'
     },
     '/exchanges': {
       title: `Crypto Exchange Directory | ${productName}`,

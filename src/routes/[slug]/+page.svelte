@@ -8,6 +8,7 @@
 
   $: page = data.landingPage;
   $: relatedPages = coinLandingPages.filter((item) => item.slug !== page.slug).slice(0, 6);
+  $: isCheckerPage = page.purpose === 'checker';
   const benefitIcons = [WalletCards, Palette, ShieldCheck];
 </script>
 
@@ -21,7 +22,7 @@
         <a class="btn-primary" href={page.generatorHref}>
           {page.ctaLabel} <ArrowRight size={18} />
         </a>
-        <a class="btn-secondary" href="/security">Privacy model</a>
+        <a class="btn-secondary" href={isCheckerPage ? '/generate' : '/security'}>{isCheckerPage ? 'Open generator' : 'Privacy model'}</a>
       </div>
     </div>
 
@@ -72,8 +73,10 @@
     <div class="surface-panel rounded-card p-6">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 class="text-2xl font-semibold text-on-surface">More crypto QR generators</h2>
-          <p class="mt-2 text-sm text-on-surface-variant">Create dedicated payment QR codes for other supported networks.</p>
+          <h2 class="text-2xl font-semibold text-on-surface">{isCheckerPage ? 'Related QR generators' : 'More crypto QR generators'}</h2>
+          <p class="mt-2 text-sm text-on-surface-variant">
+            {isCheckerPage ? 'Create scan-ready QR codes after checking public payload text.' : 'Create dedicated payment QR codes for other supported networks.'}
+          </p>
         </div>
         <a class="btn-secondary" href="/generate">Open all networks</a>
       </div>

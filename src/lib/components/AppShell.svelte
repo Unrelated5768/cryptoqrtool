@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { Code2, Landmark, LockKeyhole, QrCode, Save, ShieldCheck, TrendingUp, WalletCards, Zap } from 'lucide-svelte';
+  import { BadgeCheck, Code2, Landmark, LockKeyhole, QrCode, Save, ShieldCheck, TrendingUp, WalletCards, Zap } from 'lucide-svelte';
   import { trackEvent } from '$lib/analytics';
   import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
@@ -8,6 +8,7 @@
 
   const nav = [
     { href: '/generate', label: 'Generator', icon: QrCode },
+    { href: '/verify', label: 'Verify', icon: BadgeCheck },
     { href: '/saved', label: 'Saved', icon: Save },
     { href: '/markets', label: 'Markets', icon: TrendingUp },
     { href: '/fees', label: 'Fees', icon: Zap },
