@@ -25,6 +25,7 @@
   ];
 
   $: pathname = $page.url.pathname;
+  $: selectedCurrency = fiatCurrencies.find((option) => option.code === $defaultCurrency) ?? fiatCurrencies[0];
 
   let updateAvailable = false;
   let updateDismissed = false;
@@ -100,20 +101,29 @@
     </nav>
     <div class="flex items-center gap-2">
       <label class="sr-only" for="default-currency">Default currency</label>
-      <select
-        id="default-currency"
-        class="h-10 rounded-lg border border-outline-variant bg-surface-low px-2 text-sm font-semibold text-on-surface outline-none transition focus:border-primary"
+      <div
+        class="relative inline-flex h-10 min-w-24 items-center gap-2 rounded-lg border border-outline-variant bg-surface-high px-2.5 text-sm font-semibold text-on-surface transition hover:border-primary/60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/25"
         title="Default currency"
-        bind:value={$defaultCurrency}
-        on:change={(event) => {
-          setDefaultCurrency(event.currentTarget.value);
-          trackEvent('currency_selected', { currency: event.currentTarget.value });
-        }}
       >
-        {#each fiatCurrencies as option}
-          <option value={option.code}>{option.label}</option>
-        {/each}
-      </select>
+        <span class="flex h-6 min-w-6 items-center justify-center rounded-md bg-surface-container px-1.5 text-xs text-primary" aria-hidden="true">
+          {selectedCurrency.symbol}
+        </span>
+        <span class="min-w-8 text-center" aria-hidden="true">{selectedCurrency.code}</span>
+        <ChevronDown size={14} class="text-on-surface-variant" aria-hidden="true" />
+        <select
+          id="default-currency"
+          class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          bind:value={$defaultCurrency}
+          on:change={(event) => {
+            setDefaultCurrency(event.currentTarget.value);
+            trackEvent('currency_selected', { currency: event.currentTarget.value });
+          }}
+        >
+          {#each fiatCurrencies as option}
+            <option value={option.code}>{option.symbol} {option.label}</option>
+          {/each}
+        </select>
+      </div>
       <a href="/security" class="icon-button" title="Local-only privacy model" aria-label="Local-only privacy model">
         <LockKeyhole size={18} />
       </a>

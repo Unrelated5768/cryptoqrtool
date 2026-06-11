@@ -1,11 +1,11 @@
 export const fiatCurrencies = [
-  { code: 'USD', label: 'USD' },
-  { code: 'EUR', label: 'EUR' },
-  { code: 'CAD', label: 'CAD' },
-  { code: 'GBP', label: 'GBP' },
-  { code: 'AUD', label: 'AUD' },
-  { code: 'JPY', label: 'JPY' },
-  { code: 'CHF', label: 'CHF' }
+  { code: 'USD', label: 'USD', symbol: '$' },
+  { code: 'EUR', label: 'EUR', symbol: '€' },
+  { code: 'CAD', label: 'CAD', symbol: 'C$' },
+  { code: 'GBP', label: 'GBP', symbol: '£' },
+  { code: 'AUD', label: 'AUD', symbol: 'A$' },
+  { code: 'JPY', label: 'JPY', symbol: '¥' },
+  { code: 'CHF', label: 'CHF', symbol: 'Fr' }
 ] as const;
 
 export type FiatCurrency = (typeof fiatCurrencies)[number]['code'];
