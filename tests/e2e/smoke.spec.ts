@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const bitcoinAddress = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080';
+const lightningInvoice = 'lnbc2500u1p3xnhl2pp5qqqsyqcyq5rqwzqfka';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/markets**', async (route) => {
@@ -105,8 +106,21 @@ test('persists saved addresses locally and opens them from the saved page', asyn
   await expect(page.getByTestId('qr-payload')).toContainText(bitcoinAddress);
 });
 
+test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
+  await page.goto('/crypto-qrcode-bitcoin-lightning');
+  await expect(page.locator('h1')).toContainText('Bitcoin Lightning');
+
+  await page.getByRole('link', { name: /generate lightning qr code/i }).click();
+  await page.getByTestId('address-input').fill(lightningInvoice);
+
+  await expect(page.getByLabel('Lightning invoice')).toBeVisible();
+  await expect(page.getByTestId('amount-input')).toHaveCount(0);
+  await expect(page.getByTestId('qr-payload')).toContainText(lightningInvoice);
+  await expect(page.getByTestId('qr-render-host').locator('svg')).toBeVisible();
+});
+
 test('public routes load on desktop and mobile viewports', async ({ page }) => {
-  for (const path of ['/', '/markets', '/fees', '/exchanges', '/security']) {
+  for (const path of ['/', '/markets', '/fees', '/exchanges', '/security', '/crypto-qrcode-bitcoin-lightning']) {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
   }

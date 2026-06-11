@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { buildQrPayload, decimalToUnits, detectNetwork, validateAddress, validateMoneroAddress } from './networks';
+import {
+  buildQrPayload,
+  decimalToUnits,
+  detectNetwork,
+  validateAddress,
+  validateLightningInvoice,
+  validateMoneroAddress
+} from './networks';
 
 const fill = (prefix: string, length: number) => prefix + 'A'.repeat(length - prefix.length);
+const lightningInvoice = 'lnbc2500u1p3xnhl2pp5qqqsyqcyq5rqwzqfka';
 
 describe('network address validation', () => {
   it('accepts Monero standard, subaddress, and integrated address shapes', () => {
@@ -15,13 +23,19 @@ describe('network address validation', () => {
     expect(validateMoneroAddress(fill('0', 95)).status).toBe('invalid');
   });
 
-  it('validates Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 recipient addresses', () => {
+  it('validates Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, and ERC-20 recipient addresses', () => {
     expect(validateAddress('bitcoin', 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080').status).toBe('valid');
+    expect(validateAddress('lightning', lightningInvoice).status).toBe('valid');
     expect(validateAddress('ethereum', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e').status).toBe('valid');
     expect(validateAddress('solana', '7XSYgFFZPM91GtMWygbH6g2hQF3Y7doYxWKTpXhGZ4kD').status).toBe('valid');
     expect(validateAddress('litecoin', 'ltc1qg8jccf2k56l5r6gr5d9g0nv5ar09l6029l4z2l').status).toBe('valid');
     expect(validateAddress('usdc', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e').status).toBe('valid');
     expect(validateAddress('usdt', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e').status).toBe('valid');
+  });
+
+  it('rejects invalid Bitcoin Lightning invoices', () => {
+    expect(validateLightningInvoice('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080').status).toBe('invalid');
+    expect(validateLightningInvoice('lnurl1dp68gurn8ghj7mrww4exctnvdakz7').status).toBe('invalid');
   });
 });
 
@@ -33,6 +47,7 @@ describe('QR payload builders', () => {
   it('builds network payment URIs with amounts', () => {
     expect(buildQrPayload('monero', '84PqAddress', '1.23')).toBe('monero:84PqAddress?tx_amount=1.23');
     expect(buildQrPayload('bitcoin', 'bc1qaddress', '0.5')).toBe('bitcoin:bc1qaddress?amount=0.5');
+    expect(buildQrPayload('lightning', lightningInvoice, '0.5')).toBe(lightningInvoice);
     expect(buildQrPayload('ethereum', '0xabc', '2')).toBe('ethereum:0xabc?value=2');
     expect(buildQrPayload('solana', 'SolAddress', '3')).toBe('solana:SolAddress?amount=3');
     expect(buildQrPayload('litecoin', 'ltc1address', '4')).toBe('litecoin:ltc1address?amount=4');
@@ -52,6 +67,7 @@ describe('QR payload builders', () => {
 describe('automatic network detection', () => {
   it('detects supported networks from address shape', () => {
     expect(detectNetwork(fill('4', 95))).toBe('monero');
+    expect(detectNetwork(lightningInvoice)).toBe('lightning');
     expect(detectNetwork('0x742d35Cc6634C0532925a3b844Bc454e4438f44e')).toBe('ethereum');
     expect(detectNetwork('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080')).toBe('bitcoin');
     expect(detectNetwork('ltc1qg8jccf2k56l5r6gr5d9g0nv5ar09l6029l4z2l')).toBe('litecoin');

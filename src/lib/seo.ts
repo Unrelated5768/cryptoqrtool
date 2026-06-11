@@ -38,6 +38,7 @@ function networkDisplayName(network: (typeof networks)[number]) {
 
 function networkLandingPage(network: (typeof networks)[number]): LandingPage {
   const name = networkDisplayName(network);
+  const isLightning = network.id === 'lightning';
   return {
     slug: `${network.id}-qr-code-generator`,
     networkId: network.id,
@@ -45,10 +46,14 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
     ticker: network.ticker,
     accent: network.accent,
     title: `${name} QR Code Generator | ${productName}`,
-    description: `Generate ${name} (${network.ticker}) wallet address and payment QR codes in your browser with local-only address handling, scan-safe styling, and no account required.`,
+    description: isLightning
+      ? `Generate Bitcoin Lightning BOLT11 invoice QR codes in your browser with local-only invoice handling, scan-safe styling, and no account required.`
+      : `Generate ${name} (${network.ticker}) wallet address and payment QR codes in your browser with local-only address handling, scan-safe styling, and no account required.`,
     headline: `${name} QR Code Generator`,
-    eyebrow: `${network.ticker} wallet QR tool`,
-    body: `Create a scannable ${name} QR code for wallet addresses and payment requests. ${productName} keeps QR generation, style presets, and saved addresses in your browser.`,
+    eyebrow: isLightning ? 'BTC Lightning invoice QR tool' : `${network.ticker} wallet QR tool`,
+    body: isLightning
+      ? `Create scannable Bitcoin Lightning QR codes from BOLT11 invoices. ${productName} keeps invoice rendering, QR styling, and saved presets in your browser.`
+      : `Create a scannable ${name} QR code for wallet addresses and payment requests. ${productName} keeps QR generation, style presets, and saved addresses in your browser.`,
     ctaLabel: `Generate ${network.ticker} QR code`,
     generatorHref: coinGenerateHref(network.id),
     payloadExample:
@@ -56,20 +61,24 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
         ? 'monero:84Pq...tx_amount=1.25'
         : network.id === 'bitcoin'
           ? 'bitcoin:bc1q...?amount=0.015'
-          : network.id === 'ethereum'
-            ? 'ethereum:0x742d...?value=0.25'
-            : network.id === 'solana'
-              ? 'solana:7XSY...?amount=2.5'
-              : network.id === 'litecoin'
-                ? 'litecoin:ltc1...?amount=1.5'
-                : network.id === 'usdc'
-                  ? 'ethereum:USDC/transfer?address=0x742d...'
-                  : 'ethereum:USDT/transfer?address=0x742d...',
-    chips: ['Address', 'Amount', 'Logo'],
+          : network.id === 'lightning'
+            ? 'lnbc2500u1p...'
+            : network.id === 'ethereum'
+              ? 'ethereum:0x742d...?value=0.25'
+              : network.id === 'solana'
+                ? 'solana:7XSY...?amount=2.5'
+                : network.id === 'litecoin'
+                  ? 'litecoin:ltc1...?amount=1.5'
+                  : network.id === 'usdc'
+                    ? 'ethereum:USDC/transfer?address=0x742d...'
+                    : 'ethereum:USDT/transfer?address=0x742d...',
+    chips: isLightning ? ['Lightning', 'BOLT11', 'Invoice'] : ['Address', 'Amount', 'Logo'],
     benefits: [
       {
-        title: 'Address and amount QR codes',
-        body: `Generate ${network.ticker} address QR codes and supported payment request payloads from the same focused tool.`
+        title: isLightning ? 'BOLT11 invoice QR codes' : 'Address and amount QR codes',
+        body: isLightning
+          ? 'Paste a Bitcoin Lightning invoice and generate a QR payload that compatible wallets can scan directly.'
+          : `Generate ${network.ticker} address QR codes and supported payment request payloads from the same focused tool.`
       },
       {
         title: 'Scan-safe styling',
@@ -77,7 +86,9 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
       },
       {
         title: 'Local by design',
-        body: 'QR payloads, saved addresses, custom logos, and presets stay in browser-local storage.'
+        body: isLightning
+          ? 'Invoice payloads, custom logos, and QR style presets stay in browser-local storage.'
+          : 'QR payloads, saved addresses, custom logos, and presets stay in browser-local storage.'
       }
     ],
     faq: [
@@ -86,8 +97,12 @@ function networkLandingPage(network: (typeof networks)[number]): LandingPage {
         answer: `Yes. ${productName} generates ${network.ticker} QR codes in the browser without requiring an account or wallet connection.`
       },
       {
-        question: `Does ${productName} store ${name} wallet addresses?`,
-        answer: 'Saved addresses and QR style presets stay in browser local storage and are not synced server-side.'
+        question: isLightning
+          ? `Does ${productName} store Bitcoin Lightning invoices?`
+          : `Does ${productName} store ${name} wallet addresses?`,
+        answer: isLightning
+          ? 'Lightning invoices and QR style presets stay in browser local storage and are not synced server-side.'
+          : 'Saved addresses and QR style presets stay in browser local storage and are not synced server-side.'
       }
     ]
   };
@@ -181,6 +196,49 @@ export const searchLandingPages: LandingPage[] = [
       {
         question: 'Are Bitcoin addresses uploaded to the server?',
         answer: 'No. QR generation and saved address presets are handled in browser-local state.'
+      }
+    ]
+  },
+  {
+    slug: 'crypto-qrcode-bitcoin-lightning',
+    canonicalSlug: 'crypto-qrcode-bitcoin-lightning',
+    networkId: 'lightning',
+    name: 'Bitcoin Lightning',
+    ticker: 'BTC-LN',
+    accent: '#facc15',
+    title: `Bitcoin Lightning QR Code Generator | ${productName}`,
+    description:
+      'Generate Bitcoin Lightning QR codes from BOLT11 invoices with local invoice handling, scan-safe styling, and no wallet connection required.',
+    headline: 'Bitcoin Lightning QR Code Generator',
+    eyebrow: 'BTC Lightning invoice QR codes',
+    body:
+      'Turn a Bitcoin Lightning BOLT11 invoice into a scan-ready QR code. Paste the invoice from your wallet, preview the QR locally, tune the style, and export a code that Lightning wallets can scan.',
+    ctaLabel: 'Generate Lightning QR code',
+    generatorHref: coinGenerateHref('lightning'),
+    payloadExample: 'lnbc2500u1p...',
+    chips: ['Lightning', 'BOLT11', 'Invoice', 'BTC'],
+    benefits: [
+      {
+        title: 'Invoice-first workflow',
+        body: 'Lightning payments use BOLT11 invoices, so the QR encodes the invoice directly instead of a reusable BTC address.'
+      },
+      {
+        title: 'Wallet scanner friendly',
+        body: 'Keep the QR high-contrast with quiet-zone defaults designed for fast scanning in mobile Lightning wallets.'
+      },
+      {
+        title: 'Local invoice handling',
+        body: 'The invoice, QR preview, custom logos, and saved presets stay in browser-local state.'
+      }
+    ],
+    faq: [
+      {
+        question: 'Can I make a QR code for a Bitcoin Lightning invoice?',
+        answer: 'Yes. Paste a BOLT11 invoice beginning with lnbc and the generator creates a QR code from that invoice.'
+      },
+      {
+        question: 'Should I reuse a Lightning invoice QR code?',
+        answer: 'No. Lightning invoices are payment requests. Generate a fresh invoice in your wallet for each payment.'
       }
     ]
   },
@@ -406,7 +464,7 @@ export const searchLandingPages: LandingPage[] = [
     accent: genericAccent,
     title: `Crypto Generate QRCode | ${productName}`,
     description:
-      'Generate crypto QR codes online for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT with a browser-local QR generator.',
+      'Generate crypto QR codes online for Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT with a browser-local QR generator.',
     headline: 'Crypto Generate QRCode',
     eyebrow: 'Multi-coin QR generator',
     body:
@@ -414,11 +472,11 @@ export const searchLandingPages: LandingPage[] = [
     ctaLabel: 'Open crypto QR generator',
     generatorHref: '/generate',
     payloadExample: 'bitcoin:bc1q...?amount=0.015',
-    chips: ['XMR', 'BTC', 'ETH', 'SOL', 'LTC', 'USDC', 'USDT'],
+    chips: ['XMR', 'BTC', 'Lightning', 'ETH', 'SOL', 'LTC', 'USDC', 'USDT'],
     benefits: [
       {
         title: 'One generator for major networks',
-        body: 'Use guided presets for Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT.'
+        body: 'Use guided presets for Monero, Bitcoin, Bitcoin Lightning invoices, Ethereum/EVM, Solana, Litecoin, USDC, and USDT.'
       },
       {
         title: 'Custom payload mode',
@@ -432,7 +490,7 @@ export const searchLandingPages: LandingPage[] = [
     faq: [
       {
         question: 'Which crypto QR codes can I generate?',
-        answer: `${productName} supports Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT, plus custom text payloads.`
+        answer: `${productName} supports Monero, Bitcoin, Bitcoin Lightning invoices, Ethereum/EVM, Solana, Litecoin, USDC, and USDT, plus custom text payloads.`
       },
       {
         question: 'Can I generate a QR code without connecting a wallet?',

@@ -20,6 +20,15 @@ export const networks = [
     supportsAmount: true
   },
   {
+    id: 'lightning',
+    name: 'Bitcoin Lightning',
+    ticker: 'BTC-LN',
+    accent: '#facc15',
+    coingeckoId: 'bitcoin',
+    placeholder: 'lnbc1...',
+    supportsAmount: false
+  },
+  {
     id: 'ethereum',
     name: 'Ethereum / EVM',
     ticker: 'ETH',
@@ -95,6 +104,7 @@ export function detectNetwork(address: string): NetworkId | null {
 
   const checks: Array<[NetworkId, (candidate: string) => ValidationResult]> = [
     ['monero', validateMoneroAddress],
+    ['lightning', validateLightningInvoice],
     ['ethereum', validateEthereumAddress],
     ['bitcoin', validateBitcoinAddress],
     ['litecoin', validateLitecoinAddress],
@@ -116,6 +126,8 @@ export function validateAddress(network: NetworkId, address: string): Validation
       return validateMoneroAddress(value);
     case 'bitcoin':
       return validateBitcoinAddress(value);
+    case 'lightning':
+      return validateLightningInvoice(value);
     case 'ethereum':
       return validateEthereumAddress(value);
     case 'usdc':
@@ -164,6 +176,16 @@ export function validateBitcoinAddress(address: string): ValidationResult {
   return { status: 'invalid', message: 'Expected a Bitcoin legacy, SegWit, or Taproot address.' };
 }
 
+export function validateLightningInvoice(invoice: string): ValidationResult {
+  const bolt11 = /^ln(bc|tb|bcrt)(\d+[munp]?)?1[02-9ac-hj-np-z]+$/i;
+
+  if (bolt11.test(invoice) && invoice.length >= 20 && invoice.length <= 4096) {
+    return { status: 'valid', message: 'Valid Bitcoin Lightning BOLT11 invoice.' };
+  }
+
+  return { status: 'invalid', message: 'Expected a Bitcoin Lightning BOLT11 invoice beginning with lnbc1.' };
+}
+
 export function validateEthereumAddress(address: string): ValidationResult {
   if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
     return { status: 'valid', message: 'Valid Ethereum/EVM address format.' };
@@ -208,6 +230,8 @@ export function buildQrPayload(network: NetworkId, address: string, amount?: str
   }
 
   switch (network) {
+    case 'lightning':
+      return cleanAddress;
     case 'monero':
       return `monero:${cleanAddress}?tx_amount=${encodeURIComponent(cleanAmount)}`;
     case 'bitcoin':

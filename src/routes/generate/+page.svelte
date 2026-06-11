@@ -52,6 +52,8 @@
   $: selectedName = selectedMarketAsset?.name ?? (selectedMarketId ? 'Selected market asset' : selectedNetwork.name);
   $: selectedTicker = selectedMarketAsset?.symbol ?? (selectedMarketId ? selectedMarketId.toUpperCase() : selectedNetwork.ticker);
   $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} address` : selectedNetwork.placeholder;
+  $: paymentInputLabel = effectiveNetwork === 'lightning' ? 'Lightning invoice' : 'Address';
+  $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount;
   $: validation =
     network === 'automatic' && !detectedNetwork
       ? {
@@ -242,7 +244,7 @@
     <p class="label mb-2">Local QR generator</p>
     <h1 class="text-3xl font-bold text-on-surface md:text-5xl">Generate crypto QR codes</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      Build address-only or amount payment payloads for Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT. QR styling stays local.
+      Build address-only, amount payment, or Bitcoin Lightning invoice QR payloads for Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT. QR styling stays local.
       Switch to custom mode to design an arbitrary QR payload by hand.
     </p>
   </div>
@@ -254,7 +256,7 @@
           <div>
             <h2 class="text-xl font-semibold">Payment details</h2>
             <p class="text-sm text-on-surface-variant">
-              Automatic mode detects XMR, BTC, ETH/EVM, LTC, or SOL from the address format. Select USDC or USDT manually for ERC-20 token payment URIs.
+              Automatic mode detects XMR, BTC, BTC Lightning invoices, ETH/EVM, LTC, or SOL from the address format. Select USDC or USDT manually for ERC-20 token payment URIs.
             </p>
           </div>
           <StatusBadge status={activeValidation.status} label={activeValidation.status === 'valid' ? 'Valid' : activeValidation.status} />
@@ -319,7 +321,7 @@
 
             <div>
               <div class="mb-2 flex items-center justify-between gap-3">
-                <label class="label" for="address">Address</label>
+                <label class="label" for="address">{paymentInputLabel}</label>
                 <span class="text-xs text-on-surface-variant">{validation.message}</span>
               </div>
               <div class="flex gap-2">
@@ -341,15 +343,22 @@
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
-              <div>
-                <label class="label mb-2 block" for="amount">Optional amount</label>
-                <input id="amount" data-testid="amount-input" class="field" inputmode="decimal" placeholder="0.00" bind:value={amount} />
-              </div>
+              {#if amountSupported}
+                <div>
+                  <label class="label mb-2 block" for="amount">Optional amount</label>
+                  <input id="amount" data-testid="amount-input" class="field" inputmode="decimal" placeholder="0.00" bind:value={amount} />
+                </div>
+              {/if}
               <div>
                 <label class="label mb-2 block" for="label">Local save label</label>
                 <input id="label" data-testid="label-input" class="field" placeholder={`${selectedTicker} treasury`} bind:value={label} />
               </div>
             </div>
+            {#if effectiveNetwork === 'lightning'}
+              <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
+                Lightning QR codes encode the BOLT11 invoice directly. Generate a new invoice in your wallet for each payment request.
+              </p>
+            {/if}
             {#if selectedMarketId}
               <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
                 {selectedName} is available from market data for address-only QR codes. Amounts are used for the fiat estimate only.
