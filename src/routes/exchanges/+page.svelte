@@ -18,7 +18,24 @@
   };
 
   let xmrFilter = false;
+  let searchQuery = '';
+  let visibleCount = 12;
   $: rows = data.result.data;
+  $: normalizedSearch = searchQuery.trim().toLowerCase();
+  $: filteredRows = normalizedSearch
+    ? rows.filter((row) => `${row.name} ${row.country ?? ''}`.toLowerCase().includes(normalizedSearch))
+    : rows;
+  $: visibleRows = filteredRows.slice(0, visibleCount);
+  $: hiddenCount = Math.max(filteredRows.length - visibleRows.length, 0);
+
+  function showMore() {
+    visibleCount = Math.min(visibleCount + 12, filteredRows.length);
+  }
+
+  function updateSearch(event: Event) {
+    searchQuery = event.currentTarget instanceof HTMLInputElement ? event.currentTarget.value : '';
+    visibleCount = 12;
+  }
 </script>
 
 <main class="mx-auto max-w-7xl px-5 py-10 md:px-8">
@@ -33,10 +50,21 @@
     <StatusBadge status={data.result.state} label={data.result.state} />
   </div>
 
-  <label class="mb-5 inline-flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-low px-4 py-3">
-    <input type="checkbox" class="rounded border-outline-variant bg-surface-high text-primary-action" bind:checked={xmrFilter} />
-    <span>Show XMR-support filter state</span>
-  </label>
+  <div class="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+    <label class="sr-only" for="exchange-search">Search exchanges</label>
+    <input
+      id="exchange-search"
+      class="field"
+      type="search"
+      placeholder="Search exchanges or countries"
+      value={searchQuery}
+      on:input={updateSearch}
+    />
+    <label class="inline-flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-low px-4 py-3">
+      <input type="checkbox" class="rounded border-outline-variant bg-surface-high text-primary-action" bind:checked={xmrFilter} />
+      <span>Show XMR-support filter state</span>
+    </label>
+  </div>
   {#if xmrFilter}
     <p class="mb-5 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-warning">
       CoinGecko's exchange list endpoint does not include per-asset support. XMR filtering requires exchange ticker data and is marked unavailable here.
@@ -44,7 +72,7 @@
   {/if}
 
   <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-    {#each rows as row}
+    {#each visibleRows as row}
       <article class="surface-panel rounded-card p-5">
         <div class="flex items-start justify-between gap-3">
           <div class="flex min-w-0 items-center gap-3">
@@ -69,8 +97,21 @@
           <a class="mt-4 inline-flex text-sm font-semibold text-primary hover:underline" href={row.url} rel="noreferrer" target="_blank">Open exchange</a>
         {/if}
       </article>
-    {:else}
-      <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">Exchange data is unavailable.</p>
     {/each}
   </section>
+
+  {#if rows.length === 0}
+    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">Exchange data is unavailable.</p>
+  {:else if filteredRows.length === 0}
+    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">No exchanges match this search.</p>
+  {/if}
+
+  {#if hiddenCount > 0}
+    <div class="mt-6 flex justify-center">
+      <button class="btn-secondary" type="button" on:click={showMore}>
+        Show 12 more
+        <span class="text-on-surface-variant">({hiddenCount} remaining)</span>
+      </button>
+    </div>
+  {/if}
 </main>

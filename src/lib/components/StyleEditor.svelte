@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { Upload } from 'lucide-svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { ChevronDown, Upload } from 'lucide-svelte';
   import { cryptoIcons, getCryptoIcon, type CryptoIconVariant } from '$lib/cryptoIcons';
   import {
     builtInPresets,
@@ -12,6 +12,7 @@
 
   export let style: QrStyle = { ...defaultQrStyle };
   export let customLogoDataUrl: string | undefined = undefined;
+  export let collapseOnMobile = false;
 
   const dispatch = createEventDispatcher<{
     logoChanged: void;
@@ -25,6 +26,7 @@
 
   let fileWarning = '';
   let logoSearch = '';
+  let editorOpen = true;
   $: contrastWarning = getContrastWarning(style);
   $: selectedIcon = style.logo === 'none' || style.logo === 'custom' ? undefined : getCryptoIcon(style.logo);
   $: filteredIcons = cryptoIcons
@@ -79,15 +81,32 @@
       reader.readAsDataURL(file);
     });
   }
+
+  onMount(() => {
+    if (!collapseOnMobile) return;
+
+    const mobileQuery = window.matchMedia('(max-width: 1023px)');
+    const syncOpenState = () => {
+      editorOpen = !mobileQuery.matches;
+    };
+
+    syncOpenState();
+    mobileQuery.addEventListener('change', syncOpenState);
+
+    return () => mobileQuery.removeEventListener('change', syncOpenState);
+  });
 </script>
 
-<section class="glass-panel rounded-card p-5 md:p-6">
-  <div class="mb-5">
-    <h2 class="text-xl font-semibold text-on-surface">Style editor</h2>
-    <p class="text-sm text-on-surface-variant">Presets keep contrast and quiet-zone defaults conservative.</p>
-  </div>
+<details bind:open={editorOpen} class="glass-panel rounded-card p-5 md:p-6">
+  <summary class="group flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
+    <div>
+      <h2 class="text-xl font-semibold text-on-surface">Style editor</h2>
+      <p class="text-sm text-on-surface-variant">Presets keep contrast and quiet-zone defaults conservative.</p>
+    </div>
+    <ChevronDown size={18} class="shrink-0 text-on-surface-variant transition group-open:rotate-180" />
+  </summary>
 
-  <div class="grid gap-5">
+  <div class="mt-5 grid gap-5">
     <div>
       <p class="label mb-2">Built-in presets</p>
       <div class="grid grid-cols-2 gap-2">
@@ -285,4 +304,4 @@
       <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{contrastWarning}</p>
     {/if}
   </div>
-</section>
+</details>

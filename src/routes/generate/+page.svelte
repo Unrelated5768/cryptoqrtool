@@ -2,7 +2,7 @@
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { BadgeCheck, Clipboard, Copy, Save } from 'lucide-svelte';
+  import { BadgeCheck, ChevronDown, Clipboard, Copy, Save } from 'lucide-svelte';
   import QrPreview from '$components/QrPreview.svelte';
   import StatusBadge from '$components/StatusBadge.svelte';
   import StyleEditor from '$components/StyleEditor.svelte';
@@ -334,9 +334,9 @@
   </div>
 
   <div class="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
-    <div class="grid gap-6">
-      <section class="glass-panel rounded-card p-5 md:p-6">
-        <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <details open class="glass-panel rounded-card p-5 md:p-6 lg:col-start-1 lg:row-start-1">
+      <summary class="group flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
+        <div class="flex flex-wrap items-center gap-3">
           <div>
             <h2 class="text-xl font-semibold">Payment details</h2>
             <p class="text-sm text-on-surface-variant">
@@ -345,8 +345,10 @@
           </div>
           <StatusBadge status={activeValidation.status} label={activeValidation.status === 'valid' ? 'Valid' : activeValidation.status} />
         </div>
+        <ChevronDown size={18} class="shrink-0 text-on-surface-variant transition group-open:rotate-180" />
+      </summary>
 
-        <div class="grid gap-5">
+        <div class="mt-5 grid gap-5">
           <div class="grid grid-cols-2 rounded-lg border border-outline-variant bg-surface-low p-1">
             <button
               type="button"
@@ -535,27 +537,31 @@
             </div>
           {/if}
         </div>
-      </section>
+    </details>
 
+    <div class="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start lg:sticky lg:top-24">
+      <QrPreview {payload} {style} {customLogoDataUrl} {analyticsContext} />
+    </div>
+
+    <div class="lg:col-start-1 lg:row-start-2">
       <StyleEditor
         bind:style
         bind:customLogoDataUrl
+        collapseOnMobile
         on:logoChanged={markLogoManuallyChanged}
         on:presetApplied={markPresetApplied}
       />
-
-      <section class="glass-panel rounded-card p-5 md:p-6">
-        <h2 class="text-xl font-semibold">Save current style</h2>
-        <p class="mt-2 text-sm text-on-surface-variant">
-          Custom logos are stored as browser-local data URLs only when you save a style preset.
-        </p>
-        <div class="mt-4 flex flex-col gap-3 sm:flex-row">
-          <input class="field" data-testid="preset-name-input" placeholder="Preset name" bind:value={presetName} />
-          <button class="btn-primary sm:w-52" data-testid="save-preset" type="button" on:click={persistStylePreset}>Save preset</button>
-        </div>
-      </section>
     </div>
 
-    <QrPreview {payload} {style} {customLogoDataUrl} {analyticsContext} />
+    <section class="glass-panel rounded-card p-5 md:p-6 lg:col-start-1 lg:row-start-3">
+      <h2 class="text-xl font-semibold">Save current style</h2>
+      <p class="mt-2 text-sm text-on-surface-variant">
+        Custom logos are stored as browser-local data URLs only when you save a style preset.
+      </p>
+      <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+        <input class="field" data-testid="preset-name-input" placeholder="Preset name" bind:value={presetName} />
+        <button class="btn-primary sm:w-52" data-testid="save-preset" type="button" on:click={persistStylePreset}>Save preset</button>
+      </div>
+    </section>
   </div>
 </main>

@@ -1,8 +1,0 @@
-{
-  "http://127.0.0.1:4173/": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176456757-23581.report.html",
-  "http://127.0.0.1:4173/generate": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176457611-39233.report.html",
-  "http://127.0.0.1:4173/markets": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176458549-8300.report.html",
-  "http://127.0.0.1:4173/fees": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176459415-40609.report.html",
-  "http://127.0.0.1:4173/exchanges": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176460321-70633.report.html",
-  "http://127.0.0.1:4173/security": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1781176461131-30517.report.html"
-}
