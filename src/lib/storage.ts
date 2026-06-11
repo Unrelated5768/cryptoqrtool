@@ -18,9 +18,12 @@ export interface AppStorage {
   addresses: SavedAddress[];
   presets: StylePreset[];
   defaultCurrency: FiatCurrency;
+  theme: ThemeMode;
 }
 
-const emptyStorage = (): AppStorage => ({ version: 1, addresses: [], presets: [], defaultCurrency: 'USD' });
+export type ThemeMode = 'dark' | 'light';
+
+const emptyStorage = (): AppStorage => ({ version: 1, addresses: [], presets: [], defaultCurrency: 'USD', theme: 'dark' });
 
 export function loadStorage(): AppStorage {
   if (!browserStorageAvailable()) return emptyStorage();
@@ -124,8 +127,13 @@ export function migrateStorage(value: unknown): AppStorage {
           style: parseStyle(JSON.stringify(preset.style ?? defaultQrStyle))
         }))
       : [],
-    defaultCurrency: normalizeCurrency(candidate.defaultCurrency)
+    defaultCurrency: normalizeCurrency(candidate.defaultCurrency),
+    theme: normalizeTheme(candidate.theme)
   };
+}
+
+export function normalizeTheme(value: unknown): ThemeMode {
+  return value === 'light' ? 'light' : 'dark';
 }
 
 function browserStorageAvailable() {

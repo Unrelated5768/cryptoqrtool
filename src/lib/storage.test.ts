@@ -36,6 +36,12 @@ describe('browser local storage', () => {
     expect(migrateStorage({ addresses: [], presets: [], defaultCurrency: 'nope' }).defaultCurrency).toBe('USD');
   });
 
+  it('defaults the saved theme to dark and migrates invalid values', () => {
+    expect(loadStorage().theme).toBe('dark');
+    expect(migrateStorage({ addresses: [], presets: [], theme: 'light' }).theme).toBe('light');
+    expect(migrateStorage({ addresses: [], presets: [], theme: 'sepia' }).theme).toBe('dark');
+  });
+
   it('formats fiat values for the selected currency', () => {
     expect(formatCurrency(12.34, 'CAD')).toContain('12.34');
     expect(formatCurrency(undefined, 'USD')).toBe('Unavailable');

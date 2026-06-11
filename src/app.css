@@ -4,19 +4,71 @@
 
 :root {
   color-scheme: dark;
-  background: #11131c;
-  color: #e1e1ef;
+  --surface: 17 19 28;
+  --surface-lowest: 12 14 23;
+  --surface-low: 25 27 37;
+  --surface-container: 29 31 41;
+  --surface-high: 40 41 52;
+  --surface-highest: 50 52 63;
+  --surface-bright: 55 57 67;
+  --on-surface: 225 225 239;
+  --on-surface-variant: 195 197 217;
+  --outline: 141 144 162;
+  --outline-variant: 67 70 86;
+  --primary: 183 196 255;
+  --primary-action: 0 82 255;
+  --primary-action-dark: 0 56 182;
+  --secondary: 183 200 225;
+  --tertiary: 210 187 255;
+  --success: 52 211 153;
+  --warning: 251 191 36;
+  --error: 255 180 171;
+  --page-glow-a: 0 82 255;
+  --page-glow-b: 20 241 149;
+  background: rgb(var(--surface));
+  color: rgb(var(--on-surface));
   font-family: Geist, Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html.light {
+  color-scheme: light;
+  --surface: 250 248 243;
+  --surface-lowest: 255 255 255;
+  --surface-low: 255 252 248;
+  --surface-container: 255 255 255;
+  --surface-high: 248 244 237;
+  --surface-highest: 241 236 228;
+  --surface-bright: 231 224 214;
+  --on-surface: 28 26 22;
+  --on-surface-variant: 92 82 70;
+  --outline: 133 119 101;
+  --outline-variant: 224 214 200;
+  --primary: 105 74 39;
+  --primary-action: 26 86 219;
+  --primary-action-dark: 22 70 180;
+  --secondary: 119 90 57;
+  --tertiary: 126 76 61;
+  --success: 18 132 86;
+  --warning: 161 98 7;
+  --error: 185 59 52;
+  --page-glow-a: 214 180 123;
+  --page-glow-b: 232 208 169;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 18% 10%, rgba(0, 82, 255, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 18%, rgba(20, 241, 149, 0.09), transparent 22rem),
-    #11131c;
-  color: #e1e1ef;
+    radial-gradient(circle at 18% 10%, rgb(var(--page-glow-a) / 0.16), transparent 28rem),
+    radial-gradient(circle at 88% 18%, rgb(var(--page-glow-b) / 0.1), transparent 22rem),
+    rgb(var(--surface));
+  color: rgb(var(--on-surface));
+}
+
+html.light body {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 247, 241, 0.98)),
+    rgb(var(--surface));
 }
 
 button,
@@ -31,7 +83,7 @@ button {
 }
 
 ::selection {
-  background: rgba(183, 196, 255, 0.32);
+  background: rgb(var(--primary) / 0.32);
 }
 
 ::-webkit-scrollbar {
@@ -39,25 +91,25 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #11131c;
+  background: rgb(var(--surface));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #434656;
+  background: rgb(var(--outline-variant));
   border-radius: 9999px;
 }
 
 @layer components {
   .glass-panel {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(29, 31, 41, 0.82);
+    border: 1px solid rgb(var(--outline-variant) / 0.35);
+    background: rgb(var(--surface-container) / 0.82);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
     backdrop-filter: blur(20px);
   }
 
   .surface-panel {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #1d1f29;
+    border: 1px solid rgb(var(--outline-variant) / 0.35);
+    background: rgb(var(--surface-container));
   }
 
   .field {
@@ -82,5 +134,37 @@ button {
 
   .mono {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  html.light .glass-panel {
+    border-color: rgb(var(--outline-variant) / 0.85);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+      0 24px 54px rgba(64, 43, 19, 0.09),
+      0 3px 12px rgba(64, 43, 19, 0.04);
+  }
+
+  html.light .surface-panel {
+    border-color: rgb(var(--outline-variant) / 0.9);
+    background: rgb(var(--surface-container));
+    box-shadow:
+      0 18px 36px rgba(64, 43, 19, 0.05),
+      0 2px 8px rgba(64, 43, 19, 0.03);
+  }
+
+  html.light .field {
+    background: rgb(var(--surface-lowest));
+    border-color: rgb(var(--outline-variant) / 0.95);
+  }
+
+  html.light .btn-secondary {
+    background: rgb(var(--surface-lowest));
+    border-color: rgb(var(--outline-variant) / 0.95);
+  }
+
+  html.light .icon-button {
+    background: rgb(var(--surface-lowest));
+    border-color: rgb(var(--outline-variant) / 0.95);
+    color: rgb(var(--on-surface-variant));
   }
 }

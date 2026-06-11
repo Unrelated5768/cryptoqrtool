@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AppShell from './AppShell.svelte';
+import { loadStorage } from '$lib/storage';
+import { setTheme } from '$lib/theme';
 import { startVersionCheck } from '$lib/versionCheck';
 
 vi.mock('$app/stores', () => ({
@@ -17,6 +19,11 @@ vi.mock('$lib/versionCheck', () => ({
 }));
 
 describe('AppShell', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    setTheme('dark');
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -64,6 +71,31 @@ describe('AppShell', () => {
     expect(screen.getByText(/zero data collection/i)).toBeInTheDocument();
     expect(screen.getByText('Made with')).toBeInTheDocument();
     expect(screen.getByText('for privacy.')).toBeInTheDocument();
+  });
+
+  it('toggles between dark and light themes', async () => {
+    render(AppShell);
+
+    const toggle = screen.getByRole('button', { name: 'Switch to light mode' });
+    await fireEvent.click(toggle);
+
+    expect(document.documentElement.classList.contains('light')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(loadStorage().theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toBeInTheDocument();
+  });
+
+  it('updates the default currency from the header picker', async () => {
+    const { container } = render(AppShell);
+    const currencySummary = container.querySelector('header > div > div.flex.items-center.gap-2 details summary');
+
+    expect(currencySummary).not.toBeNull();
+
+    await fireEvent.click(currencySummary as HTMLElement);
+    await fireEvent.click(screen.getByRole('button', { name: 'EUR EUR' }));
+
+    expect(loadStorage().defaultCurrency).toBe('EUR');
+    expect(screen.getAllByText('EUR').length).toBeGreaterThan(0);
   });
 
   it('closes the more menu after a navigation link is clicked', async () => {

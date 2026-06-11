@@ -23,7 +23,40 @@
   </div>
 
   <section class="glass-panel overflow-hidden rounded-card">
-    <div class="grid gap-px bg-outline-variant/50 md:grid-cols-5">
+    <div class="grid gap-px bg-outline-variant/50 md:hidden">
+      {#each data.result.data as row}
+        <article class="bg-surface-low p-4">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="font-semibold">{row.network}</p>
+              <p class="mt-1 text-sm text-on-surface-variant">{row.ticker}</p>
+            </div>
+            <StatusBadge status={row.status} label={row.status} />
+          </div>
+
+          <dl class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Priority</dt>
+              <dd class="mt-1 text-sm text-on-surface">{row.priority}</dd>
+            </div>
+            <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Standard</dt>
+              <dd class="mt-1 text-sm text-on-surface">{row.standard}</dd>
+            </div>
+            <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Economy</dt>
+              <dd class="mt-1 text-sm text-on-surface">{row.economy}</dd>
+            </div>
+            <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Source</dt>
+              <dd class="mt-1 text-sm text-on-surface">{row.source}</dd>
+            </div>
+          </dl>
+        </article>
+      {/each}
+    </div>
+
+    <div class="hidden gap-px bg-outline-variant/50 md:grid md:grid-cols-5">
       <div class="bg-surface-container p-4 font-semibold">Network</div>
       <div class="bg-surface-container p-4 font-semibold">Priority</div>
       <div class="bg-surface-container p-4 font-semibold">Standard</div>
@@ -32,7 +65,10 @@
       {#each data.result.data as row}
         <div class="bg-surface-low p-4">
           <p class="font-semibold">{row.network}</p>
-          <StatusBadge status={row.status} label={row.status} />
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <StatusBadge status={row.status} label={row.status} />
+            <span class="text-sm text-on-surface-variant">{row.ticker}</span>
+          </div>
         </div>
         <div class="bg-surface-low p-4">{row.priority}</div>
         <div class="bg-surface-low p-4">{row.standard}</div>

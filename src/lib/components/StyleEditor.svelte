@@ -176,7 +176,7 @@
             data-testid="catalog-logo-option"
             class={`flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm transition ${
               style.logo === icon.symbol
-                ? 'border-primary bg-primary-container text-on-primary-container'
+                ? 'border-primary bg-primary/12 text-primary'
                 : 'border-outline-variant bg-surface-high text-on-surface hover:border-primary'
             }`}
             on:click={() => chooseLogo(icon.symbol)}

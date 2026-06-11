@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { BadgeCheck, ChevronDown, Code2, Heart, Landmark, LockKeyhole, QrCode, RefreshCw, Save, ShieldCheck, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
+  import { BadgeCheck, Check, ChevronDown, Code2, Heart, Landmark, LockKeyhole, Moon, QrCode, RefreshCw, Save, ShieldCheck, Sun, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
   import { trackEvent } from '$lib/analytics';
   import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
   import { coinLandingPages, productName } from '$lib/seo';
+  import { theme, toggleTheme } from '$lib/theme';
   import { startVersionCheck } from '$lib/versionCheck';
 
   export let reloadPage = () => window.location.reload();
@@ -29,6 +30,7 @@
 
   let updateAvailable = false;
   let updateDismissed = false;
+  let currencyMenu: HTMLDetailsElement;
   let desktopMoreMenu: HTMLDetailsElement;
   let mobileMoreMenu: HTMLDetailsElement;
 
@@ -43,9 +45,16 @@
     reloadPage();
   }
 
-  function closeMoreMenus() {
+  function closeMenus() {
+    if (currencyMenu) currencyMenu.open = false;
     if (desktopMoreMenu) desktopMoreMenu.open = false;
     if (mobileMoreMenu) mobileMoreMenu.open = false;
+  }
+
+  function selectCurrency(currency: string) {
+    setDefaultCurrency(currency);
+    trackEvent('currency_selected', { currency });
+    if (currencyMenu) currencyMenu.open = false;
   }
 </script>
 
@@ -61,7 +70,7 @@
       {#each primaryNav as item}
         <a
           href={item.href}
-          on:click={closeMoreMenus}
+          on:click={closeMenus}
           class={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${
             pathname === item.href
               ? 'bg-surface-high text-primary'
@@ -87,7 +96,7 @@
           {#each secondaryNav as item}
             <a
               href={item.href}
-              on:click={closeMoreMenus}
+              on:click={closeMenus}
               class={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${
                 pathname === item.href ? 'bg-surface-container text-primary' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
               }`}
@@ -100,30 +109,68 @@
       </details>
     </nav>
     <div class="flex items-center gap-2">
-      <label class="sr-only" for="default-currency">Default currency</label>
-      <div
-        class="relative inline-flex h-10 min-w-24 items-center gap-2 rounded-lg border border-outline-variant bg-surface-high px-2.5 text-sm font-semibold text-on-surface transition hover:border-primary/60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/25"
-        title="Default currency"
-      >
-        <span class="flex h-6 min-w-6 items-center justify-center rounded-md bg-surface-container px-1.5 text-xs text-primary" aria-hidden="true">
-          {selectedCurrency.symbol}
-        </span>
-        <span class="min-w-8 text-center" aria-hidden="true">{selectedCurrency.code}</span>
-        <ChevronDown size={14} class="text-on-surface-variant" aria-hidden="true" />
-        <select
-          id="default-currency"
-          class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-          bind:value={$defaultCurrency}
-          on:change={(event) => {
-            setDefaultCurrency(event.currentTarget.value);
-            trackEvent('currency_selected', { currency: event.currentTarget.value });
-          }}
+      <details bind:this={currencyMenu} class="group relative">
+        <summary
+          class="flex h-10 min-w-[8.5rem] cursor-pointer list-none items-center gap-2 rounded-xl border border-outline-variant bg-surface-high/95 px-2.5 text-left transition marker:hidden hover:border-primary/60 hover:bg-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 group-open:border-primary/70 group-open:bg-surface-container"
+          aria-label="Default currency"
         >
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/12 text-xs font-bold text-primary" aria-hidden="true">
+            {selectedCurrency.symbol}
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-xs font-semibold uppercase tracking-[0.18em] text-on-surface">{selectedCurrency.code}</span>
+          </span>
+          <ChevronDown size={14} class="shrink-0 text-on-surface-variant transition group-open:rotate-180" aria-hidden="true" />
+        </summary>
+        <div class="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-[14rem] rounded-2xl border border-outline-variant bg-surface-highest/95 p-1.5 shadow-2xl backdrop-blur-xl">
+          <div class="px-2.5 pb-1.5 pt-1">
+            <p class="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-primary/80">Display currency</p>
+          </div>
           {#each fiatCurrencies as option}
-            <option value={option.code}>{option.symbol} {option.label}</option>
+            <button
+              type="button"
+              class={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition ${
+                $defaultCurrency === option.code
+                  ? 'bg-primary-action text-white shadow-glow'
+                  : 'text-on-surface hover:bg-surface-container'
+              }`}
+              aria-pressed={$defaultCurrency === option.code}
+              on:click={() => selectCurrency(option.code)}
+            >
+              <span
+                class={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
+                  $defaultCurrency === option.code ? 'bg-white/16 text-white' : 'bg-primary/12 text-primary'
+                }`}
+                aria-hidden="true"
+              >
+                {option.symbol}
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-sm font-semibold leading-none">{option.code}</span>
+                <span class={`mt-1 block text-[0.7rem] leading-none ${$defaultCurrency === option.code ? 'text-white/75' : 'text-on-surface-variant'}`}>
+                  {option.label}
+                </span>
+              </span>
+              {#if $defaultCurrency === option.code}
+                <Check size={16} class="shrink-0" aria-hidden="true" />
+              {/if}
+            </button>
           {/each}
-        </select>
-      </div>
+        </div>
+      </details>
+      <button
+        type="button"
+        class="icon-button"
+        title={$theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-label={$theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        on:click={toggleTheme}
+      >
+        {#if $theme === 'dark'}
+          <Sun size={18} />
+        {:else}
+          <Moon size={18} />
+        {/if}
+      </button>
       <a href="/security" class="icon-button" title="Local-only privacy model" aria-label="Local-only privacy model">
         <LockKeyhole size={18} />
       </a>
@@ -137,7 +184,7 @@
     {#each primaryNav as item}
       <a
         href={item.href}
-        on:click={closeMoreMenus}
+        on:click={closeMenus}
         class={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-xs font-semibold ${
           pathname === item.href ? 'bg-surface-high text-primary' : 'text-on-surface-variant'
         }`}
@@ -159,7 +206,7 @@
         {#each secondaryNav as item}
           <a
             href={item.href}
-            on:click={closeMoreMenus}
+            on:click={closeMenus}
             class={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${
               pathname === item.href ? 'bg-surface-container text-primary' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
             }`}
