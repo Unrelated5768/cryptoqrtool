@@ -82,11 +82,28 @@
   }
 
   async function copyPayload() {
-    if (!payload || !navigator.clipboard) return;
-    await navigator.clipboard.writeText(payload);
+    if (!payload) return;
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard API unavailable');
+      await navigator.clipboard.writeText(payload);
+    } catch {
+      copyTextFallback(payload);
+    }
     copied = true;
     setTimeout(() => (copied = false), 1600);
     trackEvent('qr_payload_copied', analyticsContext);
+  }
+
+  function copyTextFallback(value: string) {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    textarea.remove();
   }
 
   async function sharePayload() {
