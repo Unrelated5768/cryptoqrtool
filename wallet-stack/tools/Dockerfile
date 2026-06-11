@@ -2,9 +2,13 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY create_wallets.py .
+COPY . .
 
 ENTRYPOINT ["python", "/app/create_wallets.py"]

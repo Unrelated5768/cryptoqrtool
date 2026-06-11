@@ -14,9 +14,14 @@
     detectNetwork,
     estimateFiat,
     getNetwork,
+    getTokenChain,
+    getTokenChainOptions,
     networks,
+    isTokenNetwork,
+    tokenChains,
     validateAddress,
-    type NetworkId
+    type NetworkId,
+    type TokenChainId
   } from '$lib/networks';
   import type { MarketAsset } from '$lib/liveData';
   import { defaultQrStyle, type QrStyle } from '$lib/qrStyle';
@@ -25,9 +30,12 @@
   type MarketSelection = `market:${string}`;
   type NetworkSelection = NetworkId | 'automatic' | MarketSelection;
   type GeneratorMode = 'guided' | 'custom';
+  type TokenPayloadFormat = 'payment' | 'caip19';
 
   let mode: GeneratorMode = 'guided';
   let network: NetworkSelection = 'automatic';
+  let tokenChainId: TokenChainId = 'ethereum';
+  let tokenPayloadFormat: TokenPayloadFormat = 'payment';
   let address = '';
   let amount = '';
   let customPayload = '';
@@ -49,13 +57,26 @@
   $: detectedNetwork = network === 'automatic' ? detectNetwork(address) : isNetworkId(network) ? network : null;
   $: effectiveNetwork = detectedNetwork ?? 'monero';
   $: selectedNetwork = getNetwork(effectiveNetwork);
+  $: selectedTokenNetwork = !selectedMarketId && isTokenNetwork(effectiveNetwork) ? effectiveNetwork : null;
+  $: tokenNetworkSelected = Boolean(selectedTokenNetwork);
+  $: tokenChainOptions = selectedTokenNetwork ? getTokenChainOptions(selectedTokenNetwork) : [];
+  $: if (tokenNetworkSelected && !tokenChainOptions.some((option) => option.id === tokenChainId)) {
+    tokenChainId = tokenChainOptions[0]?.id ?? 'ethereum';
+  }
+  $: selectedTokenChain = getTokenChain(tokenChainId);
+  $: caip19AssetOnly = tokenNetworkSelected && tokenPayloadFormat === 'caip19';
   $: selectedName = selectedMarketAsset?.name ?? (selectedMarketId ? 'Selected market asset' : selectedNetwork.name);
   $: selectedTicker = selectedMarketAsset?.symbol ?? (selectedMarketId ? selectedMarketId.toUpperCase() : selectedNetwork.ticker);
   $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} address` : selectedNetwork.placeholder;
-  $: paymentInputLabel = effectiveNetwork === 'lightning' ? 'Lightning invoice' : 'Address';
-  $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount;
+  $: paymentInputLabel = effectiveNetwork === 'lightning' ? 'Lightning invoice' : 'Recipient address';
+  $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount && !caip19AssetOnly;
   $: validation =
-    network === 'automatic' && !detectedNetwork
+    caip19AssetOnly
+      ? {
+          status: 'valid' as const,
+          message: `CAIP-19 asset ID for ${selectedTicker} on ${selectedTokenChain.name}.`
+        }
+      : network === 'automatic' && !detectedNetwork
       ? {
           status: address.trim() ? ('warning' as const) : ('warning' as const),
           message: address.trim()
@@ -86,10 +107,12 @@
   $: payload =
     mode === 'custom'
       ? customPayload.trim()
+      : caip19AssetOnly
+        ? buildQrPayload(effectiveNetwork, '', undefined, { tokenChainId, caip19AssetOnly: true })
       : selectedMarketId && validation.status === 'valid'
         ? address.trim()
         : validation.status === 'valid'
-          ? buildQrPayload(effectiveNetwork, address, amount)
+          ? buildQrPayload(effectiveNetwork, address, amount, { tokenChainId })
           : '';
   $: if (browser && $defaultCurrency !== loadedMarketCurrency) {
     loadMarketData($defaultCurrency);
@@ -98,7 +121,7 @@
     selectedTicker && marketAssets.length
       ? (marketAssets.find((asset) => asset.symbol === selectedTicker)?.price ?? undefined)
       : undefined;
-  $: canSaveAddress = mode === 'guided' && !selectedMarketId && validation.status === 'valid';
+  $: canSaveAddress = mode === 'guided' && !selectedMarketId && !caip19AssetOnly && validation.status === 'valid';
   $: marketAssetOptions = marketAssets.filter(
     (asset) => !networks.some((option) => option.coingeckoId === asset.id || option.ticker === asset.symbol)
   );
@@ -108,6 +131,8 @@
     network: selectedMarketId ? 'market' : effectiveNetwork,
     ticker: selectedTicker,
     has_amount: mode === 'guided' && Boolean(amount.trim()),
+    token_chain: tokenNetworkSelected ? selectedTokenChain.caip2 : undefined,
+    payload_standard: caip19AssetOnly ? 'caip19' : 'payment',
     custom_logo: Boolean(customLogoDataUrl),
     color_mode: style.colorMode
   };
@@ -117,7 +142,7 @@
   } else if (browser && !payload && lastTrackedPayload) {
     lastTrackedPayload = '';
   }
-  $: if (browser && mode === 'guided' && amount.trim() && price) {
+  $: if (browser && mode === 'guided' && amount.trim() && price && !caip19AssetOnly) {
     const conversionKey = `${selectedTicker}:${$defaultCurrency}`;
     if (conversionKey !== lastTrackedConversion) {
       lastTrackedConversion = conversionKey;
@@ -136,6 +161,8 @@
     const requestedNetwork = params.get('network') as NetworkSelection | null;
     const requestedAddress = params.get('address');
     const requestedPreset = params.get('preset');
+    const requestedTokenChain = params.get('tokenChain') as TokenChainId | null;
+    const requestedPayloadFormat = params.get('payloadFormat') as TokenPayloadFormat | null;
     if (
       requestedNetwork &&
       (requestedNetwork === 'automatic' || isNetworkId(requestedNetwork) || isMarketSelection(requestedNetwork))
@@ -144,6 +171,12 @@
     }
     if (requestedAddress) {
       address = requestedAddress;
+    }
+    if (requestedTokenChain && tokenChainsContain(requestedTokenChain)) {
+      tokenChainId = requestedTokenChain;
+    }
+    if (requestedPayloadFormat === 'payment' || requestedPayloadFormat === 'caip19') {
+      tokenPayloadFormat = requestedPayloadFormat;
     }
     if (requestedPreset) {
       const preset = loadStorage().presets.find((item) => item.id === requestedPreset);
@@ -172,6 +205,10 @@
 
   function isMarketSelection(value: string): value is MarketSelection {
     return value.startsWith('market:') && value.length > 'market:'.length;
+  }
+
+  function tokenChainsContain(value: string): value is TokenChainId {
+    return tokenChains.some((option) => option.id === value);
   }
 
   function getMarketSelectionId(value: NetworkSelection): string | null {
@@ -319,28 +356,61 @@
               {/if}
             </div>
 
-            <div>
-              <div class="mb-2 flex items-center justify-between gap-3">
-                <label class="label" for="address">{paymentInputLabel}</label>
-                <span class="text-xs text-on-surface-variant">{validation.message}</span>
-              </div>
-              <div class="flex gap-2">
-                <textarea
-                  id="address"
-                  data-testid="address-input"
-                  class="field mono min-h-28"
-                  placeholder={selectedPlaceholder}
-                  bind:value={address}
-                ></textarea>
-                <div class="flex flex-col gap-2">
-                  <button class="icon-button" type="button" title="Paste address" on:click={pasteAddress}><Clipboard size={18} /></button>
-                  <button class="icon-button" type="button" title="Copy address" data-testid="copy-address" on:click={copyAddress}><Copy size={18} /></button>
+            {#if tokenNetworkSelected}
+              <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label class="label mb-2 block" for="token-chain">Token chain</label>
+                  <select id="token-chain" class="field" bind:value={tokenChainId}>
+                    {#each tokenChainOptions as option}
+                      <option value={option.id}>{option.name} ({option.caip2})</option>
+                    {/each}
+                  </select>
+                </div>
+                <div>
+                  <label class="label mb-2 block" for="payload-standard">Payload standard</label>
+                  <select id="payload-standard" class="field" bind:value={tokenPayloadFormat}>
+                    <option value="payment">Payment URI</option>
+                    <option value="caip19">CAIP-19 asset ID</option>
+                  </select>
                 </div>
               </div>
-              {#if copied}
-                <p class="mt-2 text-sm text-success">Address copied.</p>
-              {/if}
-            </div>
+              <p class="rounded-lg border border-outline-variant bg-surface-low px-3 py-2 text-sm text-on-surface-variant">
+                {#if caip19AssetOnly}
+                  The QR code encodes the CAIP-19 asset type for {selectedTicker} on {selectedTokenChain.name}. It does not include a recipient or transfer amount.
+                {:else}
+                  Payment URI mode uses the selected chain's token contract and EIP-155 chain id for the ERC-20 transfer payload.
+                {/if}
+              </p>
+            {/if}
+
+            {#if !caip19AssetOnly}
+              <div>
+                <div class="mb-2 flex items-center justify-between gap-3">
+                  <label class="label" for="address">{paymentInputLabel}</label>
+                  <span class="text-xs text-on-surface-variant">{validation.message}</span>
+                </div>
+                <div class="flex gap-2">
+                  <textarea
+                    id="address"
+                    data-testid="address-input"
+                    class="field mono min-h-28"
+                    placeholder={selectedPlaceholder}
+                    bind:value={address}
+                  ></textarea>
+                  <div class="flex flex-col gap-2">
+                    <button class="icon-button" type="button" title="Paste address" on:click={pasteAddress}><Clipboard size={18} /></button>
+                    <button class="icon-button" type="button" title="Copy address" data-testid="copy-address" on:click={copyAddress}><Copy size={18} /></button>
+                  </div>
+                </div>
+                {#if copied}
+                  <p class="mt-2 text-sm text-success">Address copied.</p>
+                {/if}
+              </div>
+            {:else}
+              <div class="rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
+                {validation.message}
+              </div>
+            {/if}
 
             <div class="grid gap-4 md:grid-cols-2">
               {#if amountSupported}

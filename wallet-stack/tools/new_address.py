@@ -6,17 +6,15 @@ from pathlib import Path
 from typing import Any
 
 from create_wallets import (
-    DEFAULT_SOL_USDC_MINT,
-    DEFAULT_SOL_USDT_MINT,
     create_or_open_monero_wallet,
-    derive_bip39_addresses,
     load_local_env,
 )
-
-
-CHAIN_TICKERS = {"BTC", "LTC", "ETH", "SOL"}
-TOKEN_TICKERS = {"USDC", "USDT"}
-SUPPORTED_TICKERS = CHAIN_TICKERS | TOKEN_TICKERS | {"XMR"}
+from walletlib.allocation import (
+    SUPPORTED_TICKERS,
+    TOKEN_TICKERS,
+    build_bip39_address_response,
+    normalize_network,
+)
 
 
 def read_json(path: Path, default: dict[str, Any]) -> dict[str, Any]:
@@ -42,10 +40,7 @@ def next_index(state: dict[str, Any], ticker: str) -> int:
 
 
 def token_network(args: argparse.Namespace) -> str:
-    network = args.network.lower()
-    if network not in {"ethereum", "solana"}:
-        raise ValueError("--network must be ethereum or solana for USDC/USDT")
-    return network
+    return normalize_network(args.ticker.upper(), args.network) or ""
 
 
 def build_address_response(
@@ -54,27 +49,15 @@ def build_address_response(
     mnemonic: str,
     args: argparse.Namespace,
 ) -> dict[str, Any]:
-    all_addresses = derive_bip39_addresses(mnemonic, index)
-    lower = ticker.lower()
-
-    if ticker in CHAIN_TICKERS:
-        return {
-            "ticker": ticker,
-            "index": index,
-            **all_addresses[lower],
-        }
-
-    network = token_network(args)
-    token = all_addresses[lower][network]
-    return {
-        "ticker": ticker,
-        "network": network,
-        "index": index,
-        **token,
-        "note": (
-            f"{ticker} is a token. On {network}, monitor this token metadata plus the owner address."
-        ),
-    }
+    response = build_bip39_address_response(
+        ticker=ticker,
+        network=args.network if ticker in TOKEN_TICKERS else None,
+        index=index,
+        mnemonic=mnemonic,
+        label=None,
+    )
+    response.pop("label", None)
+    return response
 
 
 def append_history(path: Path, entry: dict[str, Any]) -> None:

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildCaip19AssetId,
   buildQrPayload,
   decimalToUnits,
   detectNetwork,
@@ -52,10 +53,30 @@ describe('QR payload builders', () => {
     expect(buildQrPayload('solana', 'SolAddress', '3')).toBe('solana:SolAddress?amount=3');
     expect(buildQrPayload('litecoin', 'ltc1address', '4')).toBe('litecoin:ltc1address?amount=4');
     expect(buildQrPayload('usdc', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', '1.23')).toBe(
-      'ethereum:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=1230000'
+      'ethereum:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48@1/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=1230000'
     );
     expect(buildQrPayload('usdt', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', '5')).toBe(
-      'ethereum:0xdAC17F958D2ee523a2206206994597C13D831ec7/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=5000000'
+      'ethereum:0xdAC17F958D2ee523a2206206994597C13D831ec7@1/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=5000000'
+    );
+  });
+
+  it('builds CAIP-19 asset identifiers for chain-specific stablecoins', () => {
+    expect(buildCaip19AssetId('usdc')).toBe('eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48');
+    expect(buildCaip19AssetId('usdc', 'polygon')).toBe(
+      'eip155:137/erc20:0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
+    );
+    expect(buildQrPayload('usdt', '', undefined, { tokenChainId: 'avalanche', caip19AssetOnly: true })).toBe(
+      'eip155:43114/erc20:0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7'
+    );
+  });
+
+  it('builds ERC-681 token transfer payloads on selected EVM chains', () => {
+    expect(
+      buildQrPayload('usdc', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', '2.5', {
+        tokenChainId: 'base'
+      })
+    ).toBe(
+      'ethereum:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913@8453/transfer?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e&uint256=2500000'
     );
   });
 

@@ -77,6 +77,30 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  api:
+    build:
+      context: ./tools
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      WALLET_API_DB: /out/wallet-api.sqlite3
+      XMR_WALLET_RPC_URL: http://monero-wallet-rpc:18083
+    volumes:
+      - ./out:/out
+    ports:
+      - "127.0.0.1:8088:8080"
+    entrypoint: []
+    command:
+      - uvicorn
+      - wallet_api.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   bitcoin-data:
   litecoin-data:

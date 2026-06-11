@@ -84,6 +84,17 @@ export const networks = [
 ] as const;
 
 export type NetworkId = (typeof networks)[number]['id'];
+export type TokenNetworkId = Extract<NetworkId, 'usdc' | 'usdt'>;
+export type TokenChainId =
+  | 'ethereum'
+  | 'polygon'
+  | 'base'
+  | 'arbitrum'
+  | 'optimism'
+  | 'avalanche'
+  | 'celo'
+  | 'kaia'
+  | 'kava';
 export type ValidationStatus = 'valid' | 'invalid' | 'unsupported' | 'warning';
 
 export interface ValidationResult {
@@ -91,11 +102,113 @@ export interface ValidationResult {
   message: string;
 }
 
+export interface TokenChain {
+  id: TokenChainId;
+  name: string;
+  shortName: string;
+  caip2: `eip155:${number}`;
+  eip155: number;
+}
+
+export interface TokenDeployment {
+  chainId: TokenChainId;
+  contractAddress: `0x${string}`;
+  decimals: number;
+  bridged?: boolean;
+}
+
+export const tokenChains = [
+  { id: 'ethereum', name: 'Ethereum', shortName: 'ETH', caip2: 'eip155:1', eip155: 1 },
+  { id: 'polygon', name: 'Polygon PoS', shortName: 'POL', caip2: 'eip155:137', eip155: 137 },
+  { id: 'base', name: 'Base', shortName: 'BASE', caip2: 'eip155:8453', eip155: 8453 },
+  { id: 'arbitrum', name: 'Arbitrum One', shortName: 'ARB', caip2: 'eip155:42161', eip155: 42161 },
+  { id: 'optimism', name: 'OP Mainnet', shortName: 'OP', caip2: 'eip155:10', eip155: 10 },
+  { id: 'avalanche', name: 'Avalanche C-Chain', shortName: 'AVAX', caip2: 'eip155:43114', eip155: 43114 },
+  { id: 'celo', name: 'Celo', shortName: 'CELO', caip2: 'eip155:42220', eip155: 42220 },
+  { id: 'kaia', name: 'Kaia', shortName: 'KAIA', caip2: 'eip155:8217', eip155: 8217 },
+  { id: 'kava', name: 'Kava EVM', shortName: 'KAVA', caip2: 'eip155:2222', eip155: 2222 }
+] as const satisfies readonly TokenChain[];
+
+export const tokenDeployments = {
+  usdc: [
+    {
+      chainId: 'ethereum',
+      contractAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      decimals: 6
+    },
+    {
+      chainId: 'polygon',
+      contractAddress: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+      decimals: 6
+    },
+    {
+      chainId: 'base',
+      contractAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      decimals: 6
+    },
+    {
+      chainId: 'arbitrum',
+      contractAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+      decimals: 6
+    },
+    {
+      chainId: 'optimism',
+      contractAddress: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+      decimals: 6
+    }
+  ],
+  usdt: [
+    {
+      chainId: 'ethereum',
+      contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      decimals: 6
+    },
+    {
+      chainId: 'avalanche',
+      contractAddress: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
+      decimals: 6
+    },
+    {
+      chainId: 'celo',
+      contractAddress: '0x48065fbBe25f71C9282ddf5e1cD6D6A887483d5e',
+      decimals: 6
+    },
+    {
+      chainId: 'kaia',
+      contractAddress: '0xd077A400968890eacc75cdc901F0356c943e4fdb',
+      decimals: 6
+    },
+    {
+      chainId: 'kava',
+      contractAddress: '0x919C1c267BC06a7039e03fcc2eF738525769109c',
+      decimals: 6
+    }
+  ]
+} as const satisfies Record<TokenNetworkId, readonly TokenDeployment[]>;
+
 const base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 const base58Pattern = new RegExp(`^[${base58}]+$`);
 
 export function getNetwork(id: NetworkId) {
   return networks.find((network) => network.id === id) ?? networks[0];
+}
+
+export function isTokenNetwork(id: NetworkId): id is TokenNetworkId {
+  return id === 'usdc' || id === 'usdt';
+}
+
+export function getTokenDeployment(network: TokenNetworkId, chainId: TokenChainId): TokenDeployment {
+  return (
+    tokenDeployments[network].find((deployment) => deployment.chainId === chainId) ?? tokenDeployments[network][0]
+  );
+}
+
+export function getTokenChain(chainId: TokenChainId): TokenChain {
+  return tokenChains.find((chain) => chain.id === chainId) ?? tokenChains[0];
+}
+
+export function getTokenChainOptions(network: TokenNetworkId): TokenChain[] {
+  return tokenDeployments[network].map((deployment) => getTokenChain(deployment.chainId));
 }
 
 export function detectNetwork(address: string): NetworkId | null {
@@ -221,9 +334,18 @@ export function validateLitecoinAddress(address: string): ValidationResult {
   return { status: 'invalid', message: 'Expected a Litecoin legacy, P2SH, or bech32 address.' };
 }
 
-export function buildQrPayload(network: NetworkId, address: string, amount?: string): string {
+export function buildQrPayload(
+  network: NetworkId,
+  address: string,
+  amount?: string,
+  options: { tokenChainId?: TokenChainId; caip19AssetOnly?: boolean } = {}
+): string {
   const cleanAddress = address.trim();
   const cleanAmount = normalizeAmount(amount);
+
+  if (isTokenNetwork(network) && options.caip19AssetOnly) {
+    return buildCaip19AssetId(network, options.tokenChainId);
+  }
 
   if (!cleanAmount) {
     return cleanAddress;
@@ -244,26 +366,28 @@ export function buildQrPayload(network: NetworkId, address: string, amount?: str
       return `litecoin:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
     case 'usdc':
     case 'usdt':
-      return buildErc20TransferPayload(network, cleanAddress, cleanAmount);
+      return buildErc20TransferPayload(network, cleanAddress, cleanAmount, options.tokenChainId);
     default:
       return cleanAddress;
   }
 }
 
-function buildErc20TransferPayload(network: Extract<NetworkId, 'usdc' | 'usdt'>, address: string, amount: string): string {
-  const tokens = {
-    usdc: {
-      contractAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      decimals: 6
-    },
-    usdt: {
-      contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      decimals: 6
-    }
-  } satisfies Record<Extract<NetworkId, 'usdc' | 'usdt'>, { contractAddress: string; decimals: number }>;
-  const token = tokens[network];
+export function buildCaip19AssetId(network: TokenNetworkId, chainId?: TokenChainId): string {
+  const token = getTokenDeployment(network, chainId ?? tokenDeployments[network][0].chainId);
+  const chain = getTokenChain(token.chainId);
+  return `${chain.caip2}/erc20:${token.contractAddress}`;
+}
+
+function buildErc20TransferPayload(
+  network: TokenNetworkId,
+  address: string,
+  amount: string,
+  chainId?: TokenChainId
+): string {
+  const token = getTokenDeployment(network, chainId ?? tokenDeployments[network][0].chainId);
+  const chain = getTokenChain(token.chainId);
   const units = decimalToUnits(amount, token.decimals);
-  return `ethereum:${token.contractAddress}/transfer?address=${encodeURIComponent(address)}&uint256=${units}`;
+  return `ethereum:${token.contractAddress}@${chain.eip155}/transfer?address=${encodeURIComponent(address)}&uint256=${units}`;
 }
 
 export function normalizeAmount(amount?: string): string {

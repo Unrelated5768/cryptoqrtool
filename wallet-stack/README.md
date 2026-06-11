@@ -97,6 +97,57 @@ uv run tools/new_address.py USDT --network solana --label customer-42
 The script stores derivation counters in `out/address-state.json` and an address
 history in `out/address-history.json`.
 
+## Internal HTTP API
+
+Start the API with Docker Compose:
+
+```sh
+docker compose up -d api
+```
+
+The API listens on `127.0.0.1:8088` only and loads `.env`. It stores API
+allocation state in `out/wallet-api.sqlite3`; it does not depend on the legacy
+`out/address-state.json` or `out/address-history.json` files.
+
+Health check:
+
+```sh
+curl http://127.0.0.1:8088/health
+```
+
+Allocate receive addresses:
+
+```sh
+curl -s http://127.0.0.1:8088/addresses \
+  -H 'Content-Type: application/json' \
+  -d '{"ticker":"BTC","label":"customer-42"}'
+
+curl -s http://127.0.0.1:8088/addresses \
+  -H 'Content-Type: application/json' \
+  -d '{"ticker":"USDT","network":"solana","label":"customer-42"}'
+```
+
+Supported tickers are `BTC`, `LTC`, `ETH`, `SOL`, `XMR`, `USDC`, and `USDT`.
+For `USDC` and `USDT`, `network` can be `ethereum` or `solana`; omitted token
+networks default to `ethereum`.
+
+List or fetch persisted allocations:
+
+```sh
+curl 'http://127.0.0.1:8088/addresses?ticker=BTC&limit=20'
+curl http://127.0.0.1:8088/addresses/1
+```
+
+Monitor a persisted allocation or an explicit address:
+
+```sh
+curl 'http://127.0.0.1:8088/monitor?ticker=BTC&address_id=1&limit=5'
+curl 'http://127.0.0.1:8088/monitor?ticker=ETH&address=0x...'
+```
+
+V1 is internal-only and has no app-level auth middleware. Keep it behind the
+Compose localhost binding or another private network boundary.
+
 For Monero, start `monero-wallet-rpc` first, then request a subaddress:
 
 ```sh
