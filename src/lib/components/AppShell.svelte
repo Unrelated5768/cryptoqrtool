@@ -223,25 +223,36 @@
 <slot />
 
 {#if updateAvailable && !updateDismissed}
-  <div class="fixed inset-x-0 bottom-0 z-50 border-t border-outline-variant bg-surface-high px-5 py-3 shadow-2xl" role="status" aria-live="polite">
-    <div class="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p class="text-sm font-semibold text-on-surface">A new version is available.</p>
-      <div class="flex items-center gap-2">
-        <button class="btn-primary px-3 py-2" type="button" on:click={reloadApp}>
-          <RefreshCw size={16} />
-          Reload
-        </button>
-        <button
-          class="icon-button h-9 w-9"
-          type="button"
-          title="Dismiss update notice"
-          aria-label="Dismiss update notice"
-          on:click={() => {
-            updateDismissed = true;
-          }}
-        >
-          <X size={16} />
-        </button>
+  <div
+    class="fixed right-4 top-20 z-[80] w-[min(calc(100vw-2rem),28rem)] rounded-card border border-primary/30 bg-surface-high p-4 shadow-2xl"
+    role="alert"
+    aria-live="assertive"
+    data-testid="update-notice"
+  >
+    <div class="flex items-start gap-3">
+      <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-action text-white">
+        <RefreshCw size={17} />
+      </span>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-on-surface">A new version is available.</p>
+        <p class="mt-1 text-sm text-on-surface-variant">Reload to use the latest deployment.</p>
+        <div class="mt-3 flex items-center gap-2">
+          <button class="btn-primary px-3 py-2" type="button" on:click={reloadApp}>
+            <RefreshCw size={16} />
+            Reload
+          </button>
+          <button
+            class="icon-button h-9 w-9"
+            type="button"
+            title="Dismiss update notice"
+            aria-label="Dismiss update notice"
+            on:click={() => {
+              updateDismissed = true;
+            }}
+          >
+            <X size={16} />
+          </button>
+        </div>
       </div>
     </div>
   </div>

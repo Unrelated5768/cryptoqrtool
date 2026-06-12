@@ -1,6 +1,9 @@
-import { buildId } from '$lib/buildInfo';
+import { appCommit, appVersion, buildId, buildVersion } from '$lib/buildInfo';
 
 type VersionPayload = {
+  version?: unknown;
+  commit?: unknown;
+  buildVersion?: unknown;
   buildId?: unknown;
 };
 
@@ -12,15 +15,32 @@ type VersionCheckOptions = {
 const defaultIntervalMs = 10 * 60 * 1000;
 const defaultVisibilityMinAgeMs = 2 * 60 * 1000;
 
-async function fetchRemoteBuildId() {
+function stringValue(value: unknown) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+export function isNewVersion(payload: VersionPayload) {
+  const remoteBuildId = stringValue(payload.buildId);
+  const remoteBuildVersion = stringValue(payload.buildVersion);
+  const remoteCommit = stringValue(payload.commit);
+  const remoteVersion = stringValue(payload.version);
+
+  if (remoteBuildId && buildId && remoteBuildId !== buildId) return true;
+  if (remoteBuildVersion && buildVersion && remoteBuildVersion !== buildVersion) return true;
+  if (remoteCommit && appCommit && remoteCommit !== appCommit) return true;
+  if (remoteVersion && appVersion && remoteVersion !== appVersion) return true;
+
+  return false;
+}
+
+async function fetchRemoteVersion() {
   const response = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
 
   if (!response.ok) {
-    return '';
+    return {};
   }
 
-  const payload = (await response.json()) as VersionPayload;
-  return typeof payload.buildId === 'string' ? payload.buildId : '';
+  return (await response.json()) as VersionPayload;
 }
 
 export function startVersionCheck(onNewVersion: () => void, options: VersionCheckOptions = {}) {
@@ -38,9 +58,9 @@ export function startVersionCheck(onNewVersion: () => void, options: VersionChec
     lastCheckedAt = Date.now();
 
     try {
-      const remoteBuildId = await fetchRemoteBuildId();
+      const remoteVersion = await fetchRemoteVersion();
 
-      if (remoteBuildId && remoteBuildId !== buildId) {
+      if (isNewVersion(remoteVersion)) {
         newVersionFound = true;
         onNewVersion();
       }

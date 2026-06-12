@@ -37,6 +37,7 @@ describe('AppShell', () => {
     onNewVersion();
 
     expect(await screen.findByText('A new version is available.')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveAttribute('data-testid', 'update-notice');
 
     await fireEvent.click(screen.getByRole('button', { name: 'Dismiss update notice' }));
 

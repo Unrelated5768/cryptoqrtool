@@ -1,11 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildId } from '$lib/buildInfo';
-import { startVersionCheck } from './versionCheck';
+import { appVersion, buildId } from '$lib/buildInfo';
+import { isNewVersion, startVersionCheck } from './versionCheck';
 
 function responseWithBuildId(remoteBuildId: string, ok = true) {
   return {
     ok,
     json: () => Promise.resolve({ buildId: remoteBuildId })
+  } as Response;
+}
+
+function responseWithPayload(payload: Record<string, unknown>, ok = true) {
+  return {
+    ok,
+    json: () => Promise.resolve(payload)
   } as Response;
 }
 
@@ -49,6 +56,20 @@ describe('startVersionCheck', () => {
     vi.useFakeTimers();
     vi.setSystemTime(0);
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(responseWithBuildId(`${buildId}-next`)));
+    const onNewVersion = vi.fn();
+
+    const stop = startVersionCheck(onNewVersion);
+    await flushPromises();
+
+    expect(onNewVersion).toHaveBeenCalledTimes(1);
+
+    stop();
+  });
+
+  it('notifies when only the deployed version differs from the loaded version', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(responseWithPayload({ version: `${appVersion}.next` })));
     const onNewVersion = vi.fn();
 
     const stop = startVersionCheck(onNewVersion);
@@ -125,5 +146,12 @@ describe('startVersionCheck', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     stop();
+  });
+});
+
+describe('isNewVersion', () => {
+  it('ignores malformed or empty version payloads', () => {
+    expect(isNewVersion({})).toBe(false);
+    expect(isNewVersion({ buildId: null, version: 12 })).toBe(false);
   });
 });
