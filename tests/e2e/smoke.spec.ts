@@ -137,7 +137,7 @@ test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
   await page.goto('/crypto-qrcode-bitcoin-lightning');
   await expect(page.locator('h1')).toContainText('Bitcoin Lightning');
 
-  await page.getByRole('link', { name: /generate lightning qr code/i }).click();
+  await page.getByRole('link', { name: /(open|generate) lightning qr (generator|code)/i }).click();
   await page.getByTestId('address-input').fill(lightningInvoice);
 
   await expect(page.getByLabel('Lightning invoice')).toBeVisible();
