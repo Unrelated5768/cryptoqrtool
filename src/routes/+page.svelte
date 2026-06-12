@@ -22,7 +22,7 @@
 </script>
 
 <main>
-  <section class="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 px-5 py-16 md:grid-cols-[1.05fr_0.95fr] md:px-8">
+  <section class="mx-auto grid max-w-7xl items-start gap-10 px-5 py-10 md:min-h-[calc(100dvh-4rem)] md:items-center md:grid-cols-[1.05fr_0.95fr] md:px-8 md:py-16">
     <div class="max-w-2xl">
       <div class="mb-5 inline-flex items-center gap-2 rounded border border-outline-variant bg-surface-high px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">
         <DatabaseZap size={16} />

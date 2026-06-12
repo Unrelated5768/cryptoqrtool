@@ -29,7 +29,7 @@
 </script>
 
 <main>
-  <section class="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 px-5 py-14 md:grid-cols-[1.02fr_0.98fr] md:px-8">
+  <section class="mx-auto grid max-w-7xl items-start gap-10 px-5 py-10 md:min-h-[calc(100dvh-4rem)] md:items-center md:grid-cols-[1.02fr_0.98fr] md:px-8 md:py-14">
     <div class="max-w-2xl">
       <p class="label mb-3">{page.eyebrow}</p>
       <h1 class="text-4xl font-bold leading-tight text-on-surface md:text-6xl">{page.headline}</h1>
