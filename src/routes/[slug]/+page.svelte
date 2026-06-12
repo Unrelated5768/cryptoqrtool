@@ -1,6 +1,6 @@
 <script lang="ts">
   import { AlertTriangle, ArrowRight, CheckCircle2, ListChecks, Palette, ShieldCheck, WalletCards } from 'lucide-svelte';
-  import { landingPages, relatedLandingPages, type CoinLandingPage } from '$lib/seo';
+  import { landingPages, relatedPageLabel, relatedLandingPages, type CoinLandingPage } from '$lib/seo';
 
   export let data: {
     landingPage: CoinLandingPage;
@@ -194,7 +194,7 @@
             class="flex items-center justify-between rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
             href={`/${item.slug}`}
           >
-            <span>{item.headline}</span>
+            <span>{relatedPageLabel(item)}</span>
             <CheckCircle2 size={16} style={`color: ${item.accent}`} />
           </a>
         {/each}

@@ -1,6 +1,7 @@
 import { networks, type NetworkId } from './networks';
 
 export const siteUrl = 'https://cryptoqrtool.com';
+export const siteRootUrl = `${siteUrl}/`;
 export const productName = 'CryptoQR Tool';
 export const seoProductName = 'Crypto QR Code Generator';
 export const defaultOgImage = `${siteUrl}/og-image.png`;
@@ -186,8 +187,12 @@ const staticRoutes: Record<string, StaticRouteConfig> = {
   }
 };
 
+function indefiniteArticle(phrase: string) {
+  return /^[aeiou]/i.test(phrase.trim()) ? 'an' : 'a';
+}
+
 function absoluteUrl(path: string) {
-  return path === '/' ? siteUrl : `${siteUrl}${path}`;
+  return path === '/' ? siteRootUrl : `${siteUrl}${path}`;
 }
 
 function networkDisplayName(network: (typeof networks)[number]) {
@@ -278,8 +283,20 @@ function guideBody(networkId: NetworkId, name: string, ticker: string) {
     case 'usdt':
       return `Learn how ${ticker} QR codes represent ERC-20 transfer requests, what wallet compatibility depends on, and when to prefer a dedicated generator for payment amounts.`;
     default:
-      return `Learn what a ${name} crypto QR code contains, how ${ticker} payment URIs work, and what to verify before you share or scan one.`;
+      return `Learn what ${indefiniteArticle(name)} ${name} crypto QR code contains, how ${ticker} payment URIs work, and what to verify before you share or scan one.`;
   }
+}
+
+export function relatedPageLabel(page: LandingPage) {
+  if (page.template === 'generator') {
+    return `${page.name} QR Code Generator`;
+  }
+
+  if (page.template === 'guide') {
+    return page.networkId ? `What Is ${indefiniteArticle(page.name)} ${page.name} Crypto QR Code?` : page.headline;
+  }
+
+  return page.headline;
 }
 
 function generatorBenefits(networkId: NetworkId, ticker: string, name: string): LandingPageSection[] {
@@ -701,7 +718,7 @@ function webSiteJsonLd(): JsonLd {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: productName,
-    url: siteUrl,
+    url: siteRootUrl,
     description: 'Browser-local crypto QR generation tools for public addresses, invoices, and payment requests.'
   };
 }
@@ -724,7 +741,7 @@ export const organizationJsonLd: JsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: productName,
-  url: siteUrl,
+  url: siteRootUrl,
   description: 'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.',
   sameAs: []
 };
@@ -823,7 +840,7 @@ function networkGuidePage(network: (typeof networks)[number]): LandingPage {
     description: isLightning
       ? 'Learn how Bitcoin Lightning QR codes encode BOLT11 invoices, how wallet compatibility works, and what to verify before paying or sharing one.'
       : `Learn how ${name} crypto QR codes encode ${network.ticker} addresses or payment URIs, how wallet compatibility works, and what to verify before using one.`,
-    headline: isLightning ? 'What Is a Bitcoin Lightning QR Code?' : `What Is a ${name} Crypto QR Code?`,
+    headline: isLightning ? 'What Is a Bitcoin Lightning QR Code?' : `What Is ${indefiniteArticle(name)} ${name} Crypto QR Code?`,
     eyebrow: isLightning ? 'Lightning invoice guide' : `${network.ticker} payment QR guide`,
     body: guideBody(network.id, name, network.ticker),
     ctaLabel: isLightning ? 'Open Lightning QR generator' : `Open ${name} QR generator`,
@@ -946,8 +963,9 @@ function checkerLandingPage(network: (typeof networks)[number], type: 'address' 
   const name = checkerNames[network.id];
   const isInvoice = type === 'invoice';
   const isToken = network.id === 'usdc' || network.id === 'usdt';
-  const checkerLabel = isInvoice ? 'Invoice Checker' : type === 'address' ? 'Address Checker' : 'Transaction Checker';
   const subject = isToken && type === 'address' ? `${name} EVM Recipient` : `${name} ${isInvoice ? 'Invoice' : type === 'address' ? 'Address' : 'Transaction'}`;
+  const checkerHeading = `${subject} Checker`;
+  const checkerActionLabel = isInvoice ? 'invoice checker' : type === 'address' ? 'address checker' : 'transaction checker';
 
   return {
     slug: `${network.id}-${isInvoice ? 'invoice' : type}-checker`,
@@ -956,20 +974,20 @@ function checkerLandingPage(network: (typeof networks)[number], type: 'address' 
     name,
     ticker: network.ticker,
     accent: network.accent,
-    title: `${subject} Checker | ${productName}`,
+    title: `${checkerHeading} | ${productName}`,
     description: isInvoice
       ? 'Validate Bitcoin Lightning BOLT11 invoice payloads before sharing or scanning them.'
       : type === 'address'
         ? `Check ${subject.toLowerCase()} formats, payment URI payloads, and trusted explorer links before using a crypto QR code.`
         : `Check ${subject.toLowerCase()} hashes with local validation, trusted explorer links, and best-effort live lookup.`,
-    headline: `${subject} ${checkerLabel}`,
+    headline: checkerHeading,
     eyebrow: isInvoice ? 'BOLT11 invoice validation' : type === 'address' ? `${network.ticker} recipient verification` : `${network.ticker} transaction verification`,
     body: isInvoice
       ? 'Paste a Bitcoin Lightning invoice to validate its BOLT11 shape before turning it into a QR code or sharing it with a payer.'
       : isToken
         ? `Paste a ${name} payment URI, EVM recipient address, or related EVM transaction hash to verify the payload shape and open trusted explorer links.`
         : `Paste a ${name} ${type === 'address' ? 'address or payment URI' : 'transaction hash'} to check its format and inspect available explorer or live lookup data.`,
-    ctaLabel: `Open ${checkerLabel.toLowerCase()}`,
+    ctaLabel: `Open ${checkerActionLabel}`,
     ctaHref: `/verify?network=${network.id}`,
     payloadExample:
       network.id === 'monero'

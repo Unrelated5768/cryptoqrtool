@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getCoinLandingPage, getSitemapEntries, routeMeta } from './seo';
+import { getCoinLandingPage, getSitemapEntries, relatedPageLabel, routeMeta } from './seo';
 
 function schemaTypes(pathname: string) {
   return new Set((routeMeta(pathname).jsonLd ?? []).map((item) => String(item['@type'])));
@@ -22,8 +22,23 @@ describe('seo metadata', () => {
   });
 
   it('keeps canonicals self-referential for paired pages', () => {
+    expect(routeMeta('/').canonical).toBe('https://cryptoqrtool.com/');
     expect(routeMeta('/bitcoin-qr-code-generator').canonical).toBe('https://cryptoqrtool.com/bitcoin-qr-code-generator');
     expect(routeMeta('/crypto-qrcode-bitcoin').canonical).toBe('https://cryptoqrtool.com/crypto-qrcode-bitcoin');
+  });
+
+  it('uses intent-specific related labels for generator, guide, and checker pages', () => {
+    const generatorPage = getCoinLandingPage('bitcoin-qr-code-generator');
+    const guidePage = getCoinLandingPage('crypto-qrcode-bitcoin');
+    const checkerPage = getCoinLandingPage('bitcoin-address-checker');
+
+    expect(generatorPage).toBeDefined();
+    expect(guidePage).toBeDefined();
+    expect(checkerPage).toBeDefined();
+
+    expect(relatedPageLabel(generatorPage!)).toBe('Bitcoin QR Code Generator');
+    expect(relatedPageLabel(guidePage!)).toBe('What Is a Bitcoin Crypto QR Code?');
+    expect(relatedPageLabel(checkerPage!)).toBe('Bitcoin Address Checker');
   });
 
   it('uses different schema intent for generator and guide pages', () => {
