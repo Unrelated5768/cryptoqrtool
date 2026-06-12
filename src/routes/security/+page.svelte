@@ -1,6 +1,6 @@
 <script lang="ts">
   import { FileLock2, HardDrive, ShieldCheck, WifiOff } from 'lucide-svelte';
-  import { productName } from '$lib/seo';
+  import { productName, securityFaqItems } from '$lib/seo';
 
   const items = [
     {
@@ -44,5 +44,19 @@
         <p class="mt-3 leading-7 text-on-surface-variant">{item.body}</p>
       </article>
     {/each}
+  </section>
+
+  <section class="mt-8">
+    <div class="surface-panel rounded-card p-6">
+      <h2 class="text-2xl font-semibold text-on-surface">Privacy and security FAQ</h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        {#each securityFaqItems as item}
+          <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+            <h3 class="text-lg font-semibold text-on-surface">{item.question}</h3>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{item.answer}</p>
+          </article>
+        {/each}
+      </div>
+    </div>
   </section>
 </main>

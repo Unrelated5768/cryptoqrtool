@@ -3,12 +3,45 @@ import { networks, type NetworkId } from './networks';
 export const siteUrl = 'https://cryptoqrtool.com';
 export const productName = 'CryptoQR Tool';
 export const seoProductName = 'Crypto QR Code Generator';
+export const defaultOgImage = `${siteUrl}/og-image.png`;
+export const defaultOgImageAlt = 'CryptoQR Tool crypto QR code generator';
+export const defaultOgImageWidth = 1200;
+export const defaultOgImageHeight = 630;
+export const contentLastUpdated = '2026-06-12';
+
+export type JsonLd = Record<string, unknown>;
+
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type SeoMeta = {
+  title: string;
+  description: string;
+  canonical: string;
+  jsonLd?: JsonLd[];
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  twitterImage?: string;
+  robots?: string;
+  lastModified?: string;
+};
+
+export type LandingPageTemplate = 'generator' | 'guide' | 'checker';
+
+export type LandingPageSection = {
+  title: string;
+  body: string;
+};
 
 export type LandingPage = {
   slug: string;
   canonicalSlug?: string;
+  template: LandingPageTemplate;
   networkId?: NetworkId;
-  purpose?: 'generator' | 'checker';
   name: string;
   ticker?: string;
   accent: string;
@@ -18,498 +51,885 @@ export type LandingPage = {
   eyebrow: string;
   body: string;
   ctaLabel: string;
-  generatorHref: string;
+  ctaHref: string;
   payloadExample: string;
   chips: string[];
-  benefits: Array<{
-    title: string;
-    body: string;
-  }>;
-  faq: Array<{
-    question: string;
-    answer: string;
-  }>;
+  benefits: LandingPageSection[];
+  primarySections: LandingPageSection[];
+  howToSteps?: string[];
+  trustPoints?: string[];
+  cautionItems?: string[];
+  faq: FaqItem[];
+  lastModified?: string;
 };
 
-const genericAccent = '#38bdf8';
+type BreadcrumbItem = {
+  name: string;
+  path: string;
+};
+
+type StaticRouteKind = 'home' | 'webapp' | 'page' | 'tech-article';
+
+type StaticRouteConfig = {
+  title: string;
+  description: string;
+  schemaName: string;
+  kind: StaticRouteKind;
+  breadcrumbLabel?: string;
+  faq?: FaqItem[];
+  robots?: string;
+  indexable?: boolean;
+  lastModified?: string;
+};
+
+export const homeFaqItems: FaqItem[] = [
+  {
+    question: `Does ${productName} store crypto addresses?`,
+    answer: 'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.'
+  },
+  {
+    question: 'Which networks are supported?',
+    answer: `${productName} supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.`
+  }
+];
+
+export const securityFaqItems: FaqItem[] = [
+  {
+    question: 'Where are saved addresses stored?',
+    answer: `Saved addresses are stored in browser local storage under a versioned ${productName} key for this browser profile only.`
+  },
+  {
+    question: 'Are custom logos uploaded?',
+    answer: 'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.'
+  }
+];
+
+const staticRoutes: Record<string, StaticRouteConfig> = {
+  '/': {
+    title: `${seoProductName} | ${productName}`,
+    description:
+      'Generate scannable crypto QR codes locally for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT with browser-only saved addresses and style presets.',
+    schemaName: seoProductName,
+    kind: 'home',
+    faq: homeFaqItems,
+    lastModified: contentLastUpdated
+  },
+  '/generate': {
+    title: `Generate Crypto QR Codes | ${productName}`,
+    description:
+      'Create guided crypto payment QR codes or hand-designed custom payload QR codes with scan-safe styling and local-only presets.',
+    schemaName: 'Crypto QR Code Generator',
+    kind: 'webapp',
+    breadcrumbLabel: 'Generate Crypto QR Codes',
+    lastModified: contentLastUpdated
+  },
+  '/saved': {
+    title: `Saved Addresses and QR Presets | ${productName}`,
+    description: 'Manage browser-local crypto addresses and QR style presets for this device only.',
+    schemaName: 'Saved Addresses and QR Presets',
+    kind: 'page',
+    breadcrumbLabel: 'Saved Addresses and QR Presets',
+    robots: 'noindex,follow',
+    indexable: false,
+    lastModified: contentLastUpdated
+  },
+  '/markets': {
+    title: `Crypto Market Prices and QR Planning | ${productName}`,
+    description: 'Track CoinGecko top 50 crypto assets with logos, live fiat prices, and a converter for QR amount planning.',
+    schemaName: 'Crypto Market Prices',
+    kind: 'page',
+    breadcrumbLabel: 'Market Prices',
+    lastModified: contentLastUpdated
+  },
+  '/fees': {
+    title: `Crypto Network Fee Comparison | ${productName}`,
+    description: 'Compare live and configured fee estimates for Bitcoin, Ethereum, Solana, and Monero activity.',
+    schemaName: 'Crypto Network Fee Comparison',
+    kind: 'page',
+    breadcrumbLabel: 'Network Fees',
+    lastModified: contentLastUpdated
+  },
+  '/verify': {
+    title: `Crypto Address and Transaction Checker | ${productName}`,
+    description:
+      'Verify crypto addresses, transaction hashes, Lightning invoices, and payment URI QR payloads with local validation, trusted explorer links, and best-effort live lookup.',
+    schemaName: 'Crypto Address and Transaction Checker',
+    kind: 'webapp',
+    breadcrumbLabel: 'Verify Crypto QR Payloads',
+    lastModified: contentLastUpdated
+  },
+  '/exchanges': {
+    title: `Crypto Exchange Directory | ${productName}`,
+    description: 'Review exchange directory data, trust indicators, and liquidity signals from CoinGecko.',
+    schemaName: 'Crypto Exchange Directory',
+    kind: 'page',
+    breadcrumbLabel: 'Exchange Directory',
+    lastModified: contentLastUpdated
+  },
+  '/security': {
+    title: `${productName} Privacy and Security`,
+    description: `Learn how ${productName} keeps QR generation, saved addresses, style presets, and custom logos browser-local.`,
+    schemaName: `${productName} Privacy and Security`,
+    kind: 'page',
+    breadcrumbLabel: 'Privacy and Security',
+    faq: securityFaqItems,
+    lastModified: contentLastUpdated
+  },
+  '/api-docs': {
+    title: `QR Code Generation API Docs | ${productName}`,
+    description:
+      'Generate crypto QR code SVGs through a server-side API with guided network validation, custom payload support, styling, and local catalog logos.',
+    schemaName: 'QR Code Generation API Docs',
+    kind: 'tech-article',
+    breadcrumbLabel: 'API Docs',
+    lastModified: contentLastUpdated
+  }
+};
+
+function absoluteUrl(path: string) {
+  return path === '/' ? siteUrl : `${siteUrl}${path}`;
+}
 
 function networkDisplayName(network: (typeof networks)[number]) {
-  return network.id === 'usdc' ? 'USDC' : network.id === 'usdt' ? 'USDT' : network.name.replace(' / EVM', '');
+  return network.id === 'usdc' || network.id === 'usdt' ? network.id.toUpperCase() : network.name.replace(' / EVM', '');
+}
+
+function guideSlug(networkId: NetworkId) {
+  return networkId === 'lightning' ? 'crypto-qrcode-bitcoin-lightning' : `crypto-qrcode-${networkId}`;
+}
+
+function generatorSlug(networkId: NetworkId) {
+  return `${networkId}-qr-code-generator`;
+}
+
+function guideHref(networkId: NetworkId) {
+  return `/${guideSlug(networkId)}`;
+}
+
+function generatorHref(networkId: NetworkId) {
+  return `/${generatorSlug(networkId)}`;
+}
+
+function coinGenerateHref(networkId: NetworkId) {
+  return `/generate?network=${networkId}`;
+}
+
+function payloadExample(networkId: NetworkId) {
+  switch (networkId) {
+    case 'monero':
+      return 'monero:84Pq...tx_amount=1.25';
+    case 'bitcoin':
+      return 'bitcoin:bc1q...?amount=0.015';
+    case 'lightning':
+      return 'lnbc2500u1p...';
+    case 'ethereum':
+      return 'ethereum:0x742d...?value=250000000000000000';
+    case 'solana':
+      return 'solana:7XSY...?amount=2.5';
+    case 'litecoin':
+      return 'litecoin:ltc1...?amount=1.5';
+    case 'usdc':
+      return 'ethereum:USDC/transfer?address=0x742d...';
+    case 'usdt':
+      return 'ethereum:USDT/transfer?address=0x742d...';
+  }
+}
+
+function uriScheme(networkId: NetworkId) {
+  switch (networkId) {
+    case 'monero':
+      return 'monero';
+    case 'bitcoin':
+      return 'bitcoin';
+    case 'lightning':
+      return 'lightning';
+    case 'ethereum':
+      return 'ethereum';
+    case 'solana':
+      return 'solana';
+    case 'litecoin':
+      return 'litecoin';
+    case 'usdc':
+      return 'ethereum';
+    case 'usdt':
+      return 'ethereum';
+  }
+}
+
+function generatorBody(networkId: NetworkId, name: string) {
+  switch (networkId) {
+    case 'lightning':
+      return `Generate scan-ready Bitcoin Lightning invoice QR codes from BOLT11 payment requests without connecting a wallet. ${productName} keeps invoice handling, QR styling, and saved presets in your browser.`;
+    case 'usdc':
+    case 'usdt':
+      return `Generate ${name} payment QR codes for EVM recipient addresses and token amounts with browser-local processing, scan-safe styling, and no account required.`;
+    default:
+      return `Generate a scannable ${name} QR code for wallet addresses and payment requests with browser-local processing, scan-safe styling, and no account required.`;
+  }
+}
+
+function guideBody(networkId: NetworkId, name: string, ticker: string) {
+  switch (networkId) {
+    case 'lightning':
+      return `Learn what a Bitcoin Lightning QR code contains, how BOLT11 invoices are encoded, when wallets expect one-time invoice payloads, and how to avoid reusing expired or already-paid invoices.`;
+    case 'monero':
+      return `Learn what a Monero QR code contains, how XMR payment URIs work for standard addresses, subaddresses, and integrated addresses, and what to verify before sharing a request.`;
+    case 'usdc':
+    case 'usdt':
+      return `Learn how ${ticker} QR codes represent ERC-20 transfer requests, what wallet compatibility depends on, and when to prefer a dedicated generator for payment amounts.`;
+    default:
+      return `Learn what a ${name} crypto QR code contains, how ${ticker} payment URIs work, and what to verify before you share or scan one.`;
+  }
+}
+
+function generatorBenefits(networkId: NetworkId, ticker: string, name: string): LandingPageSection[] {
+  const invoice = networkId === 'lightning';
+  return [
+    {
+      title: invoice ? 'BOLT11 invoice support' : 'Address and amount support',
+      body: invoice
+        ? 'Paste a Lightning invoice and generate a QR payload that compatible wallets can scan directly.'
+        : `Generate ${ticker} address QR codes and supported payment request payloads from the same focused tool.`
+    },
+    {
+      title: 'Scan-safe styling',
+      body: 'Tune colors, quiet zones, logo size, and contrast while keeping the QR preview readable on mobile wallets.'
+    },
+    {
+      title: 'Local-only workflow',
+      body: invoice
+        ? 'Invoices, logos, and saved presets stay in browser-local state instead of being synced to a hosted service.'
+        : `${name} addresses, QR payloads, custom logos, and saved presets stay in browser-local state.`
+    }
+  ];
+}
+
+function generatorPrimarySections(networkId: NetworkId, name: string, ticker: string): LandingPageSection[] {
+  switch (networkId) {
+    case 'lightning':
+      return [
+        {
+          title: 'How to generate a Lightning QR code',
+          body: 'Paste a fresh BOLT11 invoice, review the preview for scan contrast, and export the QR code for the payer who needs to scan it.'
+        },
+        {
+          title: 'Lightning invoice format',
+          body: 'Lightning QR codes encode the invoice itself. The payload is usually a lowercase `lnbc...` string rather than a reusable wallet address.'
+        },
+        {
+          title: 'Why this page is tool-first',
+          body: 'Use this generator when you already have an invoice and need a scannable QR. Use the guide page when you need the invoice rules explained first.'
+        }
+      ];
+    case 'ethereum':
+      return [
+        {
+          title: 'How to generate an Ethereum QR code',
+          body: 'Select Ethereum, paste the 0x address, optionally add an ETH amount, and export the QR once the preview and address look correct.'
+        },
+        {
+          title: 'Ethereum payment URI format',
+          body: 'Ethereum payment QR codes can encode a bare 0x address or an EIP-681 `ethereum:` request that includes value and chain information.'
+        },
+        {
+          title: 'What this page helps you do',
+          body: 'This page is designed for creating a QR code quickly, not for teaching the whole URI standard. The companion guide page covers the protocol details.'
+        }
+      ];
+    case 'usdc':
+    case 'usdt':
+      return [
+        {
+          title: `How to generate a ${ticker} QR code`,
+          body: `Select ${ticker}, paste the EVM recipient address, optionally add a token amount, and export the QR once the transfer request looks correct.`
+        },
+        {
+          title: `${ticker} transfer payload format`,
+          body: `${ticker} QR codes usually encode ERC-20 transfer-style requests tied to an EVM recipient address and token decimal rules.`
+        },
+        {
+          title: 'When to use this tool page',
+          body: `Use the generator when you need a payment QR immediately. Use the guide page to understand wallet support, token chains, and transfer payload expectations.`
+        }
+      ];
+    default:
+      return [
+        {
+          title: `How to generate a ${name} QR code`,
+          body: `Select ${name}, paste the recipient address, optionally add an amount, and export the QR code after checking the preview and encoded payload.`
+        },
+        {
+          title: `${name} payment URI format`,
+          body: `${name} QR codes can encode a plain address or a payment URI such as \`${uriScheme(networkId)}:address?amount=...\` when the network supports requested amounts.`
+        },
+        {
+          title: 'Why this page stays transactional',
+          body: 'This page is built to get you from a valid public address to a scannable QR code quickly. The companion guide page handles explanation and compatibility.'
+        }
+      ];
+  }
+}
+
+function generatorHowToSteps(networkId: NetworkId, name: string) {
+  if (networkId === 'lightning') {
+    return [
+      'Generate a fresh Lightning invoice in your wallet.',
+      'Paste the full BOLT11 invoice into the generator.',
+      'Review contrast, quiet zone, and logo usage before exporting the QR.',
+      'Verify the invoice amount and destination in the receiving wallet before sharing it.'
+    ];
+  }
+
+  return [
+    `Choose ${name} or open this page from the generator with the network preselected.`,
+    'Paste the public recipient address or payment destination.',
+    'Optionally add an amount if the network supports payment request payloads.',
+    'Review the preview and verify the destination before downloading or sharing the QR.'
+  ];
+}
+
+function generatorTrustPoints(networkId: NetworkId) {
+  return [
+    `${productName} does not connect to your wallet or ask for seed phrases, private keys, or exchange credentials.`,
+    networkId === 'lightning'
+      ? 'The generator works from pasted public invoice text only and keeps invoice handling inside the browser.'
+      : 'Address handling, QR rendering, custom logos, and presets stay local to the browser unless you explicitly export them.',
+    'Always verify the address or invoice in your wallet before sending funds.'
+  ];
+}
+
+function generatorCautionItems(networkId: NetworkId, name: string, ticker: string) {
+  const amountLabel = networkId === 'lightning' ? 'invoice amount' : `${ticker} amount`;
+  return [
+    `Do not paste seed phrases or private keys. This page is only for public ${networkId === 'lightning' ? 'invoice text' : 'addresses and payment request data'}.`,
+    `Double-check the destination and ${amountLabel} before distributing the QR code.`,
+    networkId === 'lightning'
+      ? 'Lightning invoices are one-time payment requests. Replace expired or already-paid invoices before reusing the QR.'
+      : `If a wallet scans only the address and ignores parameters, confirm the recipient and amount manually inside the wallet before sending ${name}.`
+  ];
+}
+
+function generatorFaq(networkId: NetworkId, name: string, ticker: string): FaqItem[] {
+  switch (networkId) {
+    case 'lightning':
+      return [
+        {
+          question: 'Can I make a QR code for a Bitcoin Lightning invoice?',
+          answer: 'Yes. Paste a BOLT11 invoice beginning with `lnbc` and the generator will create a QR code from the invoice text.'
+        },
+        {
+          question: 'Should I reuse a Lightning invoice QR code?',
+          answer: 'No. Lightning invoices are one-time payment requests. Generate a fresh invoice for each new payment.'
+        }
+      ];
+    case 'monero':
+      return [
+        {
+          question: 'Can I generate a Monero QR code for a subaddress?',
+          answer: 'Yes. The generator accepts common Monero subaddress formats and can encode them as scan-ready QR codes.'
+        },
+        {
+          question: 'Can I include a Monero payment amount?',
+          answer: 'Yes. Add an XMR amount and the tool builds a Monero URI with a `tx_amount` parameter.'
+        }
+      ];
+    default:
+      return [
+        {
+          question: `Can I generate a ${name} QR code without an account?`,
+          answer: `Yes. ${productName} generates ${ticker} QR codes in the browser without requiring an account or wallet connection.`
+        },
+        {
+          question: `Does ${productName} store ${name} wallet addresses?`,
+          answer: `No. Saved ${name} addresses and QR style presets stay in browser local storage and are not synced server-side.`
+        }
+      ];
+  }
+}
+
+function guideBenefits(networkId: NetworkId, name: string, ticker: string): LandingPageSection[] {
+  return [
+    {
+      title: 'What the QR code encodes',
+      body:
+        networkId === 'lightning'
+          ? 'Bitcoin Lightning QR codes encode invoice text, not a reusable address, so the invoice lifecycle matters.'
+          : `${name} QR codes usually encode a public address or payment URI that compatible wallets can interpret when scanned.`
+    },
+    {
+      title: 'Wallet compatibility context',
+      body:
+        networkId === 'usdc' || networkId === 'usdt'
+          ? 'Wallet support depends on token transfer parsing, chain selection, and whether the app recognizes ERC-20 transfer payload conventions.'
+          : 'Wallet behavior can vary between reading a plain address and reading amount parameters in a payment URI.'
+    },
+    {
+      title: 'How this guide differs from the tool',
+      body: `This page explains the format and safety checks. The dedicated ${name} generator page is the place to create the QR code itself.`
+    }
+  ];
+}
+
+function guidePrimarySections(networkId: NetworkId, name: string, ticker: string): LandingPageSection[] {
+  switch (networkId) {
+    case 'lightning':
+      return [
+        {
+          title: 'What a Lightning QR code contains',
+          body: 'A Lightning QR code usually contains a BOLT11 invoice. It is a payment request with encoded amount, route hints, and expiry details rather than a reusable address.'
+        },
+        {
+          title: 'Wallet compatibility',
+          body: 'Most Lightning wallets expect lowercase invoice text and treat the invoice as single-use. Expiry and amount handling should be checked before you share the code.'
+        },
+        {
+          title: 'When to switch to the generator',
+          body: 'Use the generator once the invoice is ready and you only need a scannable output. This guide is for understanding the format before you create one.'
+        }
+      ];
+    case 'monero':
+      return [
+        {
+          title: 'How Monero QR payloads work',
+          body: 'Monero QR codes can encode standard addresses, subaddresses, or integrated addresses, and can optionally include `tx_amount` to request a specific XMR value.'
+        },
+        {
+          title: 'What wallets may do with the payload',
+          body: 'Compatible wallets can prefill the recipient and amount after scanning, but the final send screen should still be checked before broadcasting a transaction.'
+        },
+        {
+          title: 'When to use the dedicated generator',
+          body: 'Use the generator when you already know the address or amount you want encoded and want a scan-friendly QR without extra setup.'
+        }
+      ];
+    case 'usdc':
+    case 'usdt':
+      return [
+        {
+          title: `${ticker} QR payload structure`,
+          body: `${ticker} QR codes often represent ERC-20 transfer requests tied to an EVM address and a token amount rather than a chain-native coin transfer.`
+        },
+        {
+          title: 'Compatibility and chain context',
+          body: 'Wallets may interpret token transfer requests differently depending on chain support, token metadata, and whether the app recognizes the transfer format.'
+        },
+        {
+          title: 'When to use the generator page',
+          body: `Use the generator page when you are ready to build the transfer QR. Use this guide when you need the format, chain, and compatibility details first.`
+        }
+      ];
+    default:
+      return [
+        {
+          title: `How ${name} QR payloads work`,
+          body: `${name} QR codes typically encode either a bare recipient address or a payment URI that can include an amount and other wallet-friendly parameters.`
+        },
+        {
+          title: 'Compatibility and scanner behavior',
+          body: `Some wallets scan only the ${ticker} address, while others also parse requested amounts. The final confirmation screen in the wallet remains the source of truth.`
+        },
+        {
+          title: `When to use the ${name} generator`,
+          body: `Open the dedicated generator when you need to create the QR immediately. Stay on the guide page when you are validating the format or teaching someone how the payload works.`
+        }
+      ];
+  }
+}
+
+function guideCautionItems(networkId: NetworkId, name: string, ticker: string) {
+  return [
+    networkId === 'lightning'
+      ? 'Do not reuse expired or already-paid Lightning invoices.'
+      : `Do not assume every wallet will honor a requested ${ticker} amount automatically.`,
+    `Always verify the final ${name} recipient in the wallet before sending funds.`,
+    networkId === 'usdc' || networkId === 'usdt'
+      ? 'Check the token chain and recipient address carefully so the transfer request matches the wallet and network you intend to use.'
+      : 'Use the dedicated generator page when you need a clean, scannable QR rather than a protocol explanation.'
+  ];
+}
+
+function guideFaq(networkId: NetworkId, name: string, ticker: string): FaqItem[] {
+  switch (networkId) {
+    case 'lightning':
+      return [
+        {
+          question: 'What is a Bitcoin Lightning QR code?',
+          answer: 'It is usually a QR representation of a BOLT11 Lightning invoice that a payer can scan from a compatible Lightning wallet.'
+        },
+        {
+          question: 'Can a Lightning QR code be reused?',
+          answer: 'Normally no. Lightning invoices are meant to be one-time payment requests with expiry and payment state.'
+        }
+      ];
+    default:
+      return [
+        {
+          question: `What does a ${name} crypto QR code contain?`,
+          answer: `It usually contains a public ${ticker} address or a payment URI that a compatible wallet can parse after scanning.`
+        },
+        {
+          question: `Is a ${name} QR code enough by itself to send funds?`,
+          answer: 'No. The sender should still verify the destination and amount in the wallet confirmation screen before approving the transaction.'
+        }
+      ];
+  }
+}
+
+function checkerBenefits(networkId: NetworkId, type: 'address' | 'transaction' | 'invoice', subject: string): LandingPageSection[] {
+  return [
+    {
+      title: 'Local format checks',
+      body:
+        type === 'invoice'
+          ? 'Validate Lightning invoice shape before sharing or turning it into a QR code.'
+          : `Check ${subject.toLowerCase()} format before opening a public explorer or handing the value to a payer.`
+    },
+    {
+      title: 'Trusted explorer links',
+      body: 'Open the matching public explorer for supported networks without guessing the right URL pattern.'
+    },
+    {
+      title: 'No wallet connection',
+      body:
+        networkId === 'lightning'
+          ? 'The checker works from pasted invoice text only and never asks for signing or wallet access.'
+          : 'The checker inspects public payload text only and never asks for wallet login, seed phrases, or signing permissions.'
+    }
+  ];
+}
+
+function checkerPrimarySections(subject: string, type: 'address' | 'transaction' | 'invoice'): LandingPageSection[] {
+  return [
+    {
+      title: `What the ${subject.toLowerCase()} checker validates`,
+      body:
+        type === 'invoice'
+          ? 'The checker looks at the invoice prefix, length, and character set to catch malformed Lightning requests before they are shared.'
+          : `The checker looks at the public payload shape, normalization, and known explorer patterns for the submitted ${subject.toLowerCase()}.`
+    },
+    {
+      title: 'What live lookup can and cannot confirm',
+      body: 'Explorer and lookup data can help with context, but wallet confirmation screens and trusted counterparty processes still matter before any transfer is approved.'
+    },
+    {
+      title: 'How this differs from the generator',
+      body: 'Use the checker to review existing public payload text. Use the generator to create a new QR code from a destination you trust.'
+    }
+  ];
+}
+
+function checkerCautionItems(type: 'address' | 'transaction' | 'invoice') {
+  return [
+    'Never paste seed phrases, private keys, recovery codes, or exchange credentials into any checker.',
+    type === 'invoice'
+      ? 'A syntactically valid invoice can still be expired, paid, or not intended for you. Verify the payment details in the wallet before paying.'
+      : 'A valid address or transaction hash does not guarantee that the destination is correct for your intended recipient.',
+    'Use explorer data as supporting context, not as a replacement for direct wallet verification.'
+  ];
+}
+
+function checkerFaq(subject: string): FaqItem[] {
+  return [
+    {
+      question: `Can I verify a ${subject.toLowerCase()} without connecting a wallet?`,
+      answer: `Yes. ${productName} checks public payload text and does not require a wallet connection.`
+    },
+    {
+      question: 'Should I paste my seed phrase into a crypto checker?',
+      answer: 'No. Only paste public addresses, transaction hashes, invoices, or payment URIs. Never paste seed phrases or private keys.'
+    }
+  ];
+}
+
+function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path)
+    }))
+  };
+}
+
+function faqJsonLd(items: FaqItem[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer
+      }
+    }))
+  };
+}
+
+function webPageJsonLd(name: string, description: string, url: string): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name,
+    url,
+    description
+  };
+}
+
+function webApplicationJsonLd(name: string, description: string, url: string): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name,
+    url,
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any modern browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD'
+    }
+  };
+}
+
+function webSiteJsonLd(): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: productName,
+    url: siteUrl,
+    description: 'Browser-local crypto QR generation tools for public addresses, invoices, and payment requests.'
+  };
+}
+
+function techArticleJsonLd(name: string, description: string, url: string): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: name,
+    url,
+    description,
+    author: {
+      '@type': 'Organization',
+      name: productName
+    }
+  };
+}
+
+export const organizationJsonLd: JsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: productName,
+  url: siteUrl,
+  description: 'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.',
+  sameAs: []
+};
+
+function landingPageBreadcrumbs(page: LandingPage): BreadcrumbItem[] {
+  const current = { name: page.headline, path: `/${page.slug}` };
+
+  if (page.template === 'generator') {
+    return [
+      { name: 'Home', path: '/' },
+      { name: staticRoutes['/generate'].breadcrumbLabel ?? staticRoutes['/generate'].schemaName, path: '/generate' },
+      current
+    ];
+  }
+
+  if (page.template === 'guide' && page.slug !== 'crypto-generate-qrcode') {
+    return [
+      { name: 'Home', path: '/' },
+      { name: 'Crypto QR Code Guide', path: '/crypto-generate-qrcode' },
+      current
+    ];
+  }
+
+  if (page.template === 'checker') {
+    return [
+      { name: 'Home', path: '/' },
+      { name: staticRoutes['/verify'].breadcrumbLabel ?? staticRoutes['/verify'].schemaName, path: '/verify' },
+      current
+    ];
+  }
+
+  return [{ name: 'Home', path: '/' }, current];
+}
+
+function staticRouteBreadcrumbs(pathname: string, route: StaticRouteConfig): BreadcrumbItem[] {
+  return [{ name: 'Home', path: '/' }, { name: route.breadcrumbLabel ?? route.schemaName, path: pathname }];
+}
+
+function landingPageJsonLd(page: LandingPage, canonical: string): JsonLd[] {
+  const schemas: JsonLd[] = [webPageJsonLd(page.headline, page.description, canonical)];
+
+  if (page.template === 'generator' || page.template === 'checker') {
+    schemas.push(webApplicationJsonLd(page.headline, page.description, canonical));
+  }
+
+  const breadcrumbs = landingPageBreadcrumbs(page);
+  if (breadcrumbs.length > 1) {
+    schemas.push(breadcrumbJsonLd(breadcrumbs));
+  }
+
+  if (page.faq.length > 0) {
+    schemas.push(faqJsonLd(page.faq));
+  }
+
+  return schemas;
+}
+
+function staticRouteJsonLd(pathname: string, route: StaticRouteConfig): JsonLd[] {
+  if (route.indexable === false) return [];
+
+  const canonical = absoluteUrl(pathname);
+
+  if (route.kind === 'home') {
+    const schemas = [organizationJsonLd, webSiteJsonLd(), webApplicationJsonLd(route.schemaName, route.description, canonical)];
+    if (route.faq?.length) schemas.push(faqJsonLd(route.faq));
+    return schemas;
+  }
+
+  const schemas: JsonLd[] =
+    route.kind === 'webapp'
+      ? [webPageJsonLd(route.schemaName, route.description, canonical), webApplicationJsonLd(route.schemaName, route.description, canonical)]
+      : route.kind === 'tech-article'
+        ? [techArticleJsonLd(route.schemaName, route.description, canonical)]
+        : [webPageJsonLd(route.schemaName, route.description, canonical)];
+
+  schemas.push(breadcrumbJsonLd(staticRouteBreadcrumbs(pathname, route)));
+
+  if (route.faq?.length) {
+    schemas.push(faqJsonLd(route.faq));
+  }
+
+  return schemas;
+}
+
+function networkGuidePage(network: (typeof networks)[number]): LandingPage {
+  const name = networkDisplayName(network);
+  const isLightning = network.id === 'lightning';
+  return {
+    slug: guideSlug(network.id),
+    template: 'guide',
+    networkId: network.id,
+    name,
+    ticker: network.ticker,
+    accent: network.accent,
+    title: `${name} Crypto QR Code Guide | ${productName}`,
+    description: isLightning
+      ? 'Learn how Bitcoin Lightning QR codes encode BOLT11 invoices, how wallet compatibility works, and what to verify before paying or sharing one.'
+      : `Learn how ${name} crypto QR codes encode ${network.ticker} addresses or payment URIs, how wallet compatibility works, and what to verify before using one.`,
+    headline: isLightning ? 'What Is a Bitcoin Lightning QR Code?' : `What Is a ${name} Crypto QR Code?`,
+    eyebrow: isLightning ? 'Lightning invoice guide' : `${network.ticker} payment QR guide`,
+    body: guideBody(network.id, name, network.ticker),
+    ctaLabel: isLightning ? 'Open Lightning QR generator' : `Open ${name} QR generator`,
+    ctaHref: coinGenerateHref(network.id),
+    payloadExample: payloadExample(network.id),
+    chips: isLightning ? ['Lightning', 'Invoice', 'BOLT11'] : [network.ticker, 'Payment URI', 'Wallet scan'],
+    benefits: guideBenefits(network.id, name, network.ticker),
+    primarySections: guidePrimarySections(network.id, name, network.ticker),
+    cautionItems: guideCautionItems(network.id, name, network.ticker),
+    faq: guideFaq(network.id, name, network.ticker),
+    lastModified: contentLastUpdated
+  };
 }
 
 function networkLandingPage(network: (typeof networks)[number]): LandingPage {
   const name = networkDisplayName(network);
   const isLightning = network.id === 'lightning';
   return {
-    slug: `${network.id}-qr-code-generator`,
-    purpose: 'generator',
+    slug: generatorSlug(network.id),
+    template: 'generator',
     networkId: network.id,
     name,
     ticker: network.ticker,
     accent: network.accent,
     title: `${name} QR Code Generator | ${productName}`,
     description: isLightning
-      ? `Generate Bitcoin Lightning BOLT11 invoice QR codes in your browser with local-only invoice handling, scan-safe styling, and no account required.`
-      : `Generate ${name} (${network.ticker}) wallet address and payment QR codes in your browser with local-only address handling, scan-safe styling, and no account required.`,
+      ? 'Generate Bitcoin Lightning invoice QR codes locally in your browser with scan-safe styling and no wallet connection.'
+      : `Generate ${name} (${network.ticker}) wallet address and payment QR codes locally in your browser with scan-safe styling and no wallet connection.`,
     headline: `${name} QR Code Generator`,
     eyebrow: isLightning ? 'BTC Lightning invoice QR tool' : `${network.ticker} wallet QR tool`,
-    body: isLightning
-      ? `Create scannable Bitcoin Lightning QR codes from BOLT11 invoices. ${productName} keeps invoice rendering, QR styling, and saved presets in your browser.`
-      : `Create a scannable ${name} QR code for wallet addresses and payment requests. ${productName} keeps QR generation, style presets, and saved addresses in your browser.`,
-    ctaLabel: `Generate ${network.ticker} QR code`,
-    generatorHref: coinGenerateHref(network.id),
-    payloadExample:
-      network.id === 'monero'
-        ? 'monero:84Pq...tx_amount=1.25'
-        : network.id === 'bitcoin'
-          ? 'bitcoin:bc1q...?amount=0.015'
-          : network.id === 'lightning'
-            ? 'lnbc2500u1p...'
-            : network.id === 'ethereum'
-              ? 'ethereum:0x742d...?value=250000000000000000'
-              : network.id === 'solana'
-                ? 'solana:7XSY...?amount=2.5'
-                : network.id === 'litecoin'
-                  ? 'litecoin:ltc1...?amount=1.5'
-                  : network.id === 'usdc'
-                    ? 'ethereum:USDC/transfer?address=0x742d...'
-                    : 'ethereum:USDT/transfer?address=0x742d...',
-    chips: isLightning ? ['Lightning', 'BOLT11', 'Invoice'] : ['Address', 'Amount', 'Logo'],
-    benefits: [
-      {
-        title: isLightning ? 'BOLT11 invoice QR codes' : 'Address and amount QR codes',
-        body: isLightning
-          ? 'Paste a Bitcoin Lightning invoice and generate a QR payload that compatible wallets can scan directly.'
-          : `Generate ${network.ticker} address QR codes and supported payment request payloads from the same focused tool.`
-      },
-      {
-        title: 'Scan-safe styling',
-        body: 'Tune colors, dot styles, quiet zones, and crypto logos while keeping the QR preview readable.'
-      },
-      {
-        title: 'Local by design',
-        body: isLightning
-          ? 'Invoice payloads, custom logos, and QR style presets stay in browser-local storage.'
-          : 'QR payloads, saved addresses, custom logos, and presets stay in browser-local storage.'
-      }
-    ],
-    faq: [
-      {
-        question: `Can I generate a ${network.ticker} QR code without an account?`,
-        answer: `Yes. ${productName} generates ${network.ticker} QR codes in the browser without requiring an account or wallet connection.`
-      },
-      {
-        question: isLightning
-          ? `Does ${productName} store Bitcoin Lightning invoices?`
-          : `Does ${productName} store ${name} wallet addresses?`,
-        answer: isLightning
-          ? 'Lightning invoices and QR style presets stay in browser local storage and are not synced server-side.'
-          : 'Saved addresses and QR style presets stay in browser local storage and are not synced server-side.'
-      }
-    ]
+    body: generatorBody(network.id, name),
+    ctaLabel: isLightning ? 'Generate Lightning QR code' : `Generate ${network.ticker} QR code`,
+    ctaHref: coinGenerateHref(network.id),
+    payloadExample: payloadExample(network.id),
+    chips: isLightning ? ['Lightning', 'BOLT11', 'Invoice'] : ['Address', 'Amount', 'Local only'],
+    benefits: generatorBenefits(network.id, network.ticker, name),
+    primarySections: generatorPrimarySections(network.id, name, network.ticker),
+    howToSteps: generatorHowToSteps(network.id, name),
+    trustPoints: generatorTrustPoints(network.id),
+    cautionItems: generatorCautionItems(network.id, name, network.ticker),
+    faq: generatorFaq(network.id, name, network.ticker),
+    lastModified: contentLastUpdated
   };
 }
 
-export const coinLandingPages = networks.map((network) => {
-  return networkLandingPage(network);
-});
-
-export const searchLandingPages: LandingPage[] = [
-  {
-    slug: 'crypto-qrcode-monero',
-    canonicalSlug: 'crypto-qrcode-monero',
-    purpose: 'generator',
-    networkId: 'monero',
-    name: 'Monero',
-    ticker: 'XMR',
-    accent: '#ff6600',
-    title: `Crypto QRCode Monero | ${productName}`,
-    description:
-      'Generate Monero crypto QR codes for XMR wallet addresses and tx_amount payment requests with browser-local processing and scan-safe styling.',
-    headline: 'Crypto QRCode Monero',
-    eyebrow: 'XMR private payment QR codes',
-    body:
-      'Build Monero QR codes for standard addresses, subaddresses, integrated addresses, and optional XMR amounts. Address validation, styling, and saved presets run locally in your browser.',
-    ctaLabel: 'Generate Monero QR code',
-    generatorHref: coinGenerateHref('monero'),
-    payloadExample: 'monero:84Pq...tx_amount=1.25',
-    chips: ['XMR', 'Subaddress', 'tx_amount'],
-    benefits: [
-      {
-        title: 'Monero address validation',
-        body: 'Check common XMR standard, subaddress, and integrated address formats before creating the QR payload.'
-      },
-      {
-        title: 'Payment amount support',
-        body: 'Add an optional XMR amount and generate a Monero URI that compatible wallets can parse.'
-      },
-      {
-        title: 'Local privacy posture',
-        body: 'Wallet addresses, custom logos, and presets remain in the browser instead of being sent to a hosted vault.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I make a Monero QR code for a subaddress?',
-        answer: 'Yes. The generator accepts common Monero subaddress formats and can encode them as QR codes.'
-      },
-      {
-        question: 'Can I include a Monero payment amount?',
-        answer: 'Yes. Add an XMR amount and the tool builds a Monero URI with a tx_amount parameter.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-bitcoin',
-    canonicalSlug: 'crypto-qrcode-bitcoin',
-    purpose: 'generator',
-    networkId: 'bitcoin',
-    name: 'Bitcoin',
-    ticker: 'BTC',
-    accent: '#f7931a',
-    title: `Crypto QRCode Bitcoin | ${productName}`,
-    description:
-      'Generate Bitcoin crypto QR codes for BTC wallet addresses and amount payment requests with local address handling and QR styling.',
-    headline: 'Crypto QRCode Bitcoin',
-    eyebrow: 'BTC wallet payment QR codes',
-    body:
-      'Create Bitcoin QR codes for legacy and SegWit-style wallet addresses, with optional BTC amounts for payment requests. Tune the QR appearance while keeping the encoded data local.',
-    ctaLabel: 'Generate Bitcoin QR code',
-    generatorHref: coinGenerateHref('bitcoin'),
-    payloadExample: 'bitcoin:bc1q...?amount=0.015',
-    chips: ['BTC', 'SegWit', 'Amount'],
-    benefits: [
-      {
-        title: 'Bitcoin address formats',
-        body: 'Validate common BTC legacy and bech32 address formats before you export or scan a QR code.'
-      },
-      {
-        title: 'Payment URI output',
-        body: 'Add a BTC amount and generate a bitcoin: payment payload for wallet scanners.'
-      },
-      {
-        title: 'Readable QR styling',
-        body: 'Customize colors, dots, corners, quiet zones, and logos while preserving scan contrast.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I generate a Bitcoin QR code with an amount?',
-        answer: 'Yes. Enter a BTC amount and the generator creates a bitcoin: URI with an amount parameter.'
-      },
-      {
-        question: 'Are Bitcoin addresses uploaded to the server?',
-        answer: 'No. QR generation and saved address presets are handled in browser-local state.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-bitcoin-lightning',
-    canonicalSlug: 'crypto-qrcode-bitcoin-lightning',
-    purpose: 'generator',
-    networkId: 'lightning',
-    name: 'Bitcoin Lightning',
-    ticker: 'BTC-LN',
-    accent: '#facc15',
-    title: `Bitcoin Lightning QR Code Generator | ${productName}`,
-    description:
-      'Generate Bitcoin Lightning QR codes from BOLT11 invoices with local invoice handling, scan-safe styling, and no wallet connection required.',
-    headline: 'Bitcoin Lightning QR Code Generator',
-    eyebrow: 'BTC Lightning invoice QR codes',
-    body:
-      'Turn a Bitcoin Lightning BOLT11 invoice into a scan-ready QR code. Paste the invoice from your wallet, preview the QR locally, tune the style, and export a code that Lightning wallets can scan.',
-    ctaLabel: 'Generate Lightning QR code',
-    generatorHref: coinGenerateHref('lightning'),
-    payloadExample: 'lnbc2500u1p...',
-    chips: ['Lightning', 'BOLT11', 'Invoice', 'BTC'],
-    benefits: [
-      {
-        title: 'Invoice-first workflow',
-        body: 'Lightning payments use BOLT11 invoices, so the QR encodes the invoice directly instead of a reusable BTC address.'
-      },
-      {
-        title: 'Wallet scanner friendly',
-        body: 'Keep the QR high-contrast with quiet-zone defaults designed for fast scanning in mobile Lightning wallets.'
-      },
-      {
-        title: 'Local invoice handling',
-        body: 'The invoice, QR preview, custom logos, and saved presets stay in browser-local state.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I make a QR code for a Bitcoin Lightning invoice?',
-        answer: 'Yes. Paste a BOLT11 invoice beginning with lnbc and the generator creates a QR code from that invoice.'
-      },
-      {
-        question: 'Should I reuse a Lightning invoice QR code?',
-        answer: 'No. Lightning invoices are payment requests. Generate a fresh invoice in your wallet for each payment.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-ethereum',
-    canonicalSlug: 'crypto-qrcode-ethereum',
-    purpose: 'generator',
-    networkId: 'ethereum',
-    name: 'Ethereum',
-    ticker: 'ETH',
-    accent: '#627eea',
-    title: `Crypto QRCode Ethereum | ${productName}`,
-    description:
-      'Generate Ethereum crypto QR codes for ETH and EVM wallet addresses with optional value payment requests and browser-local QR styling.',
-    headline: 'Crypto QRCode Ethereum',
-    eyebrow: 'ETH and EVM wallet QR codes',
-    body:
-      'Create Ethereum QR codes for 0x wallet addresses and optional ETH payment values. The generator validates common EVM address format and keeps QR payloads local in your browser.',
-    ctaLabel: 'Generate Ethereum QR code',
-    generatorHref: coinGenerateHref('ethereum'),
-    payloadExample: 'ethereum:0x742d...?value=250000000000000000',
-    chips: ['ETH', 'EVM', '0x address', 'Value'],
-    benefits: [
-      {
-        title: 'EVM address validation',
-        body: 'Check 0x-prefixed Ethereum and EVM wallet addresses before generating a scan-ready QR code.'
-      },
-      {
-        title: 'ETH payment payloads',
-        body: 'Add an optional ETH value and encode it in an EIP-681 ethereum: payment URI with chain id and wei-denominated value.'
-      },
-      {
-        title: 'Reusable QR presets',
-        body: 'Save preferred colors, logos, dot styles, and quiet-zone settings locally for repeat generation.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I generate an Ethereum QR code for a 0x address?',
-        answer: 'Yes. Paste a 0x Ethereum or EVM address and the generator can create an address QR code.'
-      },
-      {
-        question: 'Can Ethereum QR codes include an ETH amount?',
-        answer: 'Yes. Enter an amount and the tool builds an EIP-681 ethereum: URI with chain id and a wei-denominated value parameter.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-solana',
-    canonicalSlug: 'crypto-qrcode-solana',
-    purpose: 'generator',
-    networkId: 'solana',
-    name: 'Solana',
-    ticker: 'SOL',
-    accent: '#14f195',
-    title: `Crypto QRCode Solana | ${productName}`,
-    description:
-      'Generate Solana crypto QR codes for SOL wallet addresses and amount payment requests with local generation and scan-safe styling.',
-    headline: 'Crypto QRCode Solana',
-    eyebrow: 'SOL wallet QR codes',
-    body:
-      'Create Solana QR codes for SOL wallet public keys, with optional payment amounts for wallet scanners. Address checks, preview, styling, and presets stay in the browser.',
-    ctaLabel: 'Generate Solana QR code',
-    generatorHref: coinGenerateHref('solana'),
-    payloadExample: 'solana:7XSY...?amount=2.5',
-    chips: ['SOL', 'Base58', 'Amount'],
-    benefits: [
-      {
-        title: 'Solana public key checks',
-        body: 'Validate common base58 Solana public key length before creating the QR code.'
-      },
-      {
-        title: 'SOL amount support',
-        body: 'Include an optional SOL amount in the generated Solana payment payload.'
-      },
-      {
-        title: 'Local QR rendering',
-        body: 'Generate, style, and save QR presets in browser-local state without a wallet connection.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I make a QR code for a Solana wallet address?',
-        answer: 'Yes. Paste a Solana public key and the generator creates a QR code for that address.'
-      },
-      {
-        question: 'Does the Solana QR generator require wallet login?',
-        answer: 'No. It works from pasted addresses and does not require connecting a wallet.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-litecoin',
-    canonicalSlug: 'crypto-qrcode-litecoin',
-    purpose: 'generator',
-    networkId: 'litecoin',
-    name: 'Litecoin',
-    ticker: 'LTC',
-    accent: '#345d9d',
-    title: `Crypto QRCode Litecoin | ${productName}`,
-    description:
-      'Generate Litecoin crypto QR codes for LTC wallet addresses and amount payment requests with browser-local address handling.',
-    headline: 'Crypto QRCode Litecoin',
-    eyebrow: 'LTC wallet QR codes',
-    body:
-      'Build Litecoin QR codes for LTC wallet addresses, including legacy and bech32-style formats, with optional payment amounts and scan-safe QR customization.',
-    ctaLabel: 'Generate Litecoin QR code',
-    generatorHref: coinGenerateHref('litecoin'),
-    payloadExample: 'litecoin:ltc1...?amount=1.5',
-    chips: ['LTC', 'bech32', 'Amount'],
-    benefits: [
-      {
-        title: 'Litecoin address formats',
-        body: 'Validate common LTC legacy, P2SH, and bech32 address patterns before QR export.'
-      },
-      {
-        title: 'Payment URI generation',
-        body: 'Add an LTC amount and generate a litecoin: payment payload for compatible wallets.'
-      },
-      {
-        title: 'Styled but scannable',
-        body: 'Customize the look while keeping enough quiet zone and contrast for reliable scanning.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I generate a Litecoin QR code with an amount?',
-        answer: 'Yes. Enter an LTC amount and the generator creates a litecoin: URI with an amount parameter.'
-      },
-      {
-        question: 'Can I save a Litecoin QR preset?',
-        answer: 'Yes. Address and style presets can be saved in browser local storage.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-usdc',
-    canonicalSlug: 'crypto-qrcode-usdc',
-    purpose: 'generator',
-    networkId: 'usdc',
-    name: 'USDC',
-    ticker: 'USDC',
-    accent: '#2775ca',
-    title: `Crypto QRCode USDC | ${productName}`,
-    description:
-      'Generate USDC crypto QR codes for ERC-20 recipient addresses and token transfer payloads with local QR generation.',
-    headline: 'Crypto QRCode USDC',
-    eyebrow: 'USDC ERC-20 QR codes',
-    body:
-      'Create USDC QR codes for EVM recipient addresses and optional token amounts. The generator builds ERC-20 transfer-style payloads and keeps address handling local.',
-    ctaLabel: 'Generate USDC QR code',
-    generatorHref: coinGenerateHref('usdc'),
-    payloadExample: 'ethereum:USDC/transfer?address=0x742d...',
-    chips: ['USDC', 'ERC-20', '0x address'],
-    benefits: [
-      {
-        title: 'ERC-20 recipient checks',
-        body: 'Validate the EVM recipient address before generating a USDC payment QR code.'
-      },
-      {
-        title: 'Token amount payloads',
-        body: 'Add a USDC amount and encode the transfer units using the token decimal setting.'
-      },
-      {
-        title: 'No account required',
-        body: 'Generate and style QR codes from pasted addresses without signing in or connecting a wallet.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I generate a USDC QR code for an Ethereum address?',
-        answer: 'Yes. The USDC generator accepts EVM recipient addresses for ERC-20 transfer payloads.'
-      },
-      {
-        question: 'Can a USDC QR code include a token amount?',
-        answer: 'Yes. Enter a USDC amount and the generator encodes token units for the transfer payload.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-qrcode-usdt',
-    canonicalSlug: 'crypto-qrcode-usdt',
-    purpose: 'generator',
-    networkId: 'usdt',
-    name: 'USDT',
-    ticker: 'USDT',
-    accent: '#26a17b',
-    title: `Crypto QRCode USDT | ${productName}`,
-    description:
-      'Generate USDT crypto QR codes for ERC-20 recipient addresses and token transfer payloads with browser-local processing.',
-    headline: 'Crypto QRCode USDT',
-    eyebrow: 'USDT ERC-20 QR codes',
-    body:
-      'Create USDT QR codes for EVM recipient addresses with optional token amounts. Address validation, QR styling, and saved presets stay local to the browser.',
-    ctaLabel: 'Generate USDT QR code',
-    generatorHref: coinGenerateHref('usdt'),
-    payloadExample: 'ethereum:USDT/transfer?address=0x742d...',
-    chips: ['USDT', 'ERC-20', '0x address'],
-    benefits: [
-      {
-        title: 'EVM recipient validation',
-        body: 'Check the 0x recipient address before generating an ERC-20 USDT QR payload.'
-      },
-      {
-        title: 'USDT amount support',
-        body: 'Add a USDT amount and the generator converts it into token units for the QR payload.'
-      },
-      {
-        title: 'Browser-local workflow',
-        body: 'No server-side address vault is used for QR generation, logos, or saved presets.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Can I generate a USDT QR code for ERC-20 transfers?',
-        answer: 'Yes. The USDT generator creates ERC-20 transfer-style payloads for EVM recipient addresses.'
-      },
-      {
-        question: 'Does USDT QR generation require an exchange account?',
-        answer: 'No. It works in the browser from a pasted recipient address and optional token amount.'
-      }
-    ]
-  },
-  {
-    slug: 'crypto-generate-qrcode',
-    canonicalSlug: 'crypto-generate-qrcode',
-    purpose: 'generator',
-    name: 'Crypto QR Code',
-    accent: genericAccent,
-    title: `Crypto Generate QRCode | ${productName}`,
-    description:
-      'Generate crypto QR codes online for Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT with a browser-local QR generator.',
-    headline: 'Crypto Generate QRCode',
-    eyebrow: 'Multi-coin QR generator',
-    body:
-      'Generate crypto QR codes for wallet addresses, payment amounts, and custom payloads. Choose a supported network, paste an address, preview the QR code, and export a scan-ready design.',
-    ctaLabel: 'Open crypto QR generator',
-    generatorHref: '/generate',
-    payloadExample: 'bitcoin:bc1q...?amount=0.015',
-    chips: ['XMR', 'BTC', 'Lightning', 'ETH', 'SOL', 'LTC', 'USDC', 'USDT'],
-    benefits: [
-      {
-        title: 'One generator for major networks',
-        body: 'Use guided presets for Monero, Bitcoin, Bitcoin Lightning invoices, Ethereum/EVM, Solana, Litecoin, USDC, and USDT.'
-      },
-      {
-        title: 'Custom payload mode',
-        body: 'Switch to custom mode when you need to encode a raw wallet payload, invoice, or internal reference.'
-      },
-      {
-        title: 'Local saved presets',
-        body: 'Save frequently used addresses and QR styles in this browser for repeat generation.'
-      }
-    ],
-    faq: [
-      {
-        question: 'Which crypto QR codes can I generate?',
-        answer: `${productName} supports Monero, Bitcoin, Bitcoin Lightning invoices, Ethereum/EVM, Solana, Litecoin, USDC, and USDT, plus custom text payloads.`
-      },
-      {
-        question: 'Can I generate a QR code without connecting a wallet?',
-        answer: 'Yes. The generator works from pasted addresses or custom payloads and does not require a wallet connection.'
-      }
-    ]
-  }
-];
+const genericGuidePage: LandingPage = {
+  slug: 'crypto-generate-qrcode',
+  template: 'guide',
+  name: 'Crypto QR Code',
+  accent: '#38bdf8',
+  title: `Crypto QR Code Guide | ${productName}`,
+  description:
+    'Learn how crypto QR codes encode wallet addresses, payment requests, and invoices across Monero, Bitcoin, Lightning, Ethereum, Solana, Litecoin, USDC, and USDT.',
+  headline: 'Crypto QR Code Guide',
+  eyebrow: 'Multi-network QR explainer',
+  body:
+    'Learn how crypto QR codes work before you generate one. This guide explains what wallet scanners usually read, how payment URI formats differ by network, and when to use the dedicated tool pages for actual QR generation.',
+  ctaLabel: 'Open the multi-network generator',
+  ctaHref: '/generate',
+  payloadExample: 'bitcoin:bc1q...?amount=0.015',
+  chips: ['BTC', 'XMR', 'ETH', 'SOL', 'LTC', 'USDC', 'USDT', 'Lightning'],
+  benefits: [
+    {
+      title: 'Format overview',
+      body: 'Compare how major crypto networks encode addresses, payment amounts, and invoice-style QR payloads.'
+    },
+    {
+      title: 'Wallet expectations',
+      body: 'Understand what scanners usually prefill and what still needs to be verified manually in the wallet.'
+    },
+    {
+      title: 'Next-step navigation',
+      body: 'Jump from the guide to dedicated generator and checker pages once you know which workflow you need.'
+    }
+  ],
+  primarySections: [
+    {
+      title: 'What a crypto QR code usually contains',
+      body: 'Most crypto QR codes encode a public destination such as a wallet address, payment URI, or invoice string. They should never contain private keys or seed phrases.'
+    },
+    {
+      title: 'Why payment formats differ by network',
+      body: 'Bitcoin-style URIs, Monero request parameters, Ethereum payment requests, and Lightning invoices use different encoding rules and wallet expectations.'
+    },
+    {
+      title: 'When to use a guide versus a generator',
+      body: 'Use the guide when you need the standards explained. Use the generator when you already trust the destination and need a scannable QR output.'
+    }
+  ],
+  cautionItems: [
+    'Never share a QR code for a destination you have not verified independently.',
+    'Do not assume every wallet will honor optional amount parameters the same way.',
+    'Use the dedicated generator page when you need a QR code that other people will actually scan.'
+  ],
+  faq: [
+    {
+      question: 'What is a crypto QR code?',
+      answer: 'It is a QR code that encodes a public wallet destination, payment request, or invoice string so a wallet can scan it instead of requiring manual typing.'
+    },
+    {
+      question: 'Can I use one generator for every network?',
+      answer: 'A multi-network tool can help, but each blockchain still has its own address and payment format rules. Dedicated pages exist for network-specific workflows.'
+    }
+  ],
+  lastModified: contentLastUpdated
+};
 
 const checkerNames: Record<NetworkId, string> = {
   monero: 'Monero',
@@ -528,28 +948,29 @@ function checkerLandingPage(network: (typeof networks)[number], type: 'address' 
   const isToken = network.id === 'usdc' || network.id === 'usdt';
   const checkerLabel = isInvoice ? 'Invoice Checker' : type === 'address' ? 'Address Checker' : 'Transaction Checker';
   const subject = isToken && type === 'address' ? `${name} EVM Recipient` : `${name} ${isInvoice ? 'Invoice' : type === 'address' ? 'Address' : 'Transaction'}`;
+
   return {
     slug: `${network.id}-${isInvoice ? 'invoice' : type}-checker`,
-    purpose: 'checker',
+    template: 'checker',
     networkId: network.id,
     name,
     ticker: network.ticker,
     accent: network.accent,
     title: `${subject} Checker | ${productName}`,
     description: isInvoice
-      ? `Validate Bitcoin Lightning BOLT11 invoice QR payloads before scanning or sharing them.`
+      ? 'Validate Bitcoin Lightning BOLT11 invoice payloads before sharing or scanning them.'
       : type === 'address'
         ? `Check ${subject.toLowerCase()} formats, payment URI payloads, and trusted explorer links before using a crypto QR code.`
         : `Check ${subject.toLowerCase()} hashes with local validation, trusted explorer links, and best-effort live lookup.`,
     headline: `${subject} ${checkerLabel}`,
     eyebrow: isInvoice ? 'BOLT11 invoice validation' : type === 'address' ? `${network.ticker} recipient verification` : `${network.ticker} transaction verification`,
     body: isInvoice
-      ? `Paste a Bitcoin Lightning invoice to validate its BOLT11 shape before turning it into a QR code or sharing it with a payer.`
+      ? 'Paste a Bitcoin Lightning invoice to validate its BOLT11 shape before turning it into a QR code or sharing it with a payer.'
       : isToken
         ? `Paste a ${name} payment URI, EVM recipient address, or related EVM transaction hash to verify the payload shape and open trusted explorer links.`
         : `Paste a ${name} ${type === 'address' ? 'address or payment URI' : 'transaction hash'} to check its format and inspect available explorer or live lookup data.`,
     ctaLabel: `Open ${checkerLabel.toLowerCase()}`,
-    generatorHref: `/verify?network=${network.id}`,
+    ctaHref: `/verify?network=${network.id}`,
     payloadExample:
       network.id === 'monero'
         ? type === 'transaction'
@@ -576,39 +997,23 @@ function checkerLandingPage(network: (typeof networks)[number], type: 'address' 
                   : network.id === 'usdc'
                     ? 'ethereum:USDC transfer to 0x742d...'
                     : 'ethereum:USDT transfer to 0x742d...',
-    chips: isInvoice
-      ? ['Lightning', 'BOLT11', 'Invoice']
-      : type === 'address'
-        ? ['Address', 'Payment URI', 'Explorer']
-        : ['Transaction', 'Hash', 'Live lookup'],
-    benefits: [
-      {
-        title: 'Local format checks',
-        body: isInvoice
-          ? 'Validate the invoice prefix, length, and BOLT11-style character set before encoding or scanning it.'
-          : 'Identify supported address, transaction, and payment URI formats before opening a blockchain explorer.'
-      },
-      {
-        title: 'Trusted explorer links',
-        body: 'Open the matching public explorer for supported networks without guessing the correct URL pattern.'
-      },
-      {
-        title: 'No wallet connection',
-        body: 'The checker never asks for seed phrases, private keys, wallet login, or signing permissions.'
-      }
+    chips: isInvoice ? ['Lightning', 'Invoice', 'BOLT11'] : type === 'address' ? ['Address', 'Payment URI', 'Explorer'] : ['Transaction', 'Hash', 'Live lookup'],
+    benefits: checkerBenefits(network.id, type, subject),
+    primarySections: checkerPrimarySections(subject, type),
+    trustPoints: [
+      'The checker works from pasted public payload text and does not connect to your wallet.',
+      'Use it to catch obvious formatting issues before you share or pay from a QR code.',
+      'Final wallet confirmation still matters before any funds move.'
     ],
-    faq: [
-      {
-        question: `Can I verify a ${subject.toLowerCase()} without connecting a wallet?`,
-        answer: `Yes. ${productName} checks public payload text and does not require a wallet connection.`
-      },
-      {
-        question: 'Should I paste my seed phrase into a crypto checker?',
-        answer: 'No. Only paste public addresses, transaction hashes, invoices, or payment URIs. Never paste seed phrases or private keys.'
-      }
-    ]
+    cautionItems: checkerCautionItems(type),
+    faq: checkerFaq(subject),
+    lastModified: contentLastUpdated
   };
 }
+
+export const coinLandingPages = networks.map((network) => networkLandingPage(network));
+
+export const searchLandingPages: LandingPage[] = [...networks.map((network) => networkGuidePage(network)), genericGuidePage];
 
 export const checkerLandingPages: LandingPage[] = networks.flatMap((network) => {
   if (network.id === 'lightning') return [checkerLandingPage(network, 'invoice')];
@@ -623,109 +1028,85 @@ export function getCoinLandingPage(slug: string) {
   return landingPages.find((page) => page.slug === slug);
 }
 
-export function routeMeta(pathname: string) {
-  const routes: Record<string, { title: string; description: string }> = {
-    '/': {
-      title: `${seoProductName} | ${productName}`,
-      description:
-        'Generate scannable crypto QR codes locally for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT with browser-only saved addresses and style presets.'
-    },
-    '/generate': {
-      title: `Generate Crypto QR Codes | ${productName}`,
-      description:
-        'Create guided crypto payment QR codes or hand-designed custom payload QR codes with scan-safe styling and local-only presets.'
-    },
-    '/saved': {
-      title: `Saved Addresses And QR Presets | ${productName}`,
-      description: 'Manage browser-local crypto addresses and QR style presets. Nothing is synced or stored server-side.'
-    },
-    '/markets': {
-      title: `Crypto Market Prices | ${productName}`,
-      description: 'Track CoinGecko top 50 crypto assets with logos, live fiat prices, and a local converter for QR amount planning.'
-    },
-    '/fees': {
-      title: `Network Fee Comparison | ${productName}`,
-      description: 'Compare live and configured fee estimates for Bitcoin, Ethereum, Solana, and Monero availability.'
-    },
-    '/verify': {
-      title: `Crypto Address And Transaction Checker | ${productName}`,
-      description:
-        'Verify crypto addresses, transaction hashes, Lightning invoices, and payment URI QR payloads with local validation, trusted explorer links, and best-effort live lookup.'
-    },
-    '/exchanges': {
-      title: `Crypto Exchange Directory | ${productName}`,
-      description: 'Review live exchange directory data and liquidity signals from CoinGecko.'
-    },
-    '/security': {
-      title: `${productName} Privacy And Security`,
-      description: `Learn how ${productName} keeps QR generation, saved addresses, style presets, and custom logos browser-local.`
-    },
-    '/api-docs': {
-      title: `QR Code Generator API | ${productName}`,
-      description:
-        'Generate crypto QR code SVGs through a server-side API with guided network validation, custom payload support, styling, and local catalog logos.'
-    }
-  };
+export function routeMeta(pathname: string): SeoMeta {
+  const landingPage = getCoinLandingPage(pathname.replace(/^\//, ''));
 
-  const coinLandingPage = getCoinLandingPage(pathname.replace(/^\//, ''));
-  const meta = coinLandingPage ?? routes[pathname] ?? routes['/'];
-  const canonicalPath = coinLandingPage?.canonicalSlug ? `/${coinLandingPage.canonicalSlug}` : pathname;
-  return { ...meta, canonical: `${siteUrl}${canonicalPath}` };
-}
+  if (landingPage) {
+    const canonicalPath = `/${landingPage.canonicalSlug ?? landingPage.slug}`;
+    const canonical = absoluteUrl(canonicalPath);
 
-export const organizationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: productName,
-  url: siteUrl,
-  description: 'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.'
-};
-
-export const webApplicationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: seoProductName,
-  applicationCategory: 'FinanceApplication',
-  operatingSystem: 'Any modern browser',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD'
+    return {
+      title: landingPage.title,
+      description: landingPage.description,
+      canonical,
+      jsonLd: landingPageJsonLd(landingPage, canonical),
+      ogImage: defaultOgImage,
+      ogImageAlt: defaultOgImageAlt,
+      ogImageWidth: defaultOgImageWidth,
+      ogImageHeight: defaultOgImageHeight,
+      twitterImage: defaultOgImage,
+      lastModified: landingPage.lastModified ?? contentLastUpdated
+    };
   }
-};
 
-export function coinLandingJsonLd(page: CoinLandingPage) {
-  const path = `/${page.canonicalSlug ?? page.slug}`;
-  return [
-    organizationJsonLd,
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: page.headline,
-      applicationCategory: 'FinanceApplication',
-      operatingSystem: 'Any modern browser',
-      url: `${siteUrl}${path}`,
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: page.faq.map((item) => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.answer
-        }
-      }))
-    }
-  ];
+  const route = staticRoutes[pathname] ?? staticRoutes['/'];
+  const canonical = absoluteUrl(pathname in staticRoutes ? pathname : '/');
+
+  return {
+    title: route.title,
+    description: route.description,
+    canonical,
+    jsonLd: staticRouteJsonLd(pathname in staticRoutes ? pathname : '/', route),
+    ogImage: defaultOgImage,
+    ogImageAlt: defaultOgImageAlt,
+    ogImageWidth: defaultOgImageWidth,
+    ogImageHeight: defaultOgImageHeight,
+    twitterImage: defaultOgImage,
+    robots: route.robots,
+    lastModified: route.lastModified ?? contentLastUpdated
+  };
 }
 
-export function coinGenerateHref(networkId: NetworkId) {
-  return `/generate?network=${networkId}`;
+export function getSitemapEntries() {
+  const staticEntries = Object.entries(staticRoutes)
+    .filter(([, route]) => route.indexable !== false)
+    .map(([path, route]) => ({
+      path,
+      lastModified: route.lastModified ?? contentLastUpdated
+    }));
+
+  const landingEntries = landingPages.map((page) => ({
+    path: `/${page.slug}`,
+    lastModified: page.lastModified ?? contentLastUpdated
+  }));
+
+  return [...staticEntries, ...landingEntries];
 }
+
+export function relatedLandingPages(page: LandingPage) {
+  const related: LandingPage[] = [];
+
+  if (page.networkId) {
+    const generator = landingPages.find((item) => item.template === 'generator' && item.networkId === page.networkId);
+    const guide = landingPages.find((item) => item.template === 'guide' && item.networkId === page.networkId);
+    const checkers = landingPages.filter((item) => item.template === 'checker' && item.networkId === page.networkId);
+
+    if (generator && generator.slug !== page.slug) related.push(generator);
+    if (guide && guide.slug !== page.slug) related.push(guide);
+    related.push(...checkers.filter((item) => item.slug !== page.slug));
+  }
+
+  const extraGenerators = coinLandingPages.filter((item) => item.slug !== page.slug && !related.some((relatedItem) => relatedItem.slug === item.slug)).slice(0, 4);
+
+  return [...related, ...extraGenerators];
+}
+
+export function isIndexableRoute(pathname: string) {
+  const landingPage = getCoinLandingPage(pathname.replace(/^\//, ''));
+  if (landingPage) return true;
+
+  const route = staticRoutes[pathname];
+  return route ? route.indexable !== false : false;
+}
+
+export { coinGenerateHref, generatorHref, guideHref };

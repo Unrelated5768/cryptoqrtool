@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { coinLandingJsonLd, getCoinLandingPage, routeMeta } from '$lib/seo';
+import { getCoinLandingPage, routeMeta } from '$lib/seo';
 
 export function load({ params }) {
   const landingPage = getCoinLandingPage(params.slug);
@@ -10,9 +10,6 @@ export function load({ params }) {
 
   return {
     landingPage,
-    meta: {
-      ...routeMeta(`/${landingPage.slug}`),
-      jsonLd: coinLandingJsonLd(landingPage)
-    }
+    meta: routeMeta(`/${landingPage.slug}`)
   };
 }

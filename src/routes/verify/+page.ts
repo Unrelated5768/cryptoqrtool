@@ -1,4 +1,4 @@
-import { routeMeta, webApplicationJsonLd } from '$lib/seo';
+import { routeMeta } from '$lib/seo';
 
 export async function load({ fetch, url }) {
   const q = url.searchParams.get('q') ?? '';
@@ -10,10 +10,7 @@ export async function load({ fetch, url }) {
     : null;
 
   return {
-    meta: {
-      ...routeMeta('/verify'),
-      jsonLd: webApplicationJsonLd
-    },
+    meta: routeMeta('/verify'),
     q,
     network,
     result

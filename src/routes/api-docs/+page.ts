@@ -1,10 +1,7 @@
-import { routeMeta, webApplicationJsonLd } from '$lib/seo';
+import { routeMeta } from '$lib/seo';
 
 export function load() {
   return {
-    meta: {
-      ...routeMeta('/api-docs'),
-      jsonLd: webApplicationJsonLd
-    }
+    meta: routeMeta('/api-docs')
   };
 }

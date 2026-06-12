@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ArrowRight, DatabaseZap, Heart, QrCode, ShieldCheck, WifiOff } from 'lucide-svelte';
-  import { coinLandingPages, productName, searchLandingPages } from '$lib/seo';
+  import { coinLandingPages, homeFaqItems, productName, searchLandingPages } from '$lib/seo';
 
   const features = [
     {
@@ -111,6 +111,20 @@
           >
             {item.headline}
           </a>
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
+    <div class="surface-panel rounded-card p-6">
+      <h2 class="text-2xl font-semibold text-on-surface">Frequently asked questions</h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        {#each homeFaqItems as item}
+          <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+            <h3 class="text-lg font-semibold text-on-surface">{item.question}</h3>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{item.answer}</p>
+          </article>
         {/each}
       </div>
     </div>

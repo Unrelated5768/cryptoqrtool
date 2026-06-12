@@ -1,14 +1,30 @@
 <script lang="ts">
-  import { ArrowRight, CheckCircle2, Palette, ShieldCheck, WalletCards } from 'lucide-svelte';
-  import { coinLandingPages, type CoinLandingPage } from '$lib/seo';
+  import { AlertTriangle, ArrowRight, CheckCircle2, ListChecks, Palette, ShieldCheck, WalletCards } from 'lucide-svelte';
+  import { landingPages, relatedLandingPages, type CoinLandingPage } from '$lib/seo';
 
   export let data: {
     landingPage: CoinLandingPage;
   };
 
   $: page = data.landingPage;
-  $: relatedPages = coinLandingPages.filter((item) => item.slug !== page.slug).slice(0, 6);
-  $: isCheckerPage = page.purpose === 'checker';
+  $: isGeneratorPage = page.template === 'generator';
+  $: isGuidePage = page.template === 'guide';
+  $: isCheckerPage = page.template === 'checker';
+  $: generatorPage = page.networkId ? landingPages.find((item) => item.template === 'generator' && item.networkId === page.networkId) : null;
+  $: guidePage = page.networkId ? landingPages.find((item) => item.template === 'guide' && item.networkId === page.networkId) : null;
+  $: relatedPages = relatedLandingPages(page).slice(0, 6);
+  $: secondaryAction =
+    isGeneratorPage && guidePage
+      ? { href: `/${guidePage.slug}`, label: `Read the ${page.name} QR guide` }
+      : isGuidePage && generatorPage
+        ? { href: generatorPage.ctaHref, label: `Open the ${page.name} generator` }
+        : isCheckerPage && generatorPage
+          ? { href: generatorPage.ctaHref, label: `Create a ${page.name} QR code` }
+          : { href: '/security', label: 'Privacy model' };
+  $: relatedHeading = isGuidePage ? 'Next steps for this network' : isCheckerPage ? 'Related generators and guides' : 'Related tools and guides';
+  $: primarySectionHeading = isGuidePage ? 'Guide details' : isCheckerPage ? 'What the checker covers' : 'What this generator covers';
+  $: trustHeading = isGuidePage ? 'Common mistakes to avoid' : 'Trust and verification notes';
+
   const benefitIcons = [WalletCards, Palette, ShieldCheck];
 </script>
 
@@ -19,10 +35,10 @@
       <h1 class="text-4xl font-bold leading-tight text-on-surface md:text-6xl">{page.headline}</h1>
       <p class="mt-5 text-lg leading-8 text-on-surface-variant">{page.body}</p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a class="btn-primary" href={page.generatorHref}>
+        <a class="btn-primary" href={page.ctaHref}>
           {page.ctaLabel} <ArrowRight size={18} />
         </a>
-        <a class="btn-secondary" href={isCheckerPage ? '/generate' : '/security'}>{isCheckerPage ? 'Open generator' : 'Privacy model'}</a>
+        <a class="btn-secondary" href={secondaryAction.href}>{secondaryAction.label}</a>
       </div>
     </div>
 
@@ -69,13 +85,105 @@
     {/each}
   </section>
 
+  {#if page.howToSteps?.length}
+    <section class="mx-auto max-w-7xl px-5 pb-12 md:px-8">
+      <div class="surface-panel rounded-card p-6">
+        <div class="mb-5 flex items-center gap-3">
+          <ListChecks class="text-primary" size={24} />
+          <h2 class="text-2xl font-semibold text-on-surface">How to generate safely</h2>
+        </div>
+        <ol class="grid gap-3 md:grid-cols-2">
+          {#each page.howToSteps as step, index}
+            <li class="rounded-lg border border-outline-variant bg-surface-low p-4 text-sm leading-6 text-on-surface-variant">
+              <span class="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary-action/15 font-semibold text-primary">
+                {index + 1}
+              </span>
+              {step}
+            </li>
+          {/each}
+        </ol>
+      </div>
+    </section>
+  {/if}
+
+  <section class="mx-auto max-w-7xl px-5 pb-12 md:px-8">
+    <div class="surface-panel rounded-card p-6">
+      <h2 class="text-2xl font-semibold text-on-surface">{primarySectionHeading}</h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        {#each page.primarySections as section}
+          <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+            <h3 class="text-lg font-semibold text-on-surface">{section.title}</h3>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{section.body}</p>
+          </article>
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  {#if page.trustPoints?.length || page.cautionItems?.length}
+    <section class="mx-auto max-w-7xl px-5 pb-12 md:px-8">
+      <div class="surface-panel rounded-card p-6">
+        <h2 class="text-2xl font-semibold text-on-surface">{trustHeading}</h2>
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          {#if page.trustPoints?.length}
+            <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+              <div class="mb-4 flex items-center gap-3">
+                <ShieldCheck class="text-primary" size={22} />
+                <h3 class="text-lg font-semibold text-on-surface">Trust signals</h3>
+              </div>
+              <ul class="grid gap-3 text-sm leading-6 text-on-surface-variant">
+                {#each page.trustPoints as item}
+                  <li class="rounded-lg border border-outline-variant/70 bg-surface-container px-4 py-3">{item}</li>
+                {/each}
+              </ul>
+            </article>
+          {/if}
+
+          {#if page.cautionItems?.length}
+            <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+              <div class="mb-4 flex items-center gap-3">
+                <AlertTriangle class="text-warning" size={22} />
+                <h3 class="text-lg font-semibold text-on-surface">{isGuidePage ? 'Guide cautions' : 'Common mistakes'}</h3>
+              </div>
+              <ul class="grid gap-3 text-sm leading-6 text-on-surface-variant">
+                {#each page.cautionItems as item}
+                  <li class="rounded-lg border border-outline-variant/70 bg-surface-container px-4 py-3">{item}</li>
+                {/each}
+              </ul>
+            </article>
+          {/if}
+        </div>
+      </div>
+    </section>
+  {/if}
+
+  {#if page.faq.length}
+    <section class="mx-auto max-w-7xl px-5 pb-12 md:px-8">
+      <div class="surface-panel rounded-card p-6">
+        <h2 class="text-2xl font-semibold text-on-surface">Frequently asked questions</h2>
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          {#each page.faq as item}
+            <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
+              <h3 class="text-lg font-semibold text-on-surface">{item.question}</h3>
+              <p class="mt-3 text-sm leading-6 text-on-surface-variant">{item.answer}</p>
+            </article>
+          {/each}
+        </div>
+      </div>
+    </section>
+  {/if}
+
   <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
     <div class="surface-panel rounded-card p-6">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 class="text-2xl font-semibold text-on-surface">{isCheckerPage ? 'Related QR generators' : 'More crypto QR generators'}</h2>
+          <h2 class="text-2xl font-semibold text-on-surface">{relatedHeading}</h2>
           <p class="mt-2 text-sm text-on-surface-variant">
-            {isCheckerPage ? 'Create scan-ready QR codes after checking public payload text.' : 'Create dedicated payment QR codes for other supported networks.'}
+            {isGuidePage
+              ? 'Move from explanation to action with the matching generator or checker pages.'
+              : isCheckerPage
+                ? 'Create or review the matching QR workflow once the payload looks correct.'
+                : 'Open the matching guide or checker before you share a QR code publicly.'}
           </p>
         </div>
         <a class="btn-secondary" href="/generate">Open all networks</a>
@@ -86,7 +194,7 @@
             class="flex items-center justify-between rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
             href={`/${item.slug}`}
           >
-            <span>{item.name} QR Code Generator</span>
+            <span>{item.headline}</span>
             <CheckCircle2 size={16} style={`color: ${item.accent}`} />
           </a>
         {/each}
