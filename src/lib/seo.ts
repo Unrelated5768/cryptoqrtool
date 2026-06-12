@@ -1,199 +1,33 @@
 import { networks, type NetworkId } from './networks';
+import { landingPageJsonLd, staticRouteJsonLd } from './seoJsonLd';
+import {
+  absoluteUrl,
+  contentLastUpdated,
+  defaultOgImage,
+  defaultOgImageAlt,
+  defaultOgImageHeight,
+  defaultOgImageWidth,
+  indefiniteArticle,
+  productName,
+  type FaqItem,
+  type LandingPage,
+  type LandingPageSection,
+  type SeoMeta
+} from './seoShared';
+import { staticRoutes } from './seoStaticRoutes';
 
-export const siteUrl = 'https://cryptoqrtool.com';
-export const siteRootUrl = `${siteUrl}/`;
-export const productName = 'CryptoQR Tool';
-export const seoProductName = 'Crypto QR Code Generator';
-export const defaultOgImage = `${siteUrl}/og-image.png`;
-export const defaultOgImageAlt = 'CryptoQR Tool crypto QR code generator';
-export const defaultOgImageWidth = 1200;
-export const defaultOgImageHeight = 630;
-export const contentLastUpdated = '2026-06-12';
-
-export type JsonLd = Record<string, unknown>;
-
-export type FaqItem = {
-  question: string;
-  answer: string;
-};
-
-export type SeoMeta = {
-  title: string;
-  description: string;
-  canonical: string;
-  jsonLd?: JsonLd[];
-  ogImage?: string;
-  ogImageAlt?: string;
-  ogImageWidth?: number;
-  ogImageHeight?: number;
-  twitterImage?: string;
-  robots?: string;
-  lastModified?: string;
-};
-
-export type LandingPageTemplate = 'generator' | 'guide' | 'checker';
-
-export type LandingPageSection = {
-  title: string;
-  body: string;
-};
-
-export type LandingPage = {
-  slug: string;
-  canonicalSlug?: string;
-  template: LandingPageTemplate;
-  networkId?: NetworkId;
-  name: string;
-  ticker?: string;
-  accent: string;
-  title: string;
-  description: string;
-  headline: string;
-  eyebrow: string;
-  body: string;
-  ctaLabel: string;
-  ctaHref: string;
-  payloadExample: string;
-  chips: string[];
-  benefits: LandingPageSection[];
-  primarySections: LandingPageSection[];
-  howToSteps?: string[];
-  trustPoints?: string[];
-  cautionItems?: string[];
-  faq: FaqItem[];
-  lastModified?: string;
-};
-
-type BreadcrumbItem = {
-  name: string;
-  path: string;
-};
-
-type StaticRouteKind = 'home' | 'webapp' | 'page' | 'tech-article';
-
-type StaticRouteConfig = {
-  title: string;
-  description: string;
-  schemaName: string;
-  kind: StaticRouteKind;
-  breadcrumbLabel?: string;
-  faq?: FaqItem[];
-  robots?: string;
-  indexable?: boolean;
-  lastModified?: string;
-};
-
-export const homeFaqItems: FaqItem[] = [
-  {
-    question: `Does ${productName} store crypto addresses?`,
-    answer: 'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.'
-  },
-  {
-    question: 'Which networks are supported?',
-    answer: `${productName} supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.`
-  }
-];
-
-export const securityFaqItems: FaqItem[] = [
-  {
-    question: 'Where are saved addresses stored?',
-    answer: `Saved addresses are stored in browser local storage under a versioned ${productName} key for this browser profile only.`
-  },
-  {
-    question: 'Are custom logos uploaded?',
-    answer: 'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.'
-  }
-];
-
-const staticRoutes: Record<string, StaticRouteConfig> = {
-  '/': {
-    title: `${seoProductName} | ${productName}`,
-    description:
-      'Generate scannable crypto QR codes locally for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT with browser-only saved addresses and style presets.',
-    schemaName: seoProductName,
-    kind: 'home',
-    faq: homeFaqItems,
-    lastModified: contentLastUpdated
-  },
-  '/generate': {
-    title: `Generate Crypto QR Codes | ${productName}`,
-    description:
-      'Create guided crypto payment QR codes or hand-designed custom payload QR codes with scan-safe styling and local-only presets.',
-    schemaName: 'Crypto QR Code Generator',
-    kind: 'webapp',
-    breadcrumbLabel: 'Generate Crypto QR Codes',
-    lastModified: contentLastUpdated
-  },
-  '/saved': {
-    title: `Saved Addresses and QR Presets | ${productName}`,
-    description: 'Manage browser-local crypto addresses and QR style presets for this device only.',
-    schemaName: 'Saved Addresses and QR Presets',
-    kind: 'page',
-    breadcrumbLabel: 'Saved Addresses and QR Presets',
-    robots: 'noindex,follow',
-    indexable: false,
-    lastModified: contentLastUpdated
-  },
-  '/markets': {
-    title: `Crypto Market Prices and QR Planning | ${productName}`,
-    description: 'Track CoinGecko top 50 crypto assets with logos, live fiat prices, and a converter for QR amount planning.',
-    schemaName: 'Crypto Market Prices',
-    kind: 'page',
-    breadcrumbLabel: 'Market Prices',
-    lastModified: contentLastUpdated
-  },
-  '/fees': {
-    title: `Crypto Network Fee Comparison | ${productName}`,
-    description: 'Compare live and configured fee estimates for Bitcoin, Ethereum, Solana, and Monero activity.',
-    schemaName: 'Crypto Network Fee Comparison',
-    kind: 'page',
-    breadcrumbLabel: 'Network Fees',
-    lastModified: contentLastUpdated
-  },
-  '/verify': {
-    title: `Crypto Address and Transaction Checker | ${productName}`,
-    description:
-      'Verify crypto addresses, transaction hashes, Lightning invoices, and payment URI QR payloads with local validation, trusted explorer links, and best-effort live lookup.',
-    schemaName: 'Crypto Address and Transaction Checker',
-    kind: 'webapp',
-    breadcrumbLabel: 'Verify Crypto QR Payloads',
-    lastModified: contentLastUpdated
-  },
-  '/exchanges': {
-    title: `Crypto Exchange Directory | ${productName}`,
-    description: 'Review exchange directory data, trust indicators, and liquidity signals from CoinGecko.',
-    schemaName: 'Crypto Exchange Directory',
-    kind: 'page',
-    breadcrumbLabel: 'Exchange Directory',
-    lastModified: contentLastUpdated
-  },
-  '/security': {
-    title: `${productName} Privacy and Security`,
-    description: `Learn how ${productName} keeps QR generation, saved addresses, style presets, and custom logos browser-local.`,
-    schemaName: `${productName} Privacy and Security`,
-    kind: 'page',
-    breadcrumbLabel: 'Privacy and Security',
-    faq: securityFaqItems,
-    lastModified: contentLastUpdated
-  },
-  '/api-docs': {
-    title: `QR Code Generation API Docs | ${productName}`,
-    description:
-      'Generate crypto QR code SVGs through a server-side API with guided network validation, custom payload support, styling, and local catalog logos.',
-    schemaName: 'QR Code Generation API Docs',
-    kind: 'tech-article',
-    breadcrumbLabel: 'API Docs',
-    lastModified: contentLastUpdated
-  }
-};
-
-function indefiniteArticle(phrase: string) {
-  return /^[aeiou]/i.test(phrase.trim()) ? 'an' : 'a';
-}
-
-function absoluteUrl(path: string) {
-  return path === '/' ? siteRootUrl : `${siteUrl}${path}`;
-}
+export {
+  contentLastUpdated,
+  defaultOgImage,
+  defaultOgImageAlt,
+  defaultOgImageHeight,
+  defaultOgImageWidth,
+  productName,
+  siteRootUrl,
+  siteUrl
+} from './seoShared';
+export type { FaqItem, JsonLd, LandingPage, LandingPageSection, LandingPageTemplate, SeoMeta } from './seoShared';
+export { homeFaqItems, securityFaqItems } from './seoStaticRoutes';
 
 function networkDisplayName(network: (typeof networks)[number]) {
   return network.id === 'usdc' || network.id === 'usdt' ? network.id.toUpperCase() : network.name.replace(' / EVM', '');
@@ -656,174 +490,6 @@ function checkerFaq(subject: string): FaqItem[] {
       answer: 'No. Only paste public addresses, transaction hashes, invoices, or payment URIs. Never paste seed phrases or private keys.'
     }
   ];
-}
-
-function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: absoluteUrl(item.path)
-    }))
-  };
-}
-
-function faqJsonLd(items: FaqItem[]): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: items.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer
-      }
-    }))
-  };
-}
-
-function webPageJsonLd(name: string, description: string, url: string): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name,
-    url,
-    description
-  };
-}
-
-function webApplicationJsonLd(name: string, description: string, url: string): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name,
-    url,
-    description,
-    applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Any modern browser',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD'
-    }
-  };
-}
-
-function webSiteJsonLd(): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: productName,
-    url: siteRootUrl,
-    description: 'Browser-local crypto QR generation tools for public addresses, invoices, and payment requests.'
-  };
-}
-
-function techArticleJsonLd(name: string, description: string, url: string): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'TechArticle',
-    headline: name,
-    url,
-    description,
-    author: {
-      '@type': 'Organization',
-      name: productName
-    }
-  };
-}
-
-export const organizationJsonLd: JsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: productName,
-  url: siteRootUrl,
-  description: 'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.',
-  sameAs: []
-};
-
-function landingPageBreadcrumbs(page: LandingPage): BreadcrumbItem[] {
-  const current = { name: page.headline, path: `/${page.slug}` };
-
-  if (page.template === 'generator') {
-    return [
-      { name: 'Home', path: '/' },
-      { name: staticRoutes['/generate'].breadcrumbLabel ?? staticRoutes['/generate'].schemaName, path: '/generate' },
-      current
-    ];
-  }
-
-  if (page.template === 'guide' && page.slug !== 'crypto-generate-qrcode') {
-    return [
-      { name: 'Home', path: '/' },
-      { name: 'Crypto QR Code Guide', path: '/crypto-generate-qrcode' },
-      current
-    ];
-  }
-
-  if (page.template === 'checker') {
-    return [
-      { name: 'Home', path: '/' },
-      { name: staticRoutes['/verify'].breadcrumbLabel ?? staticRoutes['/verify'].schemaName, path: '/verify' },
-      current
-    ];
-  }
-
-  return [{ name: 'Home', path: '/' }, current];
-}
-
-function staticRouteBreadcrumbs(pathname: string, route: StaticRouteConfig): BreadcrumbItem[] {
-  return [{ name: 'Home', path: '/' }, { name: route.breadcrumbLabel ?? route.schemaName, path: pathname }];
-}
-
-function landingPageJsonLd(page: LandingPage, canonical: string): JsonLd[] {
-  const schemas: JsonLd[] = [webPageJsonLd(page.headline, page.description, canonical)];
-
-  if (page.template === 'generator' || page.template === 'checker') {
-    schemas.push(webApplicationJsonLd(page.headline, page.description, canonical));
-  }
-
-  const breadcrumbs = landingPageBreadcrumbs(page);
-  if (breadcrumbs.length > 1) {
-    schemas.push(breadcrumbJsonLd(breadcrumbs));
-  }
-
-  if (page.faq.length > 0) {
-    schemas.push(faqJsonLd(page.faq));
-  }
-
-  return schemas;
-}
-
-function staticRouteJsonLd(pathname: string, route: StaticRouteConfig): JsonLd[] {
-  if (route.indexable === false) return [];
-
-  const canonical = absoluteUrl(pathname);
-
-  if (route.kind === 'home') {
-    const schemas = [organizationJsonLd, webSiteJsonLd(), webApplicationJsonLd(route.schemaName, route.description, canonical)];
-    if (route.faq?.length) schemas.push(faqJsonLd(route.faq));
-    return schemas;
-  }
-
-  const schemas: JsonLd[] =
-    route.kind === 'webapp'
-      ? [webPageJsonLd(route.schemaName, route.description, canonical), webApplicationJsonLd(route.schemaName, route.description, canonical)]
-      : route.kind === 'tech-article'
-        ? [techArticleJsonLd(route.schemaName, route.description, canonical)]
-        : [webPageJsonLd(route.schemaName, route.description, canonical)];
-
-  schemas.push(breadcrumbJsonLd(staticRouteBreadcrumbs(pathname, route)));
-
-  if (route.faq?.length) {
-    schemas.push(faqJsonLd(route.faq));
-  }
-
-  return schemas;
 }
 
 function networkGuidePage(network: (typeof networks)[number]): LandingPage {

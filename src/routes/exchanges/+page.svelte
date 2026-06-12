@@ -1,5 +1,13 @@
 <script lang="ts">
   import StatusBadge from '$components/StatusBadge.svelte';
+  import {
+    defaultVisibleSearchPageSize,
+    filterVisibleSearchRows,
+    getHiddenSearchRowCount,
+    getNextVisibleSearchCount,
+    getSearchInputValue,
+    getVisibleSearchRows
+  } from '$lib/visibleSearch';
 
   export let data: {
     result: {
@@ -19,22 +27,19 @@
 
   let xmrFilter = false;
   let searchQuery = '';
-  let visibleCount = 12;
+  let visibleCount = defaultVisibleSearchPageSize;
   $: rows = data.result.data;
-  $: normalizedSearch = searchQuery.trim().toLowerCase();
-  $: filteredRows = normalizedSearch
-    ? rows.filter((row) => `${row.name} ${row.country ?? ''}`.toLowerCase().includes(normalizedSearch))
-    : rows;
-  $: visibleRows = filteredRows.slice(0, visibleCount);
-  $: hiddenCount = Math.max(filteredRows.length - visibleRows.length, 0);
+  $: filteredRows = filterVisibleSearchRows(rows, searchQuery, (row) => `${row.name} ${row.country ?? ''}`);
+  $: visibleRows = getVisibleSearchRows(filteredRows, visibleCount);
+  $: hiddenCount = getHiddenSearchRowCount(filteredRows.length, visibleRows.length);
 
   function showMore() {
-    visibleCount = Math.min(visibleCount + 12, filteredRows.length);
+    visibleCount = getNextVisibleSearchCount(visibleCount, filteredRows.length);
   }
 
   function updateSearch(event: Event) {
-    searchQuery = event.currentTarget instanceof HTMLInputElement ? event.currentTarget.value : '';
-    visibleCount = 12;
+    searchQuery = getSearchInputValue(event);
+    visibleCount = defaultVisibleSearchPageSize;
   }
 </script>
 

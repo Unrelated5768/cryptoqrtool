@@ -62,11 +62,7 @@ export const networks = [
     accent: '#2775ca',
     coingeckoId: 'usd-coin',
     placeholder: '0x742d35Cc...',
-    supportsAmount: true,
-    derivedFrom: 'ethereum',
-    tokenStandard: 'erc20',
-    contractAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    decimals: 6
+    supportsAmount: true
   },
   {
     id: 'usdt',
@@ -75,11 +71,7 @@ export const networks = [
     accent: '#26a17b',
     coingeckoId: 'tether',
     placeholder: '0x742d35Cc...',
-    supportsAmount: true,
-    derivedFrom: 'ethereum',
-    tokenStandard: 'erc20',
-    contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-    decimals: 6
+    supportsAmount: true
   }
 ] as const;
 
@@ -101,6 +93,14 @@ export interface ValidationResult {
   status: ValidationStatus;
   message: string;
 }
+
+type BuildPayloadOptions = { tokenChainId?: TokenChainId; caip19AssetOnly?: boolean };
+
+type NetworkHandler = {
+  validate: (candidate: string) => ValidationResult;
+  buildPayload: (address: string, amount: string, options: BuildPayloadOptions) => string;
+  detectPriority?: number;
+};
 
 export interface TokenChain {
   id: TokenChainId;
@@ -217,16 +217,7 @@ export function detectNetwork(address: string): NetworkId | null {
   const value = address.trim();
   if (!value) return null;
 
-  const checks: Array<[NetworkId, (candidate: string) => ValidationResult]> = [
-    ['monero', validateMoneroAddress],
-    ['lightning', validateLightningInvoice],
-    ['ethereum', validateEthereumAddress],
-    ['bitcoin', validateBitcoinAddress],
-    ['litecoin', validateLitecoinAddress],
-    ['solana', validateSolanaAddress]
-  ];
-
-  return checks.find(([, validate]) => validate(value).status === 'valid')?.[0] ?? null;
+  return detectableNetworkHandlers.find(([, handler]) => handler.validate(value).status === 'valid')?.[0] ?? null;
 }
 
 export function validateAddress(network: NetworkId, address: string): ValidationResult {
@@ -236,25 +227,7 @@ export function validateAddress(network: NetworkId, address: string): Validation
     return { status: 'warning', message: 'Enter an address to generate a QR code.' };
   }
 
-  switch (network) {
-    case 'monero':
-      return validateMoneroAddress(value);
-    case 'bitcoin':
-      return validateBitcoinAddress(value);
-    case 'lightning':
-      return validateLightningInvoice(value);
-    case 'ethereum':
-      return validateEthereumAddress(value);
-    case 'usdc':
-    case 'usdt':
-      return validateErc20RecipientAddress(value);
-    case 'solana':
-      return validateSolanaAddress(value);
-    case 'litecoin':
-      return validateLitecoinAddress(value);
-    default:
-      return { status: 'unsupported', message: 'Network is not supported in this version.' };
-  }
+  return networkHandlers[network]?.validate(value) ?? { status: 'unsupported', message: 'Network is not supported in this version.' };
 }
 
 export function validateMoneroAddress(address: string): ValidationResult {
@@ -340,7 +313,7 @@ export function buildQrPayload(
   network: NetworkId,
   address: string,
   amount?: string,
-  options: { tokenChainId?: TokenChainId; caip19AssetOnly?: boolean } = {}
+  options: BuildPayloadOptions = {}
 ): string {
   const cleanAddress = address.trim();
   const cleanAmount = normalizeAmount(amount);
@@ -353,25 +326,7 @@ export function buildQrPayload(
     return cleanAddress;
   }
 
-  switch (network) {
-    case 'lightning':
-      return cleanAddress;
-    case 'monero':
-      return `monero:${cleanAddress}?tx_amount=${encodeURIComponent(cleanAmount)}`;
-    case 'bitcoin':
-      return `bitcoin:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
-    case 'ethereum':
-      return buildNativeEvmPayload(cleanAddress, cleanAmount, options.tokenChainId);
-    case 'solana':
-      return `solana:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
-    case 'litecoin':
-      return `litecoin:${cleanAddress}?amount=${encodeURIComponent(cleanAmount)}`;
-    case 'usdc':
-    case 'usdt':
-      return buildErc20TransferPayload(network, cleanAddress, cleanAmount, options.tokenChainId);
-    default:
-      return cleanAddress;
-  }
+  return networkHandlers[network]?.buildPayload(cleanAddress, cleanAmount, options) ?? cleanAddress;
 }
 
 export function buildCaip19AssetId(network: TokenNetworkId, chainId?: TokenChainId): string {
@@ -397,6 +352,51 @@ function buildNativeEvmPayload(address: string, amount: string, chainId?: TokenC
   const value = decimalToUnits(amount, nativeEvmDecimals);
   return `ethereum:${address}@${chain.eip155}?value=${value}`;
 }
+
+const networkHandlers = {
+  monero: {
+    validate: validateMoneroAddress,
+    detectPriority: 10,
+    buildPayload: (address, amount) => `monero:${address}?tx_amount=${encodeURIComponent(amount)}`
+  },
+  lightning: {
+    validate: validateLightningInvoice,
+    detectPriority: 20,
+    buildPayload: (address) => address
+  },
+  ethereum: {
+    validate: validateEthereumAddress,
+    detectPriority: 30,
+    buildPayload: (address, amount, options) => buildNativeEvmPayload(address, amount, options.tokenChainId)
+  },
+  bitcoin: {
+    validate: validateBitcoinAddress,
+    detectPriority: 40,
+    buildPayload: (address, amount) => `bitcoin:${address}?amount=${encodeURIComponent(amount)}`
+  },
+  litecoin: {
+    validate: validateLitecoinAddress,
+    detectPriority: 50,
+    buildPayload: (address, amount) => `litecoin:${address}?amount=${encodeURIComponent(amount)}`
+  },
+  solana: {
+    validate: validateSolanaAddress,
+    detectPriority: 60,
+    buildPayload: (address, amount) => `solana:${address}?amount=${encodeURIComponent(amount)}`
+  },
+  usdc: {
+    validate: validateErc20RecipientAddress,
+    buildPayload: (address, amount, options) => buildErc20TransferPayload('usdc', address, amount, options.tokenChainId)
+  },
+  usdt: {
+    validate: validateErc20RecipientAddress,
+    buildPayload: (address, amount, options) => buildErc20TransferPayload('usdt', address, amount, options.tokenChainId)
+  }
+} satisfies Record<NetworkId, NetworkHandler>;
+
+const detectableNetworkHandlers = (Object.entries(networkHandlers) as Array<[NetworkId, NetworkHandler]>)
+  .filter(([, handler]) => handler.detectPriority !== undefined)
+  .sort(([, left], [, right]) => left.detectPriority! - right.detectPriority!);
 
 export function normalizeAmount(amount?: string): string {
   const value = amount?.trim();

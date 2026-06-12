@@ -3,6 +3,14 @@
   import StatusBadge from '$components/StatusBadge.svelte';
   import { defaultCurrency, formatCurrency, type FiatCurrency } from '$lib/currency';
   import type { LiveResult, MarketAsset } from '$lib/liveData';
+  import {
+    defaultVisibleSearchPageSize,
+    filterVisibleSearchRows,
+    getHiddenSearchRowCount,
+    getNextVisibleSearchCount,
+    getSearchInputValue,
+    getVisibleSearchRows
+  } from '$lib/visibleSearch';
 
   export let data: {
     result: LiveResult<MarketAsset[]>;
@@ -13,7 +21,7 @@
   let loadedCurrency: FiatCurrency = 'USD';
   let loadingCurrency = false;
   let searchQuery = '';
-  let visibleCount = 12;
+  let visibleCount = defaultVisibleSearchPageSize;
   let selected = result.data.some((row) => row.symbol === 'XMR')
     ? 'XMR'
     : (result.data[0]?.symbol ?? '');
@@ -23,12 +31,9 @@
   $: asset = result.data.find((row) => row.symbol === selected) ?? result.data[0];
   $: converted = asset?.price ? Number(amount || 0) * asset.price : 0;
   $: badgeStatus = result.state === 'loading' ? 'fresh' : result.state;
-  $: normalizedSearch = searchQuery.trim().toLowerCase();
-  $: filteredRows = normalizedSearch
-    ? result.data.filter((row) => `${row.name} ${row.symbol}`.toLowerCase().includes(normalizedSearch))
-    : result.data;
-  $: visibleRows = filteredRows.slice(0, visibleCount);
-  $: hiddenCount = Math.max(filteredRows.length - visibleRows.length, 0);
+  $: filteredRows = filterVisibleSearchRows(result.data, searchQuery, (row) => `${row.name} ${row.symbol}`);
+  $: visibleRows = getVisibleSearchRows(filteredRows, visibleCount);
+  $: hiddenCount = getHiddenSearchRowCount(filteredRows.length, visibleRows.length);
 
   async function loadMarkets(currency: FiatCurrency) {
     loadedCurrency = currency;
@@ -42,12 +47,12 @@
   }
 
   function showMore() {
-    visibleCount = Math.min(visibleCount + 12, filteredRows.length);
+    visibleCount = getNextVisibleSearchCount(visibleCount, filteredRows.length);
   }
 
   function updateSearch(event: Event) {
-    searchQuery = event.currentTarget instanceof HTMLInputElement ? event.currentTarget.value : '';
-    visibleCount = 12;
+    searchQuery = getSearchInputValue(event);
+    visibleCount = defaultVisibleSearchPageSize;
   }
 </script>
 
