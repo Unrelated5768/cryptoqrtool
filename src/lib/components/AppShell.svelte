@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { BadgeCheck, Check, ChevronDown, Code2, Heart, Landmark, LockKeyhole, Moon, QrCode, RefreshCw, Save, ShieldCheck, Sun, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
+  import { BadgeCheck, Check, ChevronDown, Code2, Github, Heart, Landmark, LockKeyhole, Moon, QrCode, RefreshCw, Save, ShieldCheck, Sun, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
   import { trackEvent } from '$lib/analytics';
   import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
@@ -282,6 +282,15 @@
         <Heart size={15} class="fill-error text-error" />
         <span>for privacy.</span>
       </div>
+      <a
+        class="inline-flex items-center gap-2 text-on-surface-variant transition hover:text-primary"
+        href="https://github.com/Unrelated5768/cryptoqrtool"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Github size={16} />
+        <span>View source on GitHub</span>
+      </a>
       <p class="text-xs text-on-surface-variant/70">Version {buildVersion}</p>
     </div>
   </div>

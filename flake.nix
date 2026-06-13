@@ -35,8 +35,6 @@
           default = pkgs.mkShell {
             packages =
               (with pkgs; [
-                ansible
-                ansible-lint
                 bun
                 git
                 nodejs_22

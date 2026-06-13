@@ -72,6 +72,10 @@ describe('AppShell', () => {
     expect(screen.getByText(/zero data collection/i)).toBeInTheDocument();
     expect(screen.getByText('Made with')).toBeInTheDocument();
     expect(screen.getByText('for privacy.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /view source on github/i })).toHaveAttribute(
+      'href',
+      'https://github.com/Unrelated5768/cryptoqrtool'
+    );
   });
 
   it('toggles between dark and light themes', async () => {
