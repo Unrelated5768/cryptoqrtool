@@ -61,7 +61,23 @@ describe('seo metadata', () => {
   it('adds breadcrumbs to indexable non-home routes', () => {
     expect(schemaTypes('/generate').has('BreadcrumbList')).toBe(true);
     expect(schemaTypes('/markets').has('BreadcrumbList')).toBe(true);
+    expect(schemaTypes('/privacy').has('BreadcrumbList')).toBe(true);
+    expect(schemaTypes('/terms').has('BreadcrumbList')).toBe(true);
+    expect(schemaTypes('/faq').has('BreadcrumbList')).toBe(true);
     expect(schemaTypes('/').has('BreadcrumbList')).toBe(false);
+  });
+
+  it('includes the privacy notice in metadata and sitemap entries', () => {
+    expect(routeMeta('/privacy').title).toContain('Privacy');
+    expect(getSitemapEntries().some((entry) => entry.path === '/privacy')).toBe(true);
+  });
+
+  it('includes terms and FAQ metadata in sitemap entries', () => {
+    expect(routeMeta('/terms').title).toContain('Terms');
+    expect(routeMeta('/faq').title).toContain('FAQ');
+    expect(schemaTypes('/faq').has('FAQPage')).toBe(true);
+    expect(getSitemapEntries().some((entry) => entry.path === '/terms')).toBe(true);
+    expect(getSitemapEntries().some((entry) => entry.path === '/faq')).toBe(true);
   });
 
   it('includes lastmod data for every sitemap entry', () => {

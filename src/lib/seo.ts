@@ -27,7 +27,7 @@ export {
   siteUrl
 } from './seoShared';
 export type { FaqItem, JsonLd, LandingPage, LandingPageSection, LandingPageTemplate, SeoMeta } from './seoShared';
-export { homeFaqItems, securityFaqItems } from './seoStaticRoutes';
+export { faqPageItems, homeFaqItems, securityFaqItems } from './seoStaticRoutes';
 
 function networkDisplayName(network: (typeof networks)[number]) {
   return network.id === 'usdc' || network.id === 'usdt' ? network.id.toUpperCase() : network.name.replace(' / EVM', '');

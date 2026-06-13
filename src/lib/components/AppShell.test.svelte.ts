@@ -69,7 +69,10 @@ describe('AppShell', () => {
     render(AppShell);
 
     expect(screen.getByText('Your data never leaves your browser')).toBeInTheDocument();
-    expect(screen.getByText(/zero data collection/i)).toBeInTheDocument();
+    expect(screen.getByText(/without advertising cookies/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'FAQ' }).some((link) => link.getAttribute('href') === '/faq')).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'Privacy notice' }).some((link) => link.getAttribute('href') === '/privacy')).toBe(true);
+    expect(screen.getAllByRole('link', { name: 'Terms of use' }).some((link) => link.getAttribute('href') === '/terms')).toBe(true);
     expect(screen.getByText('Made with')).toBeInTheDocument();
     expect(screen.getByText('for privacy.')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /view source on github/i })).toHaveAttribute(

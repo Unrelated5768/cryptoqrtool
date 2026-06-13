@@ -28,6 +28,49 @@ export const securityFaqItems: FaqItem[] = [
   }
 ];
 
+export const faqPageItems: FaqItem[] = [
+  {
+    question: `Is ${productName} safe for generating crypto QR codes?`,
+    answer:
+      'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.'
+  },
+  {
+    question: `Does ${productName} store wallet addresses?`,
+    answer:
+      'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.'
+  },
+  {
+    question: 'Does the site use cookies?',
+    answer:
+      'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.'
+  },
+  {
+    question: 'What analytics are used?',
+    answer:
+      'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.'
+  },
+  {
+    question: 'Can a downloaded crypto QR code be changed later?',
+    answer:
+      'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.'
+  },
+  {
+    question: 'What happens if a wallet ignores the amount field?',
+    answer:
+      'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.'
+  },
+  {
+    question: 'Can I paste a seed phrase or private key?',
+    answer:
+      'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.'
+  },
+  {
+    question: 'Does the tool provide financial advice?',
+    answer:
+      `${productName} is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.`
+  }
+];
+
 export const staticRoutes: Record<string, StaticRouteConfig> = {
   '/': {
     title: `${seoProductName} | ${productName}`,
@@ -97,6 +140,31 @@ export const staticRoutes: Record<string, StaticRouteConfig> = {
     kind: 'page',
     breadcrumbLabel: 'Privacy and Security',
     faq: securityFaqItems,
+    lastModified: contentLastUpdated
+  },
+  '/privacy': {
+    title: `Privacy, Cookies, and Local Storage | ${productName}`,
+    description: `Review ${productName} cookie use, browser local storage, anonymous analytics, and the analytics opt-out control.`,
+    schemaName: `${productName} Privacy Notice`,
+    kind: 'page',
+    breadcrumbLabel: 'Privacy Notice',
+    lastModified: contentLastUpdated
+  },
+  '/terms': {
+    title: `Terms of Use | ${productName}`,
+    description: `Read the ${productName} terms for browser-local QR generation, no wallet custody, user verification, and crypto transaction risk.`,
+    schemaName: `${productName} Terms of Use`,
+    kind: 'page',
+    breadcrumbLabel: 'Terms of Use',
+    lastModified: contentLastUpdated
+  },
+  '/faq': {
+    title: `Crypto QR Code FAQ | ${productName}`,
+    description: `Answers about crypto QR code safety, local storage, cookies, analytics, wallet compatibility, and transaction verification.`,
+    schemaName: `${productName} FAQ`,
+    kind: 'page',
+    breadcrumbLabel: 'FAQ',
+    faq: faqPageItems,
     lastModified: contentLastUpdated
   },
   '/api-docs': {

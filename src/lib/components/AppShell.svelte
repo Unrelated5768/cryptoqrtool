@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { BadgeCheck, Check, ChevronDown, Code2, Github, Heart, Landmark, LockKeyhole, Moon, QrCode, RefreshCw, Save, ShieldCheck, Sun, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
+  import { BadgeCheck, Check, ChevronDown, CircleHelp, Code2, Cookie, Github, Heart, Landmark, LockKeyhole, Moon, QrCode, RefreshCw, Save, ShieldCheck, Sun, TrendingUp, WalletCards, X, Zap } from 'lucide-svelte';
   import { trackEvent } from '$lib/analytics';
   import { buildVersion } from '$lib/buildInfo';
   import { defaultCurrency, fiatCurrencies, setDefaultCurrency } from '$lib/currency';
@@ -22,7 +22,9 @@
     { href: '/fees', label: 'Fees', icon: Zap },
     { href: '/exchanges', label: 'Exchanges', icon: Landmark },
     { href: '/api-docs', label: 'API', icon: Code2 },
-    { href: '/security', label: 'Security', icon: ShieldCheck }
+    { href: '/faq', label: 'FAQ', icon: CircleHelp },
+    { href: '/security', label: 'Security', icon: ShieldCheck },
+    { href: '/privacy', label: 'Privacy', icon: Cookie }
   ];
 
   $: pathname = $page.url.pathname;
@@ -265,11 +267,17 @@
         <ShieldCheck size={16} />
         <span>Your data never leaves your browser</span>
       </div>
-      <p class="mt-4">{productName} generates QR payloads in the browser. Saved addresses, presets, and custom logos stay in local storage with zero data collection.</p>
+      <p class="mt-4">{productName} generates QR payloads in the browser. Saved addresses, presets, and custom logos stay in local storage without advertising cookies.</p>
       <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2">
         {#each coinLandingPages as item}
           <a class="hover:text-primary" href={`/${item.slug}`}>{item.ticker} QR generator</a>
         {/each}
+      </div>
+      <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+        <a class="hover:text-primary" href="/faq">FAQ</a>
+        <a class="hover:text-primary" href="/privacy">Privacy notice</a>
+        <a class="hover:text-primary" href="/security">Security model</a>
+        <a class="hover:text-primary" href="/terms">Terms of use</a>
       </div>
     </div>
     <div class="flex flex-col gap-2 md:items-end">
