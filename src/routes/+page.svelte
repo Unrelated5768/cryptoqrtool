@@ -3,6 +3,7 @@
   import { ArrowRight, DatabaseZap, Heart, QrCode, ShieldCheck, WifiOff } from 'lucide-svelte';
   import { tr } from '$lib/i18n/phrases';
   import { localizedHref, parseLocalePath } from '$lib/i18n/routing';
+  import { localizeLandingPage } from '$lib/i18n/seo';
   import { coinLandingPages, homeFaqItems, productName, searchLandingPages } from '$lib/seo';
 
   const features = [
@@ -25,6 +26,8 @@
 
   $: activeLocale = parseLocalePath($page.url.pathname).locale;
   $: t = (phrase: string) => tr(activeLocale, phrase);
+  $: localizedCoinPages = coinLandingPages.map((item) => localizeLandingPage(item, activeLocale));
+  $: localizedSearchPages = searchLandingPages.map((item) => localizeLandingPage(item, activeLocale));
 </script>
 
 <main>
@@ -97,18 +100,18 @@
         {t('Dedicated pages for each supported wallet address format and payment payload.')}
       </p>
       <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {#each coinLandingPages as item}
+        {#each localizedCoinPages as item}
           <a
             class="rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
             href={localizedHref(`/${item.slug}`, activeLocale)}
           >
-            {item.name} QR Code Generator
+            {item.headline}
           </a>
         {/each}
       </div>
       <h3 class="mt-8 text-lg font-semibold text-on-surface">{t('Popular crypto QR searches')}</h3>
       <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {#each searchLandingPages as item}
+        {#each localizedSearchPages as item}
           <a
             class="rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
             href={localizedHref(`/${item.slug}`, activeLocale)}
@@ -126,8 +129,8 @@
       <div class="mt-5 grid gap-4 md:grid-cols-2">
         {#each homeFaqItems as item}
           <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
-            <h3 class="text-lg font-semibold text-on-surface">{item.question}</h3>
-            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{item.answer}</p>
+            <h3 class="text-lg font-semibold text-on-surface">{t(item.question)}</h3>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{t(item.answer)}</p>
           </article>
         {/each}
       </div>

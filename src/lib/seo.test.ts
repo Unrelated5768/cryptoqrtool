@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { getCoinLandingPage, getSitemapEntries, relatedPageLabel, routeMeta } from './seo';
+import { getCoinLandingPage, getLocalizedCoinLandingPage, getSitemapEntries, relatedPageLabel, routeMeta } from './seo';
+import type { JsonLd } from './seoShared';
 
 function schemaTypes(pathname: string) {
   return new Set((routeMeta(pathname).jsonLd ?? []).map((item) => String(item['@type'])));
+}
+
+function jsonLdOfType(pathname: string, type: string) {
+  return (routeMeta(pathname).jsonLd ?? []).find((item) => item['@type'] === type) as JsonLd | undefined;
 }
 
 describe('seo metadata', () => {
@@ -34,6 +39,33 @@ describe('seo metadata', () => {
     expect(meta.canonical).toBe('https://cryptoqrtool.com/fr/generate');
     expect(meta.alternates).toContainEqual(expect.objectContaining({ hreflang: 'fr', href: 'https://cryptoqrtool.com/fr/generate' }));
     expect(meta.alternates).toContainEqual(expect.objectContaining({ hreflang: 'x-default', href: 'https://cryptoqrtool.com/generate' }));
+  });
+
+  it('localizes Russian and Ukrainian route metadata and generated landing copy', () => {
+    const ruFaq = routeMeta('/ru/faq');
+    const ukFaq = routeMeta('/uk/faq');
+    const ruBitcoin = getLocalizedCoinLandingPage('bitcoin-qr-code-generator', 'ru');
+    const ukBitcoin = getLocalizedCoinLandingPage('bitcoin-qr-code-generator', 'uk');
+
+    expect(ruFaq.title).toContain('FAQ по крипто QR-кодам');
+    expect(ukFaq.title).toContain('FAQ про крипто QR-коди');
+    expect(ruFaq.description).not.toContain('Answers about');
+    expect(ukFaq.description).not.toContain('Answers about');
+    expect(ruBitcoin?.headline).toContain('Генератор');
+    expect(ukBitcoin?.headline).toContain('Генератор');
+    expect(ruBitcoin?.body).toContain('Создание крипто QR-кодов');
+    expect(ukBitcoin?.body).toContain('Створення крипто QR-кодів');
+  });
+
+  it('localizes JSON-LD FAQ and breadcrumbs for Russian and Ukrainian pages', () => {
+    const ruFaqSchema = jsonLdOfType('/ru/faq', 'FAQPage');
+    const ukBreadcrumbs = jsonLdOfType('/uk/bitcoin-qr-code-generator', 'BreadcrumbList');
+
+    expect(JSON.stringify(ruFaqSchema)).toContain('Безопасен ли CryptoQR Tool');
+    expect(JSON.stringify(ruFaqSchema)).not.toContain('Is CryptoQR Tool safe');
+    expect(JSON.stringify(ukBreadcrumbs)).toContain('Головна');
+    expect(JSON.stringify(ukBreadcrumbs)).toContain('Генератор');
+    expect(JSON.stringify(ukBreadcrumbs)).not.toContain('"Home"');
   });
 
   it('uses intent-specific related labels for generator, guide, and checker pages', () => {

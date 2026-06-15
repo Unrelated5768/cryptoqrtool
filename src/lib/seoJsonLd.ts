@@ -8,6 +8,8 @@ import {
   type LandingPage,
   type StaticRouteConfig
 } from './seoShared';
+import { defaultLocale, type Locale } from './i18n/locales';
+import { localizeBreadcrumbLabel } from './i18n/seo';
 import { staticRoutes } from './seoStaticRoutes';
 
 function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLd {
@@ -98,48 +100,51 @@ export const organizationJsonLd: JsonLd = {
   sameAs: []
 };
 
-function landingPageBreadcrumbs(page: LandingPage): BreadcrumbItem[] {
+function landingPageBreadcrumbs(page: LandingPage, locale: Locale): BreadcrumbItem[] {
   const current = { name: page.headline, path: `/${page.slug}` };
 
   if (page.template === 'generator') {
     return [
-      { name: 'Home', path: '/' },
-      { name: staticRoutes['/generate'].breadcrumbLabel ?? staticRoutes['/generate'].schemaName, path: '/generate' },
+      { name: localizeBreadcrumbLabel('Home', locale), path: '/' },
+      { name: localizeBreadcrumbLabel('Generator', locale), path: '/generate' },
       current
     ];
   }
 
   if (page.template === 'guide' && page.slug !== 'crypto-generate-qrcode') {
     return [
-      { name: 'Home', path: '/' },
-      { name: 'Crypto QR Code Guide', path: '/crypto-generate-qrcode' },
+      { name: localizeBreadcrumbLabel('Home', locale), path: '/' },
+      { name: localizeBreadcrumbLabel('Guide', locale), path: '/crypto-generate-qrcode' },
       current
     ];
   }
 
   if (page.template === 'checker') {
     return [
-      { name: 'Home', path: '/' },
-      { name: staticRoutes['/verify'].breadcrumbLabel ?? staticRoutes['/verify'].schemaName, path: '/verify' },
+      { name: localizeBreadcrumbLabel('Home', locale), path: '/' },
+      { name: localizeBreadcrumbLabel('Verify', locale), path: '/verify' },
       current
     ];
   }
 
-  return [{ name: 'Home', path: '/' }, current];
+  return [{ name: localizeBreadcrumbLabel('Home', locale), path: '/' }, current];
 }
 
-function staticRouteBreadcrumbs(pathname: string, route: StaticRouteConfig): BreadcrumbItem[] {
-  return [{ name: 'Home', path: '/' }, { name: route.breadcrumbLabel ?? route.schemaName, path: pathname }];
+function staticRouteBreadcrumbs(pathname: string, route: StaticRouteConfig, locale: Locale): BreadcrumbItem[] {
+  return [
+    { name: localizeBreadcrumbLabel('Home', locale), path: '/' },
+    { name: localizeBreadcrumbLabel(route.breadcrumbLabel ?? route.schemaName, locale), path: pathname }
+  ];
 }
 
-export function landingPageJsonLd(page: LandingPage, canonical: string): JsonLd[] {
+export function landingPageJsonLd(page: LandingPage, canonical: string, locale: Locale = defaultLocale): JsonLd[] {
   const schemas: JsonLd[] = [webPageJsonLd(page.headline, page.description, canonical)];
 
   if (page.template === 'generator' || page.template === 'checker') {
     schemas.push(webApplicationJsonLd(page.headline, page.description, canonical));
   }
 
-  const breadcrumbs = landingPageBreadcrumbs(page);
+  const breadcrumbs = landingPageBreadcrumbs(page, locale);
   if (breadcrumbs.length > 1) {
     schemas.push(breadcrumbJsonLd(breadcrumbs));
   }
@@ -151,7 +156,7 @@ export function landingPageJsonLd(page: LandingPage, canonical: string): JsonLd[
   return schemas;
 }
 
-export function staticRouteJsonLd(pathname: string, route: StaticRouteConfig): JsonLd[] {
+export function staticRouteJsonLd(pathname: string, route: StaticRouteConfig, locale: Locale = defaultLocale): JsonLd[] {
   if (route.indexable === false) return [];
 
   const canonical = absoluteUrl(pathname);
@@ -169,7 +174,7 @@ export function staticRouteJsonLd(pathname: string, route: StaticRouteConfig): J
         ? [techArticleJsonLd(route.schemaName, route.description, canonical)]
         : [webPageJsonLd(route.schemaName, route.description, canonical)];
 
-  schemas.push(breadcrumbJsonLd(staticRouteBreadcrumbs(pathname, route)));
+  schemas.push(breadcrumbJsonLd(staticRouteBreadcrumbs(pathname, route, locale)));
 
   if (route.faq?.length) {
     schemas.push(faqJsonLd(route.faq));

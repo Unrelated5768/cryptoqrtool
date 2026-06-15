@@ -37,8 +37,7 @@
     <p class="label mb-2">{t('Trust and privacy')}</p>
     <h1 class="text-3xl font-bold text-on-surface md:min-h-24 md:text-5xl">{t('No account, no wallet connection, no server vault')}</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      {productName} is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses,
-      saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.
+      {t(`${productName} is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.`)}
     </p>
   </div>
 
@@ -58,8 +57,8 @@
       <div class="mt-5 grid gap-4 md:grid-cols-2">
         {#each securityFaqItems as item}
           <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
-            <h3 class="text-lg font-semibold text-on-surface">{item.question}</h3>
-            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{item.answer}</p>
+            <h3 class="text-lg font-semibold text-on-surface">{t(item.question)}</h3>
+            <p class="mt-3 text-sm leading-6 text-on-surface-variant">{t(item.answer)}</p>
           </article>
         {/each}
       </div>

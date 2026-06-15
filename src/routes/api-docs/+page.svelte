@@ -36,8 +36,7 @@
     <p class="label mb-2">{t('Developer API')}</p>
     <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('QR code generation API')}</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      Generate the same wallet-compatible crypto QR payloads from server-side requests. The API returns SVG by default,
-      supports guided network validation, custom payloads, scan-safe colors, quiet-zone sizing, and local catalog logos.
+      {t('Generate the same wallet-compatible crypto QR payloads from server-side requests. The API returns SVG by default, supports guided network validation, custom payloads, scan-safe colors, quiet-zone sizing, and local catalog logos.')}
     </p>
   </div>
 
@@ -165,15 +164,15 @@
         <div class="rounded-lg border border-outline-variant bg-surface-low p-4">
           <p class="label mb-2">{t('Success')}</p>
           <p class="text-sm text-on-surface-variant">
-            <span class="mono">200 image/svg+xml</span> for SVG requests, or <span class="mono">200 application/json</span>
-            when <span class="mono">format=json</span>.
+            <span class="mono">200 image/svg+xml</span> {t('for SVG requests, or')} <span class="mono">200 application/json</span>
+            {t('when')} <span class="mono">format=json</span>.
           </p>
         </div>
         <div class="rounded-lg border border-outline-variant bg-surface-low p-4">
           <p class="label mb-2">{t('Errors')}</p>
           <p class="text-sm text-on-surface-variant">
-            Invalid addresses, unknown automatic networks, malformed JSON, or empty custom payloads return JSON errors with
-            a <span class="mono">4xx</span> status.
+            {t('Invalid addresses, unknown automatic networks, malformed JSON, or empty custom payloads return JSON errors with')}
+            <span class="mono">4xx</span> {t('status')}.
           </p>
         </div>
       </div>

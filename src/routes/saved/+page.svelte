@@ -39,14 +39,14 @@
   }
 
   function renameAddress(address: SavedAddress) {
-    const next = prompt('Rename saved address', address.label);
+    const next = prompt(t('Rename saved address'), address.label);
     if (!next) return;
     updateAddressLabel(address.id, next);
     refresh();
   }
 
   function renamePreset(preset: StylePreset) {
-    const next = prompt('Rename style preset', preset.name);
+    const next = prompt(t('Rename style preset'), preset.name);
     if (!next) return;
     updateStylePresetName(preset.id, next);
     refresh();
@@ -126,7 +126,7 @@
               <div>
                 <p class="font-semibold text-on-surface">{preset.name}</p>
                 <p class="mt-2 text-sm text-on-surface-variant">
-                  {preset.style.dots} dots, {preset.style.logo} logo, {preset.style.margin}px quiet zone
+                  {preset.style.dots} {t('dots')}, {preset.style.logo} {t('logo')}, {preset.style.margin}px {t('quiet zone')}
                 </p>
               </div>
               <div class="flex gap-2">

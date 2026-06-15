@@ -22,8 +22,8 @@
     {#each faqPageItems as item}
       <article class="surface-panel rounded-card p-6">
         <CircleHelp class="mb-5 text-primary" size={28} />
-        <h2 class="text-xl font-semibold text-on-surface">{item.question}</h2>
-        <p class="mt-3 leading-7 text-on-surface-variant">{item.answer}</p>
+        <h2 class="text-xl font-semibold text-on-surface">{t(item.question)}</h2>
+        <p class="mt-3 leading-7 text-on-surface-variant">{t(item.answer)}</p>
       </article>
     {/each}
   </section>

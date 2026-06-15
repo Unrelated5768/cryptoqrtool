@@ -45,8 +45,7 @@
     <p class="label mb-2">{t('Privacy notice')}</p>
     <h1 class="text-3xl font-bold text-on-surface md:min-h-24 md:text-5xl">{t('Cookies, local storage, and analytics')}</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      {productName} does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault.
-      Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.
+      {t(`${productName} does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.`)}
     </p>
   </div>
 
@@ -55,12 +54,10 @@
       <Cookie class="mb-5 text-primary" size={30} />
       <h2 class="text-2xl font-semibold text-on-surface">{t('Cookie use')}</h2>
       <p class="mt-3 leading-7 text-on-surface-variant">
-        {productName} does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings
-        popup is not shown because there are no optional cookie categories to manage.
+        {t(`${productName} does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.`)}
       </p>
       <p class="mt-3 leading-7 text-on-surface-variant">
-        The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency,
-        and analytics opt-out status.
+        {t('The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.')}
       </p>
     </article>
 
@@ -68,8 +65,7 @@
       <BarChart3 class="mb-5 text-primary" size={30} />
       <h2 class="text-2xl font-semibold text-on-surface">{t('Anonymous analytics')}</h2>
       <p class="mt-3 leading-7 text-on-surface-variant">
-        Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies,
-        respects browser Do Not Track, and excludes query strings from page URLs.
+        {t('Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.')}
       </p>
       <button
         type="button"
@@ -122,9 +118,7 @@
       <Database class="mb-5 text-primary" size={30} />
       <h2 class="text-2xl font-semibold text-on-surface">{t('Data processing summary')}</h2>
       <p class="mt-3 max-w-4xl leading-7 text-on-surface-variant">
-        Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and
-        anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement.
-        Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.
+        {t('Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.')}
       </p>
     </div>
   </section>

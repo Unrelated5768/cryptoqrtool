@@ -37,8 +37,7 @@
     <p class="label mb-2">{t('Legal')}</p>
     <h1 class="text-3xl font-bold text-on-surface md:min-h-24 md:text-5xl">{t('Terms of Use')}</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      These terms explain the permitted use and limits of {productName}. By using the site, you agree to use it as a self-directed
-      crypto QR utility and to verify all payment details before acting on them.
+      {t(`These terms explain the permitted use and limits of ${productName}. By using the site, you agree to use it as a self-directed crypto QR utility and to verify all payment details before acting on them.`)}
     </p>
     <p class="mt-3 text-sm text-on-surface-variant">{t('Last updated: June 13, 2026')}</p>
   </div>
@@ -58,11 +57,10 @@
       <Scale class="mb-5 text-primary" size={30} />
       <h2 class="text-2xl font-semibold text-on-surface">{t('No financial advice')}</h2>
       <p class="mt-3 leading-7 text-on-surface-variant">
-        {productName} does not provide investment, tax, legal, trading, custody, accounting, or financial advice. Market, fee,
-        exchange, and verification data are informational and may be delayed, incomplete, inaccurate, or unavailable.
+        {t(`${productName} does not provide investment, tax, legal, trading, custody, accounting, or financial advice. Market, fee, exchange, and verification data are informational and may be delayed, incomplete, inaccurate, or unavailable.`)}
       </p>
       <p class="mt-3 leading-7 text-on-surface-variant">
-        You are responsible for your own decisions, wallet configuration, transaction review, and compliance obligations.
+        {t('You are responsible for your own decisions, wallet configuration, transaction review, and compliance obligations.')}
       </p>
     </article>
 
@@ -81,9 +79,7 @@
     <div class="surface-panel rounded-card p-6">
       <h2 class="text-2xl font-semibold text-on-surface">{t('Availability and liability')}</h2>
       <p class="mt-3 max-w-4xl leading-7 text-on-surface-variant">
-        The site is provided as-is and may change, pause, or stop without notice. To the fullest extent permitted by law,
-        {productName} is not liable for lost funds, wrong-address payments, wallet incompatibility, network fees, failed scans,
-        delayed data, third-party API behavior, or other losses from using generated or verified payloads.
+        {t(`The site is provided as-is and may change, pause, or stop without notice. To the fullest extent permitted by law, ${productName} is not liable for lost funds, wrong-address payments, wallet incompatibility, network fees, failed scans, delayed data, third-party API behavior, or other losses from using generated or verified payloads.`)}
       </p>
     </div>
   </section>
