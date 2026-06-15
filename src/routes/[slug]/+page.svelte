@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { page as routeStore } from '$app/stores';
   import { AlertTriangle, ArrowRight, CheckCircle2, ListChecks, Palette, ShieldCheck, WalletCards } from 'lucide-svelte';
+  import { messagesForLocale } from '$lib/i18n/messages';
+  import { localizedHref, parseLocalePath } from '$lib/i18n/routing';
   import { landingPages, relatedPageLabel, relatedLandingPages, type CoinLandingPage } from '$lib/seo';
 
   export let data: {
@@ -10,20 +13,22 @@
   $: isGeneratorPage = page.template === 'generator';
   $: isGuidePage = page.template === 'guide';
   $: isCheckerPage = page.template === 'checker';
+  $: activeLocale = parseLocalePath($routeStore.url.pathname).locale;
+  $: t = messagesForLocale(activeLocale);
   $: generatorPage = page.networkId ? landingPages.find((item) => item.template === 'generator' && item.networkId === page.networkId) : null;
   $: guidePage = page.networkId ? landingPages.find((item) => item.template === 'guide' && item.networkId === page.networkId) : null;
   $: relatedPages = relatedLandingPages(page).slice(0, 6);
   $: secondaryAction =
     isGeneratorPage && guidePage
-      ? { href: `/${guidePage.slug}`, label: `Read the ${page.name} QR guide` }
+      ? { href: `/${guidePage.slug}`, label: t.landing.readGuide(page.name) }
       : isGuidePage && generatorPage
-        ? { href: generatorPage.ctaHref, label: `Open the ${page.name} generator` }
+        ? { href: generatorPage.ctaHref, label: t.landing.openGenerator(page.name) }
         : isCheckerPage && generatorPage
-          ? { href: generatorPage.ctaHref, label: `Create a ${page.name} QR code` }
-          : { href: '/security', label: 'Privacy model' };
-  $: relatedHeading = isGuidePage ? 'Next steps for this network' : isCheckerPage ? 'Related generators and guides' : 'Related tools and guides';
-  $: primarySectionHeading = isGuidePage ? 'Guide details' : isCheckerPage ? 'What the checker covers' : 'What this generator covers';
-  $: trustHeading = isGuidePage ? 'Common mistakes to avoid' : 'Trust and verification notes';
+          ? { href: generatorPage.ctaHref, label: t.landing.createQrCode(page.name) }
+          : { href: '/security', label: t.landing.privacyModel };
+  $: relatedHeading = isGuidePage ? t.landing.nextSteps : isCheckerPage ? t.landing.relatedTools : t.landing.relatedGenerator;
+  $: primarySectionHeading = isGuidePage ? t.landing.guideDetails : isCheckerPage ? t.landing.checkerCovers : t.landing.generatorCovers;
+  $: trustHeading = isGuidePage ? t.landing.mistakesAvoid : t.landing.trustNotes;
 
   const benefitIcons = [WalletCards, Palette, ShieldCheck];
 </script>
@@ -35,10 +40,10 @@
       <h1 class="text-4xl font-bold leading-tight text-on-surface md:text-6xl">{page.headline}</h1>
       <p class="mt-5 text-lg leading-8 text-on-surface-variant">{page.body}</p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a class="btn-primary" href={page.ctaHref}>
+        <a class="btn-primary" href={localizedHref(page.ctaHref, activeLocale)}>
           {page.ctaLabel} <ArrowRight size={18} />
         </a>
-        <a class="btn-secondary" href={secondaryAction.href}>{secondaryAction.label}</a>
+        <a class="btn-secondary" href={localizedHref(secondaryAction.href, activeLocale)}>{secondaryAction.label}</a>
       </div>
     </div>
 
@@ -90,7 +95,7 @@
       <div class="surface-panel rounded-card p-6">
         <div class="mb-5 flex items-center gap-3">
           <ListChecks class="text-primary" size={24} />
-          <h2 class="text-2xl font-semibold text-on-surface">How to generate safely</h2>
+          <h2 class="text-2xl font-semibold text-on-surface">{t.landing.howToSafely}</h2>
         </div>
         <ol class="grid gap-3 md:grid-cols-2">
           {#each page.howToSteps as step, index}
@@ -129,7 +134,7 @@
             <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
               <div class="mb-4 flex items-center gap-3">
                 <ShieldCheck class="text-primary" size={22} />
-                <h3 class="text-lg font-semibold text-on-surface">Trust signals</h3>
+                <h3 class="text-lg font-semibold text-on-surface">{t.landing.trustSignals}</h3>
               </div>
               <ul class="grid gap-3 text-sm leading-6 text-on-surface-variant">
                 {#each page.trustPoints as item}
@@ -143,7 +148,7 @@
             <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
               <div class="mb-4 flex items-center gap-3">
                 <AlertTriangle class="text-warning" size={22} />
-                <h3 class="text-lg font-semibold text-on-surface">{isGuidePage ? 'Guide cautions' : 'Common mistakes'}</h3>
+                <h3 class="text-lg font-semibold text-on-surface">{isGuidePage ? t.landing.guideCautions : t.landing.commonMistakes}</h3>
               </div>
               <ul class="grid gap-3 text-sm leading-6 text-on-surface-variant">
                 {#each page.cautionItems as item}
@@ -160,7 +165,7 @@
   {#if page.faq.length}
     <section class="mx-auto max-w-7xl px-5 pb-12 md:px-8">
       <div class="surface-panel rounded-card p-6">
-        <h2 class="text-2xl font-semibold text-on-surface">Frequently asked questions</h2>
+        <h2 class="text-2xl font-semibold text-on-surface">{t.landing.faq}</h2>
         <div class="mt-5 grid gap-4 md:grid-cols-2">
           {#each page.faq as item}
             <article class="rounded-lg border border-outline-variant bg-surface-low p-5">
@@ -180,19 +185,19 @@
           <h2 class="text-2xl font-semibold text-on-surface">{relatedHeading}</h2>
           <p class="mt-2 text-sm text-on-surface-variant">
             {isGuidePage
-              ? 'Move from explanation to action with the matching generator or checker pages.'
+              ? t.landing.guideRelatedBody
               : isCheckerPage
-                ? 'Create or review the matching QR workflow once the payload looks correct.'
-                : 'Open the matching guide or checker before you share a QR code publicly.'}
+                ? t.landing.checkerRelatedBody
+                : t.landing.generatorRelatedBody}
           </p>
         </div>
-        <a class="btn-secondary" href="/generate">Open all networks</a>
+        <a class="btn-secondary" href={localizedHref('/generate', activeLocale)}>{t.landing.openAllNetworks}</a>
       </div>
       <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {#each relatedPages as item}
           <a
             class="flex items-center justify-between rounded-lg border border-outline-variant bg-surface-low px-4 py-3 text-sm font-semibold text-on-surface transition hover:border-primary/60 hover:text-primary"
-            href={`/${item.slug}`}
+            href={localizedHref(`/${item.slug}`, activeLocale)}
           >
             <span>{relatedPageLabel(item)}</span>
             <CheckCircle2 size={16} style={`color: ${item.accent}`} />

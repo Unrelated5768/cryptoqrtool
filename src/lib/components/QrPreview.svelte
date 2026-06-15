@@ -2,6 +2,8 @@
   import { browser } from '$app/environment';
   import { Download, Share2 } from 'lucide-svelte';
   import { trackEvent, type AnalyticsProperties } from '$lib/analytics';
+  import type { Locale } from '$lib/i18n/locales';
+  import { tr } from '$lib/i18n/phrases';
   import type { QrStyle } from '$lib/qrStyle';
   import { getContrastWarning, logoDataUrl } from '$lib/qrStyle';
   import { productName } from '$lib/seo';
@@ -10,11 +12,13 @@
   export let style: QrStyle;
   export let customLogoDataUrl: string | undefined = undefined;
   export let analyticsContext: AnalyticsProperties = {};
+  export let locale: Locale = 'en';
 
   let host: HTMLDivElement;
   let qr: import('qr-code-styling').default | undefined;
   let copied = false;
   $: warning = getContrastWarning(style);
+  $: t = (phrase: string) => tr(locale, phrase);
 
   $: if (browser && host && payload && style) {
     renderQr(payload, style, customLogoDataUrl);
@@ -116,13 +120,13 @@
 <section class="glass-panel rounded-card p-5 md:p-6">
   <div class="mb-4 flex items-center justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-on-surface">QR preview</h2>
-      <p class="text-sm text-on-surface-variant">High-contrast output with quiet-zone enforcement.</p>
+      <h2 class="text-xl font-semibold text-on-surface">{t('QR preview')}</h2>
+      <p class="text-sm text-on-surface-variant">{t('High-contrast output with quiet-zone enforcement.')}</p>
     </div>
     {#if warning}
-      <span data-testid="qr-scan-status" class="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">Scan warning</span>
+      <span data-testid="qr-scan-status" class="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">{t('Scan warning')}</span>
     {:else}
-      <span data-testid="qr-scan-status" class="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold text-success">Scan safe</span>
+      <span data-testid="qr-scan-status" class="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold text-success">{t('Scan safe')}</span>
     {/if}
   </div>
 
@@ -131,7 +135,7 @@
       <div bind:this={host} data-testid="qr-render-host" class="mx-auto flex min-h-[320px] items-center justify-center"></div>
     {:else}
       <div class="flex min-h-[320px] items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-500">
-        Enter a valid address to generate a QR code.
+        {t('Enter a valid address to generate a QR code.')}
       </div>
     {/if}
   </div>
@@ -141,8 +145,8 @@
   {/if}
 
   <div class="mt-4 rounded-lg border border-outline-variant bg-surface-low p-3">
-    <p class="label mb-2">Payload</p>
-    <p class="mono break-all text-sm text-on-surface-variant" data-testid="qr-payload">{payload || 'No payload yet'}</p>
+    <p class="label mb-2">{t('Payload')}</p>
+    <p class="mono break-all text-sm text-on-surface-variant" data-testid="qr-payload">{payload || t('No payload yet')}</p>
   </div>
 
   <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -152,9 +156,9 @@
     <button class="btn-secondary" on:click={() => download('svg')} disabled={!payload}>
       <Download size={16} /> SVG
     </button>
-    <button class="btn-secondary" data-testid="copy-payload" on:click={copyPayload} disabled={!payload}>{copied ? 'Copied' : 'Copy'}</button>
+    <button class="btn-secondary" data-testid="copy-payload" on:click={copyPayload} disabled={!payload}>{copied ? t('Copied') : t('Copy')}</button>
     <button class="btn-secondary" on:click={sharePayload} disabled={!payload || !browser || !navigator.share}>
-      <Share2 size={16} /> Share
+      <Share2 size={16} /> {t('Share')}
     </button>
   </div>
 </section>

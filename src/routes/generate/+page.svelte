@@ -8,6 +8,8 @@
   import StyleEditor from '$components/StyleEditor.svelte';
   import { trackEvent } from '$lib/analytics';
   import { defaultCurrency, type FiatCurrency } from '$lib/currency';
+  import { tr } from '$lib/i18n/phrases';
+  import { localizedHref, parseLocalePath } from '$lib/i18n/routing';
   import { productName } from '$lib/seo';
   import { logoForMarketSymbol, logoForNetwork } from '$lib/networkLogos';
   import {
@@ -53,6 +55,8 @@
   let manualLogoOverride = false;
   let lastAutoLogoKey = '';
 
+  $: activeLocale = parseLocalePath($page.url.pathname).locale;
+  $: t = (phrase: string) => tr(activeLocale, phrase);
   $: selectedMarketId = getMarketSelectionId(network);
   $: selectedMarketAsset = selectedMarketId
     ? marketAssets.find((asset) => asset.id === selectedMarketId)
@@ -86,7 +90,7 @@
     applyAutoLogoDefault();
   }
   $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} address` : selectedNetwork.placeholder;
-  $: paymentInputLabel = effectiveNetwork === 'lightning' ? 'Lightning invoice' : 'Recipient address';
+  $: paymentInputLabel = effectiveNetwork === 'lightning' ? t('Lightning invoice') : t('Recipient address');
   $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount && !caip19AssetOnly;
   $: validation =
     caip19AssetOnly
@@ -307,7 +311,7 @@
       address: address.trim()
     });
     trackEvent('address_saved', { network: effectiveNetwork, ticker: selectedTicker });
-    savedMessage = 'Saved locally in this browser.';
+    savedMessage = t('Saved locally in this browser.');
     setTimeout(() => (savedMessage = ''), 1800);
   }
 
@@ -319,7 +323,7 @@
       color_mode: style.colorMode,
       custom_logo: Boolean(customLogoDataUrl)
     });
-    savedMessage = 'Style preset saved locally in this browser.';
+    savedMessage = t('Style preset saved locally in this browser.');
     setTimeout(() => (savedMessage = ''), 1800);
   }
 
@@ -327,11 +331,10 @@
 
 <main class="mx-auto max-w-7xl px-5 py-10 md:px-8">
   <div class="mb-8">
-    <p class="label mb-2">Local QR generator</p>
-    <h1 class="text-3xl font-bold text-on-surface md:text-5xl">Generate crypto QR codes</h1>
+    <p class="label mb-2">{t('Local QR generator')}</p>
+    <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Generate crypto QR codes')}</h1>
     <p class="mt-3 max-w-3xl text-on-surface-variant">
-      Build address-only, amount payment, or Bitcoin Lightning invoice QR payloads for Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT. QR styling stays local.
-      Switch to custom mode to design an arbitrary QR payload by hand.
+      {t('Build address-only, amount payment, or Bitcoin Lightning invoice QR payloads for Monero, Bitcoin, Ethereum/EVM, Solana, Litecoin, USDC, and USDT. QR styling stays local. Switch to custom mode to design an arbitrary QR payload by hand.')}
     </p>
   </div>
 
@@ -340,9 +343,9 @@
       <summary class="group flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
         <div class="flex flex-wrap items-center gap-3">
           <div>
-            <h2 class="text-xl font-semibold">Payment details</h2>
+            <h2 class="text-xl font-semibold">{t('Payment details')}</h2>
             <p class="text-sm text-on-surface-variant">
-              Automatic mode detects XMR, BTC, BTC Lightning invoices, ETH/EVM, LTC, or SOL from the address format. Select USDC or USDT manually for ERC-20 token payment URIs.
+              {t('Automatic mode detects XMR, BTC, BTC Lightning invoices, ETH/EVM, LTC, or SOL from the address format. Select USDC or USDT manually for ERC-20 token payment URIs.')}
             </p>
           </div>
           <StatusBadge status={activeValidation.status} label={activeValidation.status === 'valid' ? 'Valid' : activeValidation.status} />
@@ -362,7 +365,7 @@
                 trackEvent('generator_mode_selected', { mode });
               }}
             >
-              Guided
+              {t('Guided')}
             </button>
             <button
               type="button"
@@ -374,13 +377,13 @@
                 trackEvent('generator_mode_selected', { mode });
               }}
             >
-              Custom payload
+              {t('Custom payload')}
             </button>
           </div>
 
           {#if mode === 'guided'}
             <div>
-              <label class="label mb-2 block" for="network">Network</label>
+              <label class="label mb-2 block" for="network">{t('Network')}</label>
               <select
                 id="network"
                 data-testid="network-select"
@@ -388,14 +391,14 @@
                 bind:value={network}
                 on:change={(event) => trackNetworkSelection(event.currentTarget.value as NetworkSelection)}
               >
-                <option value="automatic">Automatic from address</option>
-                <optgroup label="Supported payment networks">
+                <option value="automatic">{t('Automatic from address')}</option>
+                <optgroup label={t('Supported payment networks')}>
                   {#each networks as option}
                     <option value={option.id}>{option.name} ({option.ticker})</option>
                   {/each}
                 </optgroup>
                 {#if marketAssetOptions.length}
-                  <optgroup label="Market assets">
+                  <optgroup label={t('Market assets')}>
                     {#each marketAssetOptions as asset}
                       <option value={`market:${asset.id}`}>{asset.name} ({asset.symbol})</option>
                     {/each}
@@ -403,14 +406,14 @@
                 {/if}
               </select>
               {#if network === 'automatic' && detectedNetwork}
-                <p class="mt-2 text-sm text-success">Detected {selectedNetwork.name} ({selectedNetwork.ticker}).</p>
+                <p class="mt-2 text-sm text-success">{t('Detected')} {selectedNetwork.name} ({selectedNetwork.ticker}).</p>
               {/if}
             </div>
 
             {#if chainSelectionEnabled}
               <div class="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label class="label mb-2 block" for="token-chain">{tokenNetworkSelected ? 'Token chain' : 'EVM chain'}</label>
+                  <label class="label mb-2 block" for="token-chain">{tokenNetworkSelected ? t('Token chain') : t('EVM chain')}</label>
                   <select id="token-chain" class="field" bind:value={tokenChainId}>
                     {#each tokenChainOptions as option}
                       <option value={option.id}>{option.name} ({option.caip2})</option>
@@ -419,10 +422,10 @@
                 </div>
                 {#if tokenNetworkSelected}
                   <div>
-                    <label class="label mb-2 block" for="payload-standard">Payload standard</label>
+                    <label class="label mb-2 block" for="payload-standard">{t('Payload standard')}</label>
                     <select id="payload-standard" class="field" bind:value={tokenPayloadFormat}>
-                      <option value="payment">Payment URI</option>
-                      <option value="caip19">CAIP-19 asset ID</option>
+                      <option value="payment">{t('Payment URI')}</option>
+                      <option value="caip19">{t('CAIP-19 asset ID')}</option>
                     </select>
                   </div>
                 {/if}
@@ -453,12 +456,12 @@
                     bind:value={address}
                   ></textarea>
                   <div class="flex flex-col gap-2">
-                    <button class="icon-button" type="button" title="Paste address" on:click={pasteAddress}><Clipboard size={18} /></button>
-                    <button class="icon-button" type="button" title="Copy address" data-testid="copy-address" on:click={copyAddress}><Copy size={18} /></button>
+                    <button class="icon-button" type="button" title={t('Paste address')} on:click={pasteAddress}><Clipboard size={18} /></button>
+                    <button class="icon-button" type="button" title={t('Copy address')} data-testid="copy-address" on:click={copyAddress}><Copy size={18} /></button>
                   </div>
                 </div>
                 {#if copied}
-                  <p class="mt-2 text-sm text-success">Address copied.</p>
+                  <p class="mt-2 text-sm text-success">{t('Address copied.')}</p>
                 {/if}
               </div>
             {:else}
@@ -470,12 +473,12 @@
             <div class="grid gap-4 md:grid-cols-2">
               {#if amountSupported}
                 <div>
-                  <label class="label mb-2 block" for="amount">Optional amount</label>
+                  <label class="label mb-2 block" for="amount">{t('Optional amount')}</label>
                   <input id="amount" data-testid="amount-input" class="field" inputmode="decimal" placeholder="0.00" bind:value={amount} />
                 </div>
               {/if}
               <div>
-                <label class="label mb-2 block" for="label">Local save label</label>
+                <label class="label mb-2 block" for="label">{t('Local save label')}</label>
                 <input id="label" data-testid="label-input" class="field" placeholder={`${selectedTicker} treasury`} bind:value={label} />
               </div>
             </div>
@@ -493,18 +496,18 @@
 
             <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-outline-variant bg-surface-low p-4">
               <div>
-                <p class="text-sm text-on-surface-variant">Fiat estimate</p>
+                <p class="text-sm text-on-surface-variant">{t('Fiat estimate')}</p>
                 <p class="text-lg font-semibold text-on-surface">{fiatEstimate}</p>
               </div>
               <button class="btn-primary" data-testid="save-address" type="button" on:click={persistAddress} disabled={!canSaveAddress}>
                 <Save size={16} />
-                Save address
+                {t('Save address')}
               </button>
             </div>
           {:else}
             <div>
               <div class="mb-2 flex items-center justify-between gap-3">
-                <label class="label" for="custom-payload">Payload</label>
+                <label class="label" for="custom-payload">{t('Payload')}</label>
                 <span class="text-xs text-on-surface-variant">{customPayloadValidation.message}</span>
               </div>
               <div class="flex gap-2">
@@ -515,15 +518,15 @@
                   bind:value={customPayload}
                 ></textarea>
                 <div class="flex flex-col gap-2">
-                  <button class="icon-button" type="button" title="Paste payload" on:click={pasteCustomPayload}><Clipboard size={18} /></button>
-                  <button class="icon-button" type="button" title="Copy payload" on:click={copyCustomPayload}><Copy size={18} /></button>
+                  <button class="icon-button" type="button" title={t('Paste payload')} on:click={pasteCustomPayload}><Clipboard size={18} /></button>
+                  <button class="icon-button" type="button" title={t('Copy payload')} on:click={copyCustomPayload}><Copy size={18} /></button>
                 </div>
               </div>
               <p class="mt-3 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
                 Custom mode does not validate addresses or amounts. The QR code encodes exactly the payload you provide.
               </p>
               {#if copied}
-                <p class="mt-2 text-sm text-success">Payload copied.</p>
+                <p class="mt-2 text-sm text-success">{t('Payload copied.')}</p>
               {/if}
             </div>
           {/if}
@@ -533,12 +536,15 @@
           {#if payload}
             <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-outline-variant bg-surface-low p-4">
               <div>
-                <p class="text-sm font-semibold text-on-surface">Check before sharing</p>
-                <p class="text-sm text-on-surface-variant">Open this generated payload in the verifier.</p>
+                <p class="text-sm font-semibold text-on-surface">{t('Check before sharing')}</p>
+                <p class="text-sm text-on-surface-variant">{t('Open this generated payload in the verifier.')}</p>
               </div>
-              <a class="btn-secondary" href={`/verify?network=${selectedMarketId ? 'automatic' : effectiveNetwork}&q=${encodeURIComponent(payload)}`}>
+              <a
+                class="btn-secondary"
+                href={localizedHref(`/verify?network=${selectedMarketId ? 'automatic' : effectiveNetwork}&q=${encodeURIComponent(payload)}`, activeLocale)}
+              >
                 <BadgeCheck size={16} />
-                Verify payload
+                {t('Verify payload')}
               </a>
             </div>
           {/if}
@@ -546,7 +552,7 @@
     </details>
 
     <div class="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start lg:sticky lg:top-24">
-      <QrPreview {payload} {style} {customLogoDataUrl} {analyticsContext} />
+      <QrPreview {payload} {style} {customLogoDataUrl} {analyticsContext} locale={activeLocale} />
     </div>
 
     <div class="lg:col-start-1 lg:row-start-2">
@@ -556,17 +562,18 @@
         collapseOnMobile
         on:logoChanged={markLogoManuallyChanged}
         on:presetApplied={markPresetApplied}
+        locale={activeLocale}
       />
     </div>
 
     <section class="glass-panel rounded-card p-5 md:p-6 lg:col-start-1 lg:row-start-3">
-      <h2 class="text-xl font-semibold">Save current style</h2>
+      <h2 class="text-xl font-semibold">{t('Save current style')}</h2>
       <p class="mt-2 text-sm text-on-surface-variant">
-        Custom logos are stored as browser-local data URLs only when you save a style preset.
+        {t('Custom logos are stored as browser-local data URLs only when you save a style preset.')}
       </p>
       <div class="mt-4 flex flex-col gap-3 sm:flex-row">
-        <input class="field" data-testid="preset-name-input" placeholder="Preset name" bind:value={presetName} />
-        <button class="btn-primary sm:w-52" data-testid="save-preset" type="button" on:click={persistStylePreset}>Save preset</button>
+        <input class="field" data-testid="preset-name-input" placeholder={t('Preset name')} bind:value={presetName} />
+        <button class="btn-primary sm:w-52" data-testid="save-preset" type="button" on:click={persistStylePreset}>{t('Save preset')}</button>
       </div>
     </section>
   </div>

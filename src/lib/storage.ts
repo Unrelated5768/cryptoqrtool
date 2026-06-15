@@ -1,6 +1,7 @@
 import { defaultQrStyle, parseStyle, type QrStyle, type StylePreset } from './qrStyle';
 import type { NetworkId } from './networks';
 import { normalizeCurrency, type FiatCurrency } from './currencyOptions';
+import { defaultLocale, isLocale, type Locale } from './i18n/locales';
 
 const STORAGE_KEY = 'cryptogen:v1';
 
@@ -19,11 +20,19 @@ export interface AppStorage {
   presets: StylePreset[];
   defaultCurrency: FiatCurrency;
   theme: ThemeMode;
+  locale: Locale;
 }
 
 export type ThemeMode = 'dark' | 'light';
 
-const emptyStorage = (): AppStorage => ({ version: 1, addresses: [], presets: [], defaultCurrency: 'USD', theme: 'dark' });
+const emptyStorage = (): AppStorage => ({
+  version: 1,
+  addresses: [],
+  presets: [],
+  defaultCurrency: 'USD',
+  theme: 'dark',
+  locale: defaultLocale
+});
 
 export function loadStorage(): AppStorage {
   if (!browserStorageAvailable()) return emptyStorage();
@@ -128,12 +137,17 @@ export function migrateStorage(value: unknown): AppStorage {
         }))
       : [],
     defaultCurrency: normalizeCurrency(candidate.defaultCurrency),
-    theme: normalizeTheme(candidate.theme)
+    theme: normalizeTheme(candidate.theme),
+    locale: normalizeLocale(candidate.locale)
   };
 }
 
 export function normalizeTheme(value: unknown): ThemeMode {
   return value === 'light' ? 'light' : 'dark';
+}
+
+export function normalizeLocale(value: unknown): Locale {
+  return typeof value === 'string' && isLocale(value) ? value : defaultLocale;
 }
 
 function browserStorageAvailable() {

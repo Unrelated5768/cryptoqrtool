@@ -21,6 +21,10 @@ export type SeoMeta = {
   title: string;
   description: string;
   canonical: string;
+  alternates?: {
+    hreflang: string;
+    href: string;
+  }[];
   jsonLd?: JsonLd[];
   ogImage?: string;
   ogImageAlt?: string;

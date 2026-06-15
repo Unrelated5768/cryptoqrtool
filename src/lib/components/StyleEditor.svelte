@@ -2,6 +2,8 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { ChevronDown, Upload } from 'lucide-svelte';
   import { cryptoIcons, getCryptoIcon, type CryptoIconVariant } from '$lib/cryptoIcons';
+  import type { Locale } from '$lib/i18n/locales';
+  import { tr } from '$lib/i18n/phrases';
   import {
     builtInPresets,
     defaultQrStyle,
@@ -13,6 +15,7 @@
   export let style: QrStyle = { ...defaultQrStyle };
   export let customLogoDataUrl: string | undefined = undefined;
   export let collapseOnMobile = false;
+  export let locale: Locale = 'en';
 
   const dispatch = createEventDispatcher<{
     logoChanged: void;
@@ -28,6 +31,7 @@
   let logoSearch = '';
   let editorOpen = true;
   $: contrastWarning = getContrastWarning(style);
+  $: t = (phrase: string) => tr(locale, phrase);
   $: selectedIcon = style.logo === 'none' || style.logo === 'custom' ? undefined : getCryptoIcon(style.logo);
   $: filteredIcons = cryptoIcons
     .filter((icon) => {
@@ -100,15 +104,15 @@
 <details bind:open={editorOpen} class="glass-panel rounded-card p-5 md:p-6">
   <summary class="group flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
     <div>
-      <h2 class="text-xl font-semibold text-on-surface">Style editor</h2>
-      <p class="text-sm text-on-surface-variant">Presets keep contrast and quiet-zone defaults conservative.</p>
+      <h2 class="text-xl font-semibold text-on-surface">{t('Style editor')}</h2>
+      <p class="text-sm text-on-surface-variant">{t('Presets keep contrast and quiet-zone defaults conservative.')}</p>
     </div>
     <ChevronDown size={18} class="shrink-0 text-on-surface-variant transition group-open:rotate-180" />
   </summary>
 
   <div class="mt-5 grid gap-5">
     <div>
-      <p class="label mb-2">Built-in presets</p>
+      <p class="label mb-2">{t('Built-in presets')}</p>
       <div class="grid grid-cols-2 gap-2">
         {#each builtInPresets as preset}
           <button
@@ -126,16 +130,16 @@
     <div class="grid gap-3">
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <label class="label mb-2 block" for="logo-search">Logo</label>
+          <label class="label mb-2 block" for="logo-search">{t('Logo')}</label>
           <p class="text-sm text-on-surface-variant">
             {#if style.logo === 'none'}
-              No embedded logo selected.
+              {t('No embedded logo selected.')}
             {:else if style.logo === 'custom'}
-              Custom uploaded logo selected.
+              {t('Custom uploaded logo selected.')}
             {:else if selectedIcon}
               {selectedIcon.name} ({selectedIcon.symbol.toUpperCase()}) selected.
             {:else}
-              Catalog logo selected.
+              {t('Catalog logo selected.')}
             {/if}
           </p>
         </div>
@@ -151,7 +155,7 @@
               aria-pressed={style.logoVariant === option.value}
               on:click={() => chooseLogoVariant(option.value)}
             >
-              {option.label}
+              {t(option.label)}
             </button>
           {/each}
         </div>
@@ -162,11 +166,11 @@
           id="logo-search"
           data-testid="logo-search"
           class="field"
-          placeholder="Search by symbol or name"
+          placeholder={t('Search by symbol or name')}
           bind:value={logoSearch}
         />
-        <button type="button" data-testid="logo-none" class="btn-secondary" on:click={() => chooseLogo('none')}>None</button>
-        <button type="button" data-testid="logo-custom" class="btn-secondary" on:click={() => chooseLogo('custom')}>Custom</button>
+        <button type="button" data-testid="logo-none" class="btn-secondary" on:click={() => chooseLogo('none')}>{t('None')}</button>
+        <button type="button" data-testid="logo-custom" class="btn-secondary" on:click={() => chooseLogo('custom')}>{t('Custom')}</button>
       </div>
 
       <div class="grid max-h-72 grid-cols-2 gap-2 overflow-y-auto rounded-lg border border-outline-variant bg-surface-low p-2 sm:grid-cols-3">
@@ -193,7 +197,7 @@
 
     <label class="btn-secondary cursor-pointer">
       <Upload size={16} />
-      Upload custom logo
+      {t('Upload custom logo')}
       <input data-testid="custom-logo-input" class="sr-only" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" on:change={handleLogoUpload} />
     </label>
     {#if fileWarning}
@@ -202,43 +206,43 @@
 
     <div class="grid gap-4 md:grid-cols-3">
       <div>
-        <label class="label mb-2 block" for="dots">Dots</label>
+        <label class="label mb-2 block" for="dots">{t('Dots')}</label>
         <select id="dots" class="field" bind:value={style.dots} on:change={commitStyle}>
-          <option value="square">Square</option>
-          <option value="rounded">Rounded</option>
-          <option value="dots">Dots</option>
-          <option value="classy">Classy</option>
-          <option value="extra-rounded">Extra rounded</option>
+          <option value="square">{t('Square')}</option>
+          <option value="rounded">{t('Rounded')}</option>
+          <option value="dots">{t('Dots')}</option>
+          <option value="classy">{t('Classy')}</option>
+          <option value="extra-rounded">{t('Extra rounded')}</option>
         </select>
       </div>
       <div>
-        <label class="label mb-2 block" for="corner-square">Corner square</label>
+        <label class="label mb-2 block" for="corner-square">{t('Corner square')}</label>
         <select id="corner-square" class="field" bind:value={style.cornersSquare} on:change={commitStyle}>
-          <option value="square">Square</option>
-          <option value="dot">Dot</option>
-          <option value="extra-rounded">Extra rounded</option>
+          <option value="square">{t('Square')}</option>
+          <option value="dot">{t('Dot')}</option>
+          <option value="extra-rounded">{t('Extra rounded')}</option>
         </select>
       </div>
       <div>
-        <label class="label mb-2 block" for="corner-dot">Corner dot</label>
+        <label class="label mb-2 block" for="corner-dot">{t('Corner dot')}</label>
         <select id="corner-dot" class="field" bind:value={style.cornersDot} on:change={commitStyle}>
-          <option value="square">Square</option>
-          <option value="dot">Dot</option>
+          <option value="square">{t('Square')}</option>
+          <option value="dot">{t('Dot')}</option>
         </select>
       </div>
     </div>
 
     <div class="grid gap-4 md:grid-cols-3">
       <div>
-        <label class="label mb-2 block" for="color-mode">Color mode</label>
+        <label class="label mb-2 block" for="color-mode">{t('Color mode')}</label>
         <select id="color-mode" class="field" bind:value={style.colorMode} on:change={commitStyle}>
-          <option value="solid">Solid foreground</option>
-          <option value="gradient">Gradient foreground</option>
-          <option value="preset">Preset palette</option>
+          <option value="solid">{t('Solid foreground')}</option>
+          <option value="gradient">{t('Gradient foreground')}</option>
+          <option value="preset">{t('Preset palette')}</option>
         </select>
       </div>
       <div>
-        <label class="label mb-2 block" for="foreground">Foreground</label>
+        <label class="label mb-2 block" for="foreground">{t('Foreground')}</label>
         <input
           id="foreground"
           data-testid="foreground-input"
@@ -249,7 +253,7 @@
         />
       </div>
       <div>
-        <label class="label mb-2 block" for="foreground-end">Gradient end</label>
+        <label class="label mb-2 block" for="foreground-end">{t('Gradient end')}</label>
         <input
           id="foreground-end"
           class="h-12 w-full rounded-lg border border-outline-variant bg-surface-low p-1"
@@ -262,7 +266,7 @@
 
     <div class="grid gap-4 md:grid-cols-3">
       <div>
-        <label class="label mb-2 block" for="background">Background</label>
+        <label class="label mb-2 block" for="background">{t('Background')}</label>
         <input
           id="background"
           data-testid="background-input"
@@ -273,7 +277,7 @@
         />
       </div>
       <div>
-        <label class="label mb-2 block" for="margin">Quiet zone: {style.margin}px</label>
+        <label class="label mb-2 block" for="margin">{t('Quiet zone')}: {style.margin}px</label>
         <input
           id="margin"
           class="w-full accent-primary-action"
@@ -286,7 +290,7 @@
         />
       </div>
       <div>
-        <label class="label mb-2 block" for="logo-size">Logo size: {Math.round(style.logoSize * 100)}%</label>
+        <label class="label mb-2 block" for="logo-size">{t('Logo size')}: {Math.round(style.logoSize * 100)}%</label>
         <input
           id="logo-size"
           class="w-full accent-primary-action"

@@ -1,6 +1,6 @@
 import { routeMeta } from '$lib/seo';
 
-export async function load({ fetch }) {
+export async function load({ fetch, url }) {
   const result = await fetch('/api/fees').then((response) => response.json());
-  return { meta: routeMeta('/fees'), result };
+  return { meta: routeMeta(url.pathname), result };
 }

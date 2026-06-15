@@ -27,6 +27,15 @@ describe('seo metadata', () => {
     expect(routeMeta('/crypto-qrcode-bitcoin').canonical).toBe('https://cryptoqrtool.com/crypto-qrcode-bitcoin');
   });
 
+  it('localizes canonicals and alternate links for prefixed routes', () => {
+    const meta = routeMeta('/fr/generate');
+
+    expect(meta.title).toContain('Générer');
+    expect(meta.canonical).toBe('https://cryptoqrtool.com/fr/generate');
+    expect(meta.alternates).toContainEqual(expect.objectContaining({ hreflang: 'fr', href: 'https://cryptoqrtool.com/fr/generate' }));
+    expect(meta.alternates).toContainEqual(expect.objectContaining({ hreflang: 'x-default', href: 'https://cryptoqrtool.com/generate' }));
+  });
+
   it('uses intent-specific related labels for generator, guide, and checker pages', () => {
     const generatorPage = getCoinLandingPage('bitcoin-qr-code-generator');
     const guidePage = getCoinLandingPage('crypto-qrcode-bitcoin');
@@ -70,6 +79,8 @@ describe('seo metadata', () => {
   it('includes the privacy notice in metadata and sitemap entries', () => {
     expect(routeMeta('/privacy').title).toContain('Privacy');
     expect(getSitemapEntries().some((entry) => entry.path === '/privacy')).toBe(true);
+    expect(getSitemapEntries().some((entry) => entry.path === '/fr/privacy')).toBe(true);
+    expect(getSitemapEntries().some((entry) => entry.path === '/ar/faq')).toBe(true);
   });
 
   it('includes terms and FAQ metadata in sitemap entries', () => {

@@ -1,7 +1,7 @@
 import { routeMeta } from '$lib/seo';
 
-export function load() {
+export function load({ url }) {
   return {
-    meta: routeMeta('/generate')
+    meta: routeMeta(url.pathname)
   };
 }

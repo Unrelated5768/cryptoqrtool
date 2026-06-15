@@ -70,4 +70,16 @@ describe('Seo', () => {
       'https://cryptoqrtool.com/og-image.png'
     );
   });
+
+  it('emits hreflang alternates for localized routes', () => {
+    renderFor('/ar/faq');
+
+    expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://cryptoqrtool.com/ar/faq');
+    expect(document.head.querySelector('link[rel="alternate"][hreflang="ar"]')?.getAttribute('href')).toBe(
+      'https://cryptoqrtool.com/ar/faq'
+    );
+    expect(document.head.querySelector('link[rel="alternate"][hreflang="x-default"]')?.getAttribute('href')).toBe(
+      'https://cryptoqrtool.com/faq'
+    );
+  });
 });

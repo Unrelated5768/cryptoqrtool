@@ -10,7 +10,7 @@ export async function load({ fetch, url }) {
     : null;
 
   return {
-    meta: routeMeta('/verify'),
+    meta: routeMeta(url.pathname),
     q,
     network,
     result

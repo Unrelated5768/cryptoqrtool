@@ -20,6 +20,9 @@
     <meta name="robots" content={meta.robots} />
   {/if}
   <link rel="canonical" href={meta.canonical} />
+  {#each meta.alternates ?? [] as alternate}
+    <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />
+  {/each}
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="CryptoQR Tool" />
   <meta property="og:title" content={meta.title} />

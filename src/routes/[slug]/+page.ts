@@ -1,8 +1,10 @@
 import { error } from '@sveltejs/kit';
-import { getCoinLandingPage, routeMeta } from '$lib/seo';
+import { getLocalizedCoinLandingPage, routeMeta } from '$lib/seo';
+import { parseLocalePath } from '$lib/i18n/routing';
 
-export function load({ params }) {
-  const landingPage = getCoinLandingPage(params.slug);
+export function load({ params, url }) {
+  const { locale } = parseLocalePath(url.pathname);
+  const landingPage = getLocalizedCoinLandingPage(params.slug, locale);
 
   if (!landingPage) {
     error(404, 'Not found');
@@ -10,6 +12,6 @@ export function load({ params }) {
 
   return {
     landingPage,
-    meta: routeMeta(`/${landingPage.slug}`)
+    meta: routeMeta(url.pathname)
   };
 }

@@ -5,6 +5,9 @@ declare global {
   namespace App {
     interface PageData {
       meta?: import('$lib/seo').SeoMeta;
+      locale?: import('$lib/i18n/locales').Locale;
+      dir?: import('$lib/i18n/locales').TextDirection;
+      routePath?: string;
     }
   }
 }

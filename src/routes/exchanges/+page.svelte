@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
+  import { tr } from '$lib/i18n/phrases';
+  import { parseLocalePath } from '$lib/i18n/routing';
   import {
     defaultVisibleSearchPageSize,
     filterVisibleSearchRows,
@@ -28,6 +31,8 @@
   let xmrFilter = false;
   let searchQuery = '';
   let visibleCount = defaultVisibleSearchPageSize;
+  $: activeLocale = parseLocalePath($page.url.pathname).locale;
+  $: t = (phrase: string) => tr(activeLocale, phrase);
   $: rows = data.result.data;
   $: filteredRows = filterVisibleSearchRows(rows, searchQuery, (row) => `${row.name} ${row.country ?? ''}`);
   $: visibleRows = getVisibleSearchRows(filteredRows, visibleCount);
@@ -46,8 +51,8 @@
 <main class="mx-auto max-w-7xl px-5 py-10 md:px-8">
   <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
     <div>
-      <p class="label mb-2">Liquidity sources</p>
-      <h1 class="text-3xl font-bold text-on-surface md:text-5xl">Exchange directory</h1>
+      <p class="label mb-2">{t('Liquidity sources')}</p>
+      <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Exchange directory')}</h1>
       <p class="mt-3 max-w-3xl text-on-surface-variant">
         CoinGecko exchange directory data with an explicit XMR support filter placeholder where asset-pair data is available.
       </p>
@@ -56,18 +61,18 @@
   </div>
 
   <div class="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-    <label class="sr-only" for="exchange-search">Search exchanges</label>
+    <label class="sr-only" for="exchange-search">{t('Search exchanges')}</label>
     <input
       id="exchange-search"
       class="field"
       type="search"
-      placeholder="Search exchanges or countries"
+      placeholder={t('Search exchanges or countries')}
       value={searchQuery}
       on:input={updateSearch}
     />
     <label class="inline-flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-low px-4 py-3">
       <input type="checkbox" class="rounded border-outline-variant bg-surface-high text-primary-action" bind:checked={xmrFilter} />
-      <span>Show XMR-support filter state</span>
+      <span>{t('Show XMR-support filter state')}</span>
     </label>
   </div>
   {#if xmrFilter}
@@ -90,7 +95,7 @@
             </div>
             <div class="min-w-0">
               <h2 class="truncate text-lg font-semibold text-on-surface">{row.name}</h2>
-              <p class="text-sm text-on-surface-variant">{row.country ?? 'Global'}</p>
+              <p class="text-sm text-on-surface-variant">{row.country ?? t('Global')}</p>
             </div>
           </div>
           <span class="rounded-full border border-primary/30 bg-primary-action/15 px-3 py-1 text-sm font-semibold text-primary">
@@ -99,23 +104,23 @@
         </div>
         <p class="mt-4 text-sm text-on-surface-variant">24h volume: {row.tradeVolumeBtc?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'n/a'} BTC</p>
         {#if row.url}
-          <a class="mt-4 inline-flex text-sm font-semibold text-primary hover:underline" href={row.url} rel="noreferrer" target="_blank">Open exchange</a>
+          <a class="mt-4 inline-flex text-sm font-semibold text-primary hover:underline" href={row.url} rel="noreferrer" target="_blank">{t('Open exchange')}</a>
         {/if}
       </article>
     {/each}
   </section>
 
   {#if rows.length === 0}
-    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">Exchange data is unavailable.</p>
+    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">{t('Exchange data is unavailable.')}</p>
   {:else if filteredRows.length === 0}
-    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">No exchanges match this search.</p>
+    <p class="rounded-lg border border-outline-variant bg-surface-low p-5 text-on-surface-variant">{t('No exchanges match this search.')}</p>
   {/if}
 
   {#if hiddenCount > 0}
     <div class="mt-6 flex justify-center">
       <button class="btn-secondary" type="button" on:click={showMore}>
-        Show 12 more
-        <span class="text-on-surface-variant">({hiddenCount} remaining)</span>
+        {t('Show 12 more')}
+        <span class="text-on-surface-variant">({hiddenCount} {t('remaining')})</span>
       </button>
     </div>
   {/if}

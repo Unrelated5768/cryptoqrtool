@@ -106,6 +106,17 @@ describe('AppShell', () => {
     expect(screen.getAllByText('EUR').length).toBeGreaterThan(0);
   });
 
+  it('offers localized language links and stores the selected locale', async () => {
+    render(AppShell);
+    const frenchLink = screen.getByRole('link', { name: /français french/i });
+
+    expect(frenchLink).toHaveAttribute('href', '/fr/generate');
+    frenchLink.addEventListener('click', (event) => event.preventDefault());
+    await fireEvent.click(frenchLink);
+
+    expect(loadStorage().locale).toBe('fr');
+  });
+
   it('closes the more menu after a navigation link is clicked', async () => {
     const { container } = render(AppShell);
     const desktopMoreMenu = container.querySelector('nav[aria-label="Primary navigation"] details') as HTMLDetailsElement;

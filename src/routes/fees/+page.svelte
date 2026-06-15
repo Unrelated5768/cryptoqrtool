@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
+  import { tr } from '$lib/i18n/phrases';
+  import { parseLocalePath } from '$lib/i18n/routing';
 
   export let data: {
     result: {
@@ -8,13 +11,16 @@
       updatedAt: string;
     };
   };
+
+  $: activeLocale = parseLocalePath($page.url.pathname).locale;
+  $: t = (phrase: string) => tr(activeLocale, phrase);
 </script>
 
 <main class="mx-auto max-w-7xl px-5 py-10 md:px-8">
   <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
     <div>
-      <p class="label mb-2">Live fee comparison</p>
-      <h1 class="text-3xl font-bold text-on-surface md:text-5xl">Network fees</h1>
+      <p class="label mb-2">{t('Live fee comparison')}</p>
+      <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Network fees')}</h1>
       <p class="mt-3 max-w-3xl text-on-surface-variant">
         Fee modules show live, configured, stale, rate-limited, and unavailable states explicitly.
       </p>
@@ -36,19 +42,19 @@
 
           <dl class="mt-4 grid gap-3 sm:grid-cols-2">
             <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
-              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Priority</dt>
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">{t('Priority')}</dt>
               <dd class="mt-1 text-sm text-on-surface">{row.priority}</dd>
             </div>
             <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
-              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Standard</dt>
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">{t('Standard')}</dt>
               <dd class="mt-1 text-sm text-on-surface">{row.standard}</dd>
             </div>
             <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
-              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Economy</dt>
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">{t('Economy')}</dt>
               <dd class="mt-1 text-sm text-on-surface">{row.economy}</dd>
             </div>
             <div class="rounded-lg border border-outline-variant/70 bg-surface-container px-3 py-2">
-              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">Source</dt>
+              <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-on-surface-variant">{t('Source')}</dt>
               <dd class="mt-1 text-sm text-on-surface">{row.source}</dd>
             </div>
           </dl>
@@ -57,11 +63,11 @@
     </div>
 
     <div class="hidden gap-px bg-outline-variant/50 md:grid md:grid-cols-5">
-      <div class="bg-surface-container p-4 font-semibold">Network</div>
-      <div class="bg-surface-container p-4 font-semibold">Priority</div>
-      <div class="bg-surface-container p-4 font-semibold">Standard</div>
-      <div class="bg-surface-container p-4 font-semibold">Economy</div>
-      <div class="bg-surface-container p-4 font-semibold">Source</div>
+      <div class="bg-surface-container p-4 font-semibold">{t('Network')}</div>
+      <div class="bg-surface-container p-4 font-semibold">{t('Priority')}</div>
+      <div class="bg-surface-container p-4 font-semibold">{t('Standard')}</div>
+      <div class="bg-surface-container p-4 font-semibold">{t('Economy')}</div>
+      <div class="bg-surface-container p-4 font-semibold">{t('Source')}</div>
       {#each data.result.data as row}
         <div class="bg-surface-low p-4">
           <p class="font-semibold">{row.network}</p>

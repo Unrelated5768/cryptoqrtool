@@ -190,6 +190,10 @@ test('public routes load on desktop and mobile viewports', async ({ page }) => {
     '/exchanges',
     '/api-docs',
     '/security',
+    '/fr/generate',
+    '/ar/generate',
+    '/es/bitcoin-qr-code-generator',
+    '/ar/faq',
     '/crypto-qrcode-bitcoin-lightning',
     '/bitcoin-address-checker'
   ]) {

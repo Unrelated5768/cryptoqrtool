@@ -1,5 +1,5 @@
 import { routeMeta } from '$lib/seo';
 
-export function load() {
-  return { meta: routeMeta('/saved') };
+export function load({ url }) {
+  return { meta: routeMeta(url.pathname) };
 }

@@ -1,4 +1,7 @@
 import { networks, type NetworkId } from './networks';
+import { defaultLocale, supportedLocales, type Locale } from './i18n/locales';
+import { alternateLinks, localizedHref, localizedPath, parseLocalePath, stripLocaleFromPath } from './i18n/routing';
+import { localizeLandingPage, localizeStaticRoute } from './i18n/seo';
 import { landingPageJsonLd, staticRouteJsonLd } from './seoJsonLd';
 import {
   absoluteUrl,
@@ -712,17 +715,26 @@ export function getCoinLandingPage(slug: string) {
   return landingPages.find((page) => page.slug === slug);
 }
 
-export function routeMeta(pathname: string): SeoMeta {
-  const landingPage = getCoinLandingPage(pathname.replace(/^\//, ''));
+export function getLocalizedCoinLandingPage(slug: string, locale: Locale = defaultLocale) {
+  const page = getCoinLandingPage(slug);
+  return page ? localizeLandingPage(page, locale) : undefined;
+}
+
+export function routeMeta(pathname: string, locale?: Locale): SeoMeta {
+  const parsedPath = parseLocalePath(pathname);
+  const routePath = parsedPath.routePath;
+  const activeLocale = locale ?? parsedPath.locale;
+  const landingPage = getLocalizedCoinLandingPage(routePath.replace(/^\//, ''), activeLocale);
 
   if (landingPage) {
-    const canonicalPath = `/${landingPage.canonicalSlug ?? landingPage.slug}`;
+    const canonicalPath = localizedPath(`/${landingPage.canonicalSlug ?? landingPage.slug}`, activeLocale);
     const canonical = absoluteUrl(canonicalPath);
 
     return {
       title: landingPage.title,
       description: landingPage.description,
       canonical,
+      alternates: alternateLinks(canonicalPath),
       jsonLd: landingPageJsonLd(landingPage, canonical),
       ogImage: defaultOgImage,
       ogImageAlt: defaultOgImageAlt,
@@ -733,14 +745,17 @@ export function routeMeta(pathname: string): SeoMeta {
     };
   }
 
-  const route = staticRoutes[pathname] ?? staticRoutes['/'];
-  const canonical = absoluteUrl(pathname in staticRoutes ? pathname : '/');
+  const knownRoutePath = routePath in staticRoutes ? routePath : '/';
+  const route = localizeStaticRoute(knownRoutePath, staticRoutes[knownRoutePath] ?? staticRoutes['/'], activeLocale);
+  const canonicalPath = localizedPath(knownRoutePath, activeLocale);
+  const canonical = absoluteUrl(canonicalPath);
 
   return {
     title: route.title,
     description: route.description,
     canonical,
-    jsonLd: staticRouteJsonLd(pathname in staticRoutes ? pathname : '/', route),
+    alternates: alternateLinks(canonicalPath),
+    jsonLd: staticRouteJsonLd(knownRoutePath, route),
     ogImage: defaultOgImage,
     ogImageAlt: defaultOgImageAlt,
     ogImageWidth: defaultOgImageWidth,
@@ -754,15 +769,21 @@ export function routeMeta(pathname: string): SeoMeta {
 export function getSitemapEntries() {
   const staticEntries = Object.entries(staticRoutes)
     .filter(([, route]) => route.indexable !== false)
-    .map(([path, route]) => ({
-      path,
-      lastModified: route.lastModified ?? contentLastUpdated
-    }));
+    .flatMap(([path, route]) =>
+      supportedLocales.map((locale) => ({
+        path: localizedPath(path, locale),
+        alternates: alternateLinks(path),
+        lastModified: route.lastModified ?? contentLastUpdated
+      }))
+    );
 
-  const landingEntries = landingPages.map((page) => ({
-    path: `/${page.slug}`,
-    lastModified: page.lastModified ?? contentLastUpdated
-  }));
+  const landingEntries = landingPages.flatMap((page) =>
+    supportedLocales.map((locale) => ({
+      path: localizedPath(`/${page.slug}`, locale),
+      alternates: alternateLinks(`/${page.slug}`),
+      lastModified: page.lastModified ?? contentLastUpdated
+    }))
+  );
 
   return [...staticEntries, ...landingEntries];
 }
@@ -786,11 +807,12 @@ export function relatedLandingPages(page: LandingPage) {
 }
 
 export function isIndexableRoute(pathname: string) {
-  const landingPage = getCoinLandingPage(pathname.replace(/^\//, ''));
+  const routePath = stripLocaleFromPath(pathname);
+  const landingPage = getCoinLandingPage(routePath.replace(/^\//, ''));
   if (landingPage) return true;
 
-  const route = staticRoutes[pathname];
+  const route = staticRoutes[routePath];
   return route ? route.indexable !== false : false;
 }
 
-export { coinGenerateHref, generatorHref, guideHref };
+export { coinGenerateHref, generatorHref, guideHref, localizedHref };
