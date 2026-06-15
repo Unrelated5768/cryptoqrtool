@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { getCoinLandingPage, getLocalizedCoinLandingPage, getSitemapEntries, relatedPageLabel, routeMeta } from './seo';
+import { supportedLocales, type Locale } from './i18n/locales';
+import { messagesForLocale } from './i18n/messages';
+import { tr } from './i18n/phrases';
 import type { JsonLd } from './seoShared';
 
 function schemaTypes(pathname: string) {
@@ -66,6 +69,48 @@ describe('seo metadata', () => {
     expect(JSON.stringify(ukBreadcrumbs)).toContain('Головна');
     expect(JSON.stringify(ukBreadcrumbs)).toContain('Генератор');
     expect(JSON.stringify(ukBreadcrumbs)).not.toContain('"Home"');
+  });
+
+  it('translates French FAQ, footer, landing, privacy, and security content', () => {
+    const faqIntro =
+      'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.';
+    const privacyIntro =
+      'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.';
+    const securityIntro =
+      'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.';
+    const landing = getLocalizedCoinLandingPage('bitcoin-qr-code-generator', 'fr');
+    const footer = messagesForLocale('fr').shell.footerBody;
+
+    expect(tr('fr', faqIntro)).not.toBe(faqIntro);
+    expect(tr('fr', privacyIntro)).not.toBe(privacyIntro);
+    expect(tr('fr', securityIntro)).not.toBe(securityIntro);
+    expect(landing?.headline).toContain('Générateur');
+    expect(landing?.body).toContain('Générez');
+    expect(footer).toContain('navigateur');
+    expect(footer).not.toContain('Saved addresses');
+  });
+
+  it('has non-English page content for every production locale on FAQ, footer, landing, privacy, and security', () => {
+    const faqIntro =
+      'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.';
+    const privacyIntro =
+      'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.';
+    const securityIntro =
+      'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.';
+    const locales = supportedLocales.filter((locale) => locale !== 'en' && locale !== 'en-GB') as Locale[];
+
+    for (const locale of locales) {
+      const footer = messagesForLocale(locale).shell.footerBody;
+      const landing = getLocalizedCoinLandingPage('bitcoin-qr-code-generator', locale);
+
+      expect(tr(locale, faqIntro), locale).not.toBe(faqIntro);
+      expect(tr(locale, privacyIntro), locale).not.toBe(privacyIntro);
+      expect(tr(locale, securityIntro), locale).not.toBe(securityIntro);
+      expect(footer, locale).not.toContain('Saved addresses');
+      expect(footer, locale).not.toContain('generates QR payloads in the browser');
+      expect(landing?.headline, locale).not.toBe('Bitcoin QR Code Generator');
+      expect(landing?.body, locale).not.toContain('Generate a scan-ready');
+    }
   });
 
   it('uses intent-specific related labels for generator, guide, and checker pages', () => {

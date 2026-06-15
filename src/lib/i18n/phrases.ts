@@ -1041,19 +1041,894 @@ const ukExtra: PhraseMap = {
   Safety: 'Безпека'
 };
 
+const complaintPageExtras: Partial<Record<Locale, PhraseMap>> = {
+  es: {
+    'Browser-local crypto QR utility': 'Utilidad QR cripto local',
+    'Crypto QR Code Generator': 'Generador de códigos QR cripto',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool genera códigos QR de pago escaneables para Monero, Bitcoin, Ethereum, Solana, Litecoin y stablecoins ERC-20 como USDC y USDT sin enviar direcciones, logos subidos ni preajustes guardados a un servidor.',
+    '100% Client-Side Processing': 'Procesamiento 100% en el cliente',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Las direcciones, importes, logos y preajustes se generan en tu navegador. No hay cuenta ni bóveda de direcciones en servidor.',
+    'Zero Data Collection': 'Cero recopilación de datos',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'No recopilamos direcciones de cartera, logos subidos ni preajustes guardados. Tu flujo QR permanece en tu dispositivo.',
+    'Works Completely Offline': 'Funciona completamente sin conexión',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'La generación QR, estilos, descargas y preajustes guardados siguen funcionando en el navegador sin conexión activa.',
+    'Crypto QR generators by coin': 'Generadores QR cripto por moneda',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Páginas dedicadas para cada formato de dirección y payload de pago compatible.',
+    'Popular crypto QR searches': 'Búsquedas populares de QR cripto',
+    'Frequently asked questions': 'Preguntas frecuentes',
+    'Does CryptoQR Tool store crypto addresses?': '¿CryptoQR Tool almacena direcciones cripto?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Las direcciones guardadas y los preajustes de estilo QR permanecen en el almacenamiento local del navegador y no se sincronizan con el servidor.',
+    'Which networks are supported?': '¿Qué redes son compatibles?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'CryptoQR Tool admite Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC y USDT, además de códigos QR con payload personalizado.',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Respuestas sobre generación segura de QR cripto, almacenamiento local, analítica anónima, compatibilidad de carteras y comprobaciones antes de compartir o escanear una solicitud de pago.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': '¿CryptoQR Tool es seguro para generar códigos QR cripto?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'El generador se ejecuta en tu navegador y no requiere conexión de cartera, frases semilla, claves privadas, cuentas ni credenciales de exchange. Aun así, verifica cada dirección o factura en tu cartera antes de enviar fondos.',
+    'Does CryptoQR Tool store wallet addresses?': '¿CryptoQR Tool almacena direcciones de cartera?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Las direcciones guardadas permanecen en el almacenamiento local del navegador cuando decides guardarlas. No se sincronizan con una bóveda de direcciones del servidor.',
+    'Does the site use cookies?': '¿El sitio usa cookies?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'El sitio no establece cookies publicitarias, de retargeting, cuenta o seguimiento. Puede usar almacenamiento local para direcciones, preajustes, tema, moneda y exclusión de analítica anónima.',
+    'What analytics are used?': '¿Qué analítica se usa?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'Se usa Umami autoalojado para uso agregado de páginas y eventos generales del producto. Está configurado sin cookies de seguimiento, respeta Do Not Track y excluye cadenas de consulta.',
+    'Can a downloaded crypto QR code be changed later?': '¿Puede cambiarse después un QR cripto descargado?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'No. Una imagen QR descargada contiene el payload existente al exportarla. Si cambia la dirección, importe, factura, cadena o estilo, genera un QR nuevo.',
+    'What happens if a wallet ignores the amount field?': '¿Qué ocurre si una cartera ignora el campo de importe?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Algunas carteras pueden leer solo el destino e ignorar parámetros opcionales como importe o token. Confirma siempre destinatario, red, token e importe en la cartera antes de aprobar.',
+    'Can I paste a seed phrase or private key?': '¿Puedo pegar una frase semilla o clave privada?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'No. La herramienta es solo para direcciones públicas, URI de pago, facturas Lightning, hashes de transacción y payloads públicos. Nunca pegues frases semilla ni claves privadas.',
+    'Does the tool provide financial advice?': '¿La herramienta ofrece asesoramiento financiero?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'CryptoQR Tool es una utilidad para generar y comprobar payloads QR. No ofrece asesoramiento de inversión, fiscal, legal, trading, custodia ni financiero.',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool ayuda a crear payloads QR legibles, pero tu cartera es el lugar final para confirmar destino, cadena, token, importe y comisiones. Nunca apruebes una transacción solo porque un QR se escaneó correctamente.',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool está diseñado como utilidad privada. Los módulos de mercado, comisiones y exchanges llaman a API públicas, pero direcciones QR, etiquetas, preajustes y logos permanecen en el navegador salvo que los copies, descargues, exportes o compartas.',
+    'Generation is client-side': 'La generación es del lado del cliente',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'La construcción, validación, estilo, vista previa de logos y descargas de payloads QR se ejecutan en el navegador.',
+    'Local storage only': 'Solo almacenamiento local',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Las direcciones guardadas y preajustes del usuario usan una clave versionada de almacenamiento local y pueden eliminarse.',
+    'Custom logo handling': 'Gestión de logos personalizados',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'Los logos subidos se aceptan como PNG, JPEG, SVG o WebP, tienen límite de tamaño y solo se guardan al incluirlos en un preajuste.',
+    'Scannability checks': 'Comprobaciones de escaneo',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Contraste, zona silenciosa, tamaño de logo y corrección de errores priorizan el escaneo fiable sobre la decoración.',
+    'Where are saved addresses stored?': '¿Dónde se almacenan las direcciones guardadas?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Las direcciones se almacenan en el almacenamiento local del navegador bajo una clave versionada de CryptoQR Tool solo para este perfil.',
+    'Are custom logos uploaded?': '¿Se suben los logos personalizados?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'No. Los logos se leen y previsualizan en el navegador y solo se conservan localmente si los guardas en un preajuste.',
+    'Cookies, local storage, and analytics': 'Cookies, almacenamiento local y analítica',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool no usa cookies publicitarias ni de seguimiento, cuentas, conexiones de cartera ni bóveda de direcciones en servidor. La generación QR funciona en el navegador y los datos guardados permanecen en tu dispositivo salvo que los exportes o compartas.',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'CryptoQR Tool no establece cookies de publicidad, retargeting, cuentas ni perfilado entre sitios. No se muestra un panel de cookies porque no hay categorías opcionales que gestionar.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'El sitio puede usar almacenamiento local para funciones que controlas, como direcciones guardadas, preajustes, tema, moneda y estado de exclusión de analítica.',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'La analítica Umami autoalojada mide uso de páginas y eventos generales. Está configurada sin cookies de seguimiento, respeta Do Not Track y excluye consultas de las URL.',
+    'Saved addresses': 'Direcciones guardadas',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Las direcciones públicas y etiquetas permanecen en este perfil del navegador cuando decides guardarlas.',
+    'QR style presets': 'Preajustes de estilo QR',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Colores, zonas silenciosas, corrección de errores y datos opcionales de logos se guardan localmente para reutilizarlos.',
+    Preferences: 'Preferencias',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'El tema y la moneda se guardan localmente para abrir la interfaz con tus preferencias.',
+    'Analytics opt-out': 'Exclusión de analítica',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Si desactivas la analítica anónima, este navegador guarda una marca local llamada umami.disabled.',
+    'What stays in local storage': 'Qué queda en almacenamiento local',
+    'What is not collected': 'Qué no se recopila',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'No se solicitan claves privadas, frases semilla, conexiones de cartera ni credenciales de exchange.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'Payloads QR, direcciones públicas pegadas, importes, etiquetas y logos no se suben a una bóveda de direcciones.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'Los datos guardados pueden eliminarse borrando elementos en la app o limpiando el almacenamiento del sitio.',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'Los datos locales del navegador se usan para el generador, lista de direcciones, estilo QR y preferencias. Registros y analítica anónima pueden usarse para fiabilidad, prevención de abuso, rendimiento y mejora agregada. Mercado, comisiones y exchanges pueden llamar API externas, pero no requieren conexión de cartera ni cuenta.'
+  },
+  fr: {
+    'Browser-local crypto QR utility': 'Utilitaire QR crypto local',
+    'Crypto QR Code Generator': 'Générateur de QR codes crypto',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool génère des QR codes de paiement scannables pour Monero, Bitcoin, Ethereum, Solana, Litecoin et les stablecoins ERC-20 comme USDC et USDT sans envoyer les adresses, logos importés ou préréglages vers un serveur.',
+    '100% Client-Side Processing': 'Traitement 100 % côté client',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Les adresses, montants, logos et préréglages sont générés dans votre navigateur. Il n’y a ni compte ni coffre d’adresses côté serveur.',
+    'Zero Data Collection': 'Aucune collecte de données',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'Nous ne collectons pas vos adresses de portefeuille, logos importés ni préréglages. Votre flux QR reste sur votre appareil.',
+    'Works Completely Offline': 'Fonctionne entièrement hors ligne',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'La génération QR, le style, les téléchargements et les préréglages continuent de fonctionner dans le navigateur sans connexion active.',
+    'Crypto QR generators by coin': 'Générateurs QR crypto par monnaie',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Pages dédiées pour chaque format d’adresse de portefeuille et payload de paiement pris en charge.',
+    'Popular crypto QR searches': 'Recherches QR crypto populaires',
+    'Frequently asked questions': 'Questions fréquentes',
+    'Does CryptoQR Tool store crypto addresses?': 'CryptoQR Tool stocke-t-il des adresses crypto ?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Les adresses sauvegardées et les préréglages QR restent dans le stockage local du navigateur sur votre appareil et ne sont pas synchronisés côté serveur.',
+    'Which networks are supported?': 'Quels réseaux sont pris en charge ?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'CryptoQR Tool prend en charge Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC et USDT, ainsi que les QR codes à payload personnalisé.',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Réponses sur la génération sécurisée de QR codes crypto, le stockage local, l’analytique anonyme, la compatibilité des portefeuilles et les vérifications avant de partager ou scanner une demande de paiement.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'CryptoQR Tool est-il sûr pour générer des QR codes crypto ?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'Le générateur fonctionne dans votre navigateur et ne demande ni connexion de portefeuille, ni phrase de récupération, ni clé privée, ni compte, ni identifiant d’exchange. Vérifiez toujours chaque adresse ou facture dans votre portefeuille avant d’envoyer des fonds.',
+    'Does CryptoQR Tool store wallet addresses?': 'CryptoQR Tool stocke-t-il les adresses de portefeuille ?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Les adresses enregistrées restent dans le stockage local du navigateur sur votre appareil lorsque vous choisissez de les sauvegarder. Elles ne sont pas synchronisées avec un coffre d’adresses côté serveur.',
+    'Does the site use cookies?': 'Le site utilise-t-il des cookies ?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'Le site ne dépose pas de cookies publicitaires, de reciblage, de compte ou de suivi. Il peut utiliser le stockage local du navigateur pour les adresses, préréglages, thème, devise et le réglage de refus de l’analytique anonyme.',
+    'What analytics are used?': 'Quelle analytique est utilisée ?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'Une analytique Umami auto-hébergée est utilisée pour l’usage agrégé des pages et des événements produit généraux. Elle est configurée sans cookies de suivi, respecte Do Not Track et exclut les chaînes de requête.',
+    'Can a downloaded crypto QR code be changed later?': 'Un QR code crypto téléchargé peut-il être modifié ensuite ?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'Non. Une image QR téléchargée contient le payload présent au moment de l’export. Si l’adresse, le montant, la facture, la chaîne ou le style change, générez un nouveau QR code.',
+    'What happens if a wallet ignores the amount field?': 'Que se passe-t-il si un portefeuille ignore le champ montant ?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Certains portefeuilles peuvent lire uniquement la destination et ignorer les paramètres URI optionnels comme le montant ou les détails du token. Confirmez toujours destinataire, réseau, token et montant dans le portefeuille avant d’approuver.',
+    'Can I paste a seed phrase or private key?': 'Puis-je coller une phrase de récupération ou une clé privée ?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'Non. L’outil est uniquement destiné aux adresses publiques, URI de paiement, factures Lightning, hashes de transaction et payloads publics personnalisés. Ne collez jamais de phrase de récupération ni de clé privée.',
+    'Does the tool provide financial advice?': 'L’outil fournit-il des conseils financiers ?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'CryptoQR Tool est un utilitaire de génération et de vérification de payloads QR. Il ne fournit aucun conseil d’investissement, fiscal, juridique, de trading, de conservation ou financier.',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool aide à créer des payloads QR lisibles, mais votre portefeuille reste l’endroit final pour confirmer destination, chaîne, token, montant et frais. N’approuvez jamais une transaction uniquement parce qu’un QR code a été scanné.',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool est conçu comme un utilitaire privé. Les modules de marché, frais et exchanges appellent des API publiques, mais les adresses QR, libellés, préréglages et logos restent dans le navigateur sauf si vous les copiez, téléchargez, exportez ou partagez.',
+    'Generation is client-side': 'La génération est côté client',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'La construction, validation, mise en forme, prévisualisation des logos et téléchargements des payloads QR s’exécutent dans le navigateur.',
+    'Local storage only': 'Stockage local uniquement',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Les adresses sauvegardées et préréglages de style utilisent une clé de stockage local versionnée et peuvent être supprimés par l’utilisateur.',
+    'Custom logo handling': 'Gestion des logos personnalisés',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'Les logos importés sont acceptés en PNG, JPEG, SVG ou WebP, limités en taille et stockés uniquement lorsqu’ils sont enregistrés dans un préréglage.',
+    'Scannability checks': 'Contrôles de scannabilité',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Le contraste, la zone silencieuse, la taille du logo et la correction d’erreurs privilégient un scan fiable plutôt que la décoration.',
+    'Where are saved addresses stored?': 'Où sont stockées les adresses sauvegardées ?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Les adresses sauvegardées sont stockées dans le stockage local du navigateur sous une clé CryptoQR Tool versionnée, uniquement pour ce profil.',
+    'Are custom logos uploaded?': 'Les logos personnalisés sont-ils téléversés ?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'Non. Les logos personnalisés sont lus et prévisualisés dans le navigateur et ne sont conservés localement que si vous les enregistrez dans un préréglage.',
+    'Cookies, local storage, and analytics': 'Cookies, stockage local et analytique',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool n’utilise pas de cookies publicitaires ou de suivi, de comptes, de connexions de portefeuille ni de coffre d’adresses côté serveur. La génération QR fonctionne dans le navigateur et les données sauvegardées restent sur votre appareil sauf export ou partage.',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'CryptoQR Tool ne dépose pas de cookies publicitaires, de reciblage, de compte ou de profilage intersites. Aucune fenêtre de réglage des cookies n’est affichée, car il n’y a pas de catégories optionnelles à gérer.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'Le site peut utiliser le stockage local du navigateur pour les fonctions que vous contrôlez, comme les adresses sauvegardées, préréglages, thème, devise et refus de l’analytique.',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'L’analytique Umami auto-hébergée mesure l’usage des pages et des événements produit généraux. Elle est configurée sans cookies de suivi, respecte Do Not Track et exclut les paramètres d’URL.',
+    'Saved addresses': 'Adresses sauvegardées',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Les adresses publiques de destinataire et libellés restent dans ce profil de navigateur lorsque vous les sauvegardez.',
+    'QR style presets': 'Préréglages de style QR',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Les couleurs, zones silencieuses, correction d’erreurs et données de logo optionnelles sont conservées localement pour réutilisation.',
+    Preferences: 'Préférences',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'Le thème et la devise d’affichage sont stockés localement afin que l’interface s’ouvre avec vos préférences.',
+    'Analytics opt-out': 'Refus de l’analytique',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Si vous désactivez l’analytique anonyme, ce navigateur stocke un indicateur local nommé umami.disabled.',
+    'What stays in local storage': 'Ce qui reste en stockage local',
+    'What is not collected': 'Ce qui n’est pas collecté',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'Aucune clé privée, phrase de récupération, connexion de portefeuille ou identifiant d’exchange n’est demandé.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'Les payloads QR, adresses publiques collées, montants, libellés et logos ne sont pas envoyés vers un coffre d’adresses.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'Les données sauvegardées peuvent être supprimées depuis l’app ou en vidant le stockage navigateur de ce site.',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'Les données locales du navigateur servent au générateur, à la liste d’adresses, au style QR et aux préférences. Journaux serveur et analytique anonyme peuvent servir à la fiabilité, prévention des abus, performance et amélioration agrégée. Les vues marché, frais et exchanges peuvent appeler des API externes, mais ne demandent ni connexion de portefeuille ni compte.'
+  },
+  pt: {
+    'Browser-local crypto QR utility': 'Utilitário QR cripto local',
+    'Crypto QR Code Generator': 'Gerador de códigos QR cripto',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'O CryptoQR Tool gera códigos QR de pagamento escaneáveis para Monero, Bitcoin, Ethereum, Solana, Litecoin e stablecoins ERC-20 como USDC e USDT sem enviar endereços, logos enviados ou predefinições salvas para um servidor.',
+    'Your data never leaves your browser': 'Seus dados nunca saem do navegador',
+    'Made with love for privacy and zero data collection.': 'Feito para privacidade e sem coleta de dados.',
+    'Open generator': 'Abrir gerador',
+    'Privacy model': 'Modelo de privacidade',
+    '100% Client-Side Processing': 'Processamento 100% no cliente',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Endereços, valores, logos e predefinições são gerados no navegador. Não há conta nem cofre de endereços no servidor.',
+    'Zero Data Collection': 'Zero coleta de dados',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'Não coletamos endereços de carteira, logos enviados nem predefinições salvas. Seu fluxo QR fica no seu dispositivo.',
+    'Works Completely Offline': 'Funciona totalmente offline',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'A geração de QR, estilo, downloads e predefinições salvas continuam funcionando no navegador sem conexão ativa.',
+    'Crypto QR generators by coin': 'Geradores QR cripto por moeda',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Páginas dedicadas para cada formato de endereço de carteira e payload de pagamento compatível.',
+    'Popular crypto QR searches': 'Buscas populares de QR cripto',
+    'Frequently asked questions': 'Perguntas frequentes',
+    'Does CryptoQR Tool store crypto addresses?': 'O CryptoQR Tool armazena endereços cripto?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Endereços salvos e predefinições de estilo QR ficam no armazenamento local do navegador e não são sincronizados com o servidor.',
+    'Which networks are supported?': 'Quais redes são compatíveis?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'O CryptoQR Tool oferece suporte a Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC e USDT, além de códigos QR com payload personalizado.',
+    'Crypto QR Code FAQ': 'FAQ de códigos QR cripto',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Respostas sobre geração segura de QR cripto, armazenamento local no navegador, análise anônima, compatibilidade de carteiras e verificações antes de compartilhar ou escanear um pedido de pagamento.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'O CryptoQR Tool é seguro para gerar códigos QR cripto?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'O gerador roda no navegador e não exige conexão de carteira, frases seed, chaves privadas, contas ou credenciais de exchange. Ainda assim, verifique cada endereço ou fatura na carteira antes de enviar fundos.',
+    'Does CryptoQR Tool store wallet addresses?': 'O CryptoQR Tool armazena endereços de carteira?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Endereços salvos ficam no armazenamento local do navegador quando você escolhe salvá-los. Eles não são sincronizados com um cofre de endereços no servidor.',
+    'Does the site use cookies?': 'O site usa cookies?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'O site não define cookies de publicidade, retargeting, conta ou rastreamento. Ele pode usar armazenamento local para endereços salvos, predefinições, tema, moeda e opção de recusa de análise anônima.',
+    'What analytics are used?': 'Quais análises são usadas?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'A análise Umami auto-hospedada é usada para uso agregado de páginas e eventos gerais do produto. Ela é configurada sem cookies de rastreamento, respeita Do Not Track e exclui strings de consulta.',
+    'Can a downloaded crypto QR code be changed later?': 'Um QR cripto baixado pode ser alterado depois?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'Não. Uma imagem QR baixada contém o payload existente no momento da exportação. Se endereço, valor, fatura, rede ou estilo mudar, gere um novo QR.',
+    'What happens if a wallet ignores the amount field?': 'O que acontece se uma carteira ignorar o campo de valor?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Algumas carteiras podem ler apenas o destino e ignorar parâmetros URI opcionais, como valor ou detalhes do token. Sempre confirme destinatário, rede, token e valor na carteira antes de aprovar.',
+    'Can I paste a seed phrase or private key?': 'Posso colar uma frase seed ou chave privada?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'Não. A ferramenta é apenas para endereços públicos, URIs de pagamento, faturas Lightning, hashes de transação e payloads públicos personalizados. Nunca cole frases seed ou chaves privadas.',
+    'Does the tool provide financial advice?': 'A ferramenta oferece aconselhamento financeiro?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'O CryptoQR Tool é um utilitário para gerar e verificar payloads QR. Ele não oferece aconselhamento de investimento, fiscal, jurídico, trading, custódia ou financeiro.',
+    'Still verify in your wallet': 'Ainda verifique na sua carteira',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'O CryptoQR Tool ajuda a criar payloads QR legíveis, mas sua carteira é o local final para confirmar destino, rede, token, valor e taxas. Nunca aprove uma transação apenas porque um QR foi escaneado.',
+    'Trust and privacy': 'Confiança e privacidade',
+    'No account, no wallet connection, no server vault': 'Sem conta, sem conexão de carteira, sem cofre no servidor',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'O CryptoQR Tool foi criado como utilitário privado. Módulos de mercado, taxas e exchanges chamam APIs públicas, mas endereços QR, etiquetas, predefinições e logos ficam no navegador salvo se você copiar, baixar, exportar ou compartilhar.',
+    'Generation is client-side': 'A geração é no cliente',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'Construção, validação, estilo, prévia de logos e downloads de payloads QR rodam no navegador.',
+    'Local storage only': 'Somente armazenamento local',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Endereços salvos e predefinições do usuário usam uma chave versionada de armazenamento local e podem ser excluídos pelo usuário.',
+    'Custom logo handling': 'Tratamento de logos personalizados',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'Logos enviados são aceitos como PNG, JPEG, SVG ou WebP, têm limite de tamanho e só são armazenados quando salvos em uma predefinição.',
+    'Scannability checks': 'Verificações de escaneabilidade',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Contraste, zona silenciosa, tamanho do logo e correção de erros priorizam escaneamento confiável em vez de decoração.',
+    'Privacy and security FAQ': 'FAQ de privacidade e segurança',
+    'Where are saved addresses stored?': 'Onde os endereços salvos ficam armazenados?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Endereços salvos ficam no armazenamento local do navegador sob uma chave versionada do CryptoQR Tool apenas para este perfil.',
+    'Are custom logos uploaded?': 'Logos personalizados são enviados?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'Não. Logos personalizados são lidos e pré-visualizados no navegador e só ficam locais se você os salvar em uma predefinição.',
+    'Cookies, local storage, and analytics': 'Cookies, armazenamento local e análise',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'O CryptoQR Tool não usa cookies de publicidade ou rastreamento, contas, conexões de carteira nem cofre de endereços no servidor. A geração QR roda no navegador e os dados salvos ficam no dispositivo salvo se você exportar ou compartilhar.',
+    'Cookie use': 'Uso de cookies',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'O CryptoQR Tool não define cookies de publicidade, retargeting, contas ou perfilamento entre sites. Não há popup de cookies porque não existem categorias opcionais a gerenciar.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'O site ainda pode usar armazenamento local para recursos que você controla, como endereços salvos, predefinições, tema, moeda e status de recusa de análise.',
+    'Anonymous analytics': 'Análise anônima',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'A análise Umami auto-hospedada mede uso de páginas e eventos gerais do produto. Ela é configurada sem cookies de rastreamento, respeita Do Not Track e exclui consultas das URLs.',
+    'Disable anonymous analytics': 'Desativar análise anônima',
+    'Anonymous analytics disabled': 'Análise anônima desativada',
+    'Saved addresses': 'Endereços salvos',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Endereços públicos de destinatário e etiquetas ficam neste perfil do navegador quando você os salva.',
+    'QR style presets': 'Predefinições de estilo QR',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Cores, zonas silenciosas, correção de erros e dados opcionais de logo ficam locais para reutilização.',
+    Preferences: 'Preferências',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'Tema e moeda de exibição ficam salvos localmente para abrir a interface com suas preferências.',
+    'Analytics opt-out': 'Recusa de análise',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Se você desativar a análise anônima, este navegador salva uma marca local chamada umami.disabled.',
+    'What stays in local storage': 'O que fica no armazenamento local',
+    'What is not collected': 'O que não é coletado',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'Chaves privadas, frases seed, conexões de carteira ou credenciais de exchange não são solicitadas.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'Payloads QR, endereços públicos colados, valores, etiquetas e logos não são enviados para um cofre de endereços.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'Dados salvos podem ser removidos excluindo itens no app ou limpando o armazenamento deste site no navegador.',
+    'Data processing summary': 'Resumo do processamento de dados',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'Dados locais do navegador fornecem o gerador, lista de endereços, estilo QR e preferências. Logs e análise anônima podem ser usados para confiabilidade, abuso, desempenho e melhoria agregada. Mercado, taxas e exchanges podem chamar APIs externas, mas não exigem carteira ou conta.'
+  },
+  de: {
+    'Browser-local crypto QR utility': 'Browserlokales Krypto-QR-Werkzeug',
+    'Crypto QR Code Generator': 'Krypto-QR-Code-Generator',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool erzeugt scannbare Zahlungs-QR-Codes für Monero, Bitcoin, Ethereum, Solana, Litecoin und ERC-20-Stablecoins wie USDC und USDT, ohne Wallet-Adressen, hochgeladene Logos oder gespeicherte Presets an einen Server zu senden.',
+    'Your data never leaves your browser': 'Deine Daten verlassen nie deinen Browser',
+    'Made with love for privacy and zero data collection.': 'Für Datenschutz und ohne Datensammlung gemacht.',
+    'Open generator': 'Generator öffnen',
+    'Privacy model': 'Datenschutzmodell',
+    '100% Client-Side Processing': '100 % Verarbeitung im Browser',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Adressen, Beträge, Logos und Presets werden in deinem Browser erzeugt. Es gibt kein Konto und keinen serverseitigen Adresstresor.',
+    'Zero Data Collection': 'Keine Datensammlung',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'Wir sammeln keine Wallet-Adressen, hochgeladenen Logos oder gespeicherten Presets. Dein QR-Ablauf bleibt auf deinem Gerät.',
+    'Works Completely Offline': 'Funktioniert vollständig offline',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'QR-Erzeugung, Styling, Downloads und gespeicherte Presets funktionieren im Browser auch ohne aktive Verbindung.',
+    'Crypto QR generators by coin': 'Krypto-QR-Generatoren nach Coin',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Eigene Seiten für jedes unterstützte Wallet-Adressformat und jeden Zahlungs-Payload.',
+    'Popular crypto QR searches': 'Beliebte Krypto-QR-Suchen',
+    'Frequently asked questions': 'Häufige Fragen',
+    'Does CryptoQR Tool store crypto addresses?': 'Speichert CryptoQR Tool Krypto-Adressen?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Gespeicherte Adressen und QR-Stilpresets bleiben im lokalen Browser-Speicher deines Geräts und werden nicht serverseitig synchronisiert.',
+    'Which networks are supported?': 'Welche Netzwerke werden unterstützt?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'CryptoQR Tool unterstützt Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC und USDT sowie QR-Codes mit eigenem Payload.',
+    'Crypto QR Code FAQ': 'FAQ zu Krypto-QR-Codes',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Antworten zur sicheren Erzeugung von Krypto-QR-Codes, lokalem Browser-Speicher, anonymer Analyse, Wallet-Kompatibilität und Prüfungen vor dem Teilen oder Scannen einer Zahlungsanforderung.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'Ist CryptoQR Tool sicher für Krypto-QR-Codes?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'Der Generator läuft im Browser und benötigt keine Wallet-Verbindung, Seed-Phrasen, privaten Schlüssel, Konten oder Exchange-Zugangsdaten. Prüfe trotzdem jede Zieladresse oder Rechnung in deiner Wallet, bevor du Geld sendest.',
+    'Does CryptoQR Tool store wallet addresses?': 'Speichert CryptoQR Tool Wallet-Adressen?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Gespeicherte Adressen bleiben im lokalen Browser-Speicher deines Geräts, wenn du sie speicherst. Sie werden nicht mit einem serverseitigen Adresstresor synchronisiert.',
+    'Does the site use cookies?': 'Verwendet die Website Cookies?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'Die Website setzt keine Werbe-, Retargeting-, Konto- oder Tracking-Cookies. Sie kann lokalen Browser-Speicher für gespeicherte Adressen, Presets, Theme, Währung und Analyse-Opt-out verwenden.',
+    'What analytics are used?': 'Welche Analyse wird verwendet?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'Selbst gehostete Umami-Analyse wird für aggregierte Seitennutzung und grobe Produktereignisse verwendet. Sie ist ohne Tracking-Cookies konfiguriert, respektiert Do Not Track und schließt Query-Strings aus.',
+    'Can a downloaded crypto QR code be changed later?': 'Kann ein heruntergeladener Krypto-QR-Code später geändert werden?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'Nein. Ein heruntergeladenes QR-Bild enthält den Payload zum Zeitpunkt des Exports. Wenn Adresse, Betrag, Rechnung, Chain oder Stil geändert werden müssen, erstelle einen neuen QR-Code.',
+    'What happens if a wallet ignores the amount field?': 'Was passiert, wenn eine Wallet das Betragsfeld ignoriert?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Manche Wallets lesen nur das Ziel und ignorieren optionale URI-Parameter wie Betrag oder Token-Details. Bestätige Empfänger, Netzwerk, Token und Betrag immer in der sendenden Wallet.',
+    'Can I paste a seed phrase or private key?': 'Kann ich eine Seed-Phrase oder einen privaten Schlüssel einfügen?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'Nein. Das Tool ist nur für öffentliche Adressen, Zahlungs-URIs, Lightning-Rechnungen, Transaktionshashes und öffentliche eigene Payloads gedacht. Füge niemals Seed-Phrasen oder private Schlüssel ein.',
+    'Does the tool provide financial advice?': 'Bietet das Tool Finanzberatung?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'CryptoQR Tool ist ein Werkzeug zum Erzeugen und Prüfen von QR-Payloads. Es bietet keine Anlage-, Steuer-, Rechts-, Handels-, Verwahr- oder Finanzberatung.',
+    'Still verify in your wallet': 'Trotzdem in deiner Wallet prüfen',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool hilft beim Erstellen lesbarer QR-Payloads, aber deine Wallet ist der endgültige Ort zur Bestätigung von Ziel, Chain, Token, Betrag und Gebühren. Genehmige nie nur deshalb eine Transaktion, weil ein QR-Code erfolgreich gescannt wurde.',
+    'Trust and privacy': 'Vertrauen und Datenschutz',
+    'No account, no wallet connection, no server vault': 'Kein Konto, keine Wallet-Verbindung, kein Server-Tresor',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool ist als privates Werkzeug konzipiert. Markt-, Gebühren- und Exchange-Module nutzen öffentliche APIs, aber QR-Adressen, Labels, Presets und Logos bleiben im Browser, solange du sie nicht kopierst, herunterlädst, exportierst oder teilst.',
+    'Generation is client-side': 'Erzeugung im Browser',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'QR-Payload-Erstellung, Validierung, Styling, Logo-Vorschau und Downloads laufen im Browser.',
+    'Local storage only': 'Nur lokaler Speicher',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Gespeicherte Adressen und nutzerdefinierte Stilpresets verwenden einen versionierten lokalen Speicherschlüssel und können gelöscht werden.',
+    'Custom logo handling': 'Umgang mit eigenen Logos',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'Hochgeladene Logos werden als PNG, JPEG, SVG oder WebP akzeptiert, sind größenbegrenzt und werden nur beim Speichern in einem Preset abgelegt.',
+    'Scannability checks': 'Scanbarkeitsprüfungen',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Kontrast, Ruhezone, Logogröße und Fehlerkorrektur priorisieren zuverlässiges Scannen statt Dekoration.',
+    'Privacy and security FAQ': 'FAQ zu Datenschutz und Sicherheit',
+    'Where are saved addresses stored?': 'Wo werden gespeicherte Adressen abgelegt?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Gespeicherte Adressen werden im lokalen Browser-Speicher unter einem versionierten CryptoQR-Tool-Schlüssel nur für dieses Profil abgelegt.',
+    'Are custom logos uploaded?': 'Werden eigene Logos hochgeladen?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'Nein. Eigene Logos werden im Browser gelesen und angezeigt und bleiben nur lokal, wenn du sie in einem Preset speicherst.',
+    'Cookies, local storage, and analytics': 'Cookies, lokaler Speicher und Analyse',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool verwendet keine Werbe- oder Tracking-Cookies, Konten, Wallet-Verbindungen oder serverseitigen Adresstresor. Die QR-Erzeugung läuft im Browser und gespeicherte Arbeitsdaten bleiben auf deinem Gerät, sofern du sie nicht exportierst oder teilst.',
+    'Cookie use': 'Cookie-Nutzung',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'CryptoQR Tool setzt keine Cookies für Werbung, Retargeting, Konten oder Cross-Site-Profiling. Ein Cookie-Popup wird nicht angezeigt, da es keine optionalen Cookie-Kategorien gibt.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'Die Website kann lokalen Browser-Speicher für Funktionen verwenden, die du steuerst: gespeicherte Adressen, Presets, Theme, Währung und Analyse-Opt-out.',
+    'Anonymous analytics': 'Anonyme Analyse',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'Selbst gehostete Umami-Analyse misst Seitennutzung und grobe Produktereignisse. Sie ist ohne Tracking-Cookies konfiguriert, respektiert Do Not Track und schließt URL-Query-Strings aus.',
+    'Disable anonymous analytics': 'Anonyme Analyse deaktivieren',
+    'Anonymous analytics disabled': 'Anonyme Analyse deaktiviert',
+    'Saved addresses': 'Gespeicherte Adressen',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Öffentliche Empfängeradressen und Labels bleiben in diesem Browserprofil, wenn du sie speicherst.',
+    'QR style presets': 'QR-Stilpresets',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Farben, Ruhezonen, Fehlerkorrektur und optionale Logodaten werden lokal zur Wiederverwendung gespeichert.',
+    Preferences: 'Einstellungen',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'Theme und Anzeigewährung werden lokal gespeichert, damit die Oberfläche mit deinen Einstellungen öffnet.',
+    'Analytics opt-out': 'Analyse-Opt-out',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Wenn du anonyme Analyse deaktivierst, speichert dieser Browser ein lokales Opt-out-Flag namens umami.disabled.',
+    'What stays in local storage': 'Was im lokalen Speicher bleibt',
+    'What is not collected': 'Was nicht gesammelt wird',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'Private Schlüssel, Seed-Phrasen, Wallet-Verbindungen oder Exchange-Zugangsdaten werden nicht angefordert.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'QR-Payloads, eingefügte öffentliche Adressen, Beträge, Labels und Logos werden nicht in einen Adresstresor hochgeladen.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'Gespeicherte Daten können durch Löschen in der App oder Leeren des Browser-Speichers dieser Website entfernt werden.',
+    'Data processing summary': 'Zusammenfassung der Datenverarbeitung',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'Browserlokale Daten liefern Generator, Adressliste, QR-Styling und Anzeigeeinstellungen. Serverlogs und anonyme Analyse können für Zuverlässigkeit, Missbrauchsschutz, Performance und aggregierte Produktverbesserung genutzt werden. Markt-, Gebühren- und Exchange-Ansichten können externe APIs aufrufen, benötigen aber keine Wallet- oder Kontodaten.'
+  },
+  nl: {
+    'Browser-local crypto QR utility': 'Browserlokale crypto-QR-tool',
+    'Crypto QR Code Generator': 'Crypto-QR-codegenerator',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool genereert scanbare betaal-QR-codes voor Monero, Bitcoin, Ethereum, Solana, Litecoin en ERC-20-stablecoins zoals USDC en USDT zonder walletadressen, geüploade logo’s of opgeslagen presets naar een server te sturen.',
+    'Your data never leaves your browser': 'Je gegevens verlaten je browser nooit',
+    'Made with love for privacy and zero data collection.': 'Gemaakt voor privacy en zonder gegevensverzameling.',
+    'Open generator': 'Generator openen',
+    'Privacy model': 'Privacymodel',
+    '100% Client-Side Processing': '100% verwerking in de browser',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Adressen, bedragen, logo’s en presets worden in je browser gegenereerd. Er is geen account en geen serverkluis voor adressen.',
+    'Zero Data Collection': 'Geen gegevensverzameling',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'We verzamelen geen walletadressen, geüploade logo’s of opgeslagen presets. Je QR-workflow blijft op je apparaat.',
+    'Works Completely Offline': 'Werkt volledig offline',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'QR-generatie, styling, downloads en opgeslagen presets blijven in de browser werken zonder actieve verbinding.',
+    'Crypto QR generators by coin': 'Crypto-QR-generators per munt',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Aparte pagina’s voor elk ondersteund walletadresformaat en betaalpayload.',
+    'Popular crypto QR searches': 'Populaire crypto-QR-zoekopdrachten',
+    'Frequently asked questions': 'Veelgestelde vragen',
+    'Does CryptoQR Tool store crypto addresses?': 'Slaat CryptoQR Tool cryptoadressen op?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Opgeslagen adressen en QR-stijlpresets blijven in lokale browseropslag op je apparaat en worden niet server-side gesynchroniseerd.',
+    'Which networks are supported?': 'Welke netwerken worden ondersteund?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'CryptoQR Tool ondersteunt Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC en USDT, plus QR-codes met eigen payload.',
+    'Crypto QR Code FAQ': 'FAQ over crypto-QR-codes',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Antwoorden over veilig crypto-QR-codes genereren, browserlokale opslag, anonieme analytics, walletcompatibiliteit en controles vóór delen of scannen van een betaalverzoek.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'Is CryptoQR Tool veilig voor crypto-QR-codes?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'De generator draait in je browser en vereist geen walletverbinding, seedphrases, privésleutels, accounts of exchange-inloggegevens. Controleer elke bestemming of factuur nog steeds in je wallet voordat je geld verzendt.',
+    'Does CryptoQR Tool store wallet addresses?': 'Slaat CryptoQR Tool walletadressen op?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Opgeslagen adressen blijven in lokale browseropslag wanneer je ze opslaat. Ze worden niet gesynchroniseerd met een serverkluis.',
+    'Does the site use cookies?': 'Gebruikt de site cookies?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'De site plaatst geen advertentie-, retargeting-, account- of trackingcookies. Lokale opslag kan worden gebruikt voor adressen, presets, thema, valuta en analytics-opt-out.',
+    'What analytics are used?': 'Welke analytics worden gebruikt?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'Zelf gehoste Umami-analytics wordt gebruikt voor geaggregeerd paginagebruik en grove productevents. Het gebruikt geen trackingcookies, respecteert Do Not Track en sluit querystrings uit.',
+    'Can a downloaded crypto QR code be changed later?': 'Kan een gedownloade crypto-QR-code later worden gewijzigd?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'Nee. Een gedownload QR-beeld bevat de payload van het exportmoment. Als adres, bedrag, factuur, chain of stijl wijzigt, genereer dan een nieuwe QR-code.',
+    'What happens if a wallet ignores the amount field?': 'Wat gebeurt er als een wallet het bedrag negeert?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Sommige wallets lezen alleen de bestemming en negeren optionele URI-parameters zoals bedrag of tokengegevens. Bevestig ontvanger, netwerk, token en bedrag altijd in de verzendende wallet.',
+    'Can I paste a seed phrase or private key?': 'Kan ik een seedphrase of privésleutel plakken?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'Nee. De tool is alleen voor publieke adressen, betaal-URI’s, Lightning-facturen, transactiehashes en publieke payloads. Plak nooit seedphrases of privésleutels.',
+    'Does the tool provide financial advice?': 'Geeft de tool financieel advies?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'CryptoQR Tool is een hulpmiddel voor het genereren en controleren van QR-payloads. Het geeft geen beleggings-, belasting-, juridisch, handels-, bewaar- of financieel advies.',
+    'Still verify in your wallet': 'Controleer nog steeds in je wallet',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool helpt leesbare QR-payloads te maken, maar je wallet is de uiteindelijke plek om bestemming, chain, token, bedrag en kosten te bevestigen. Keur nooit een transactie goed alleen omdat een QR-code succesvol scande.',
+    'Trust and privacy': 'Vertrouwen en privacy',
+    'No account, no wallet connection, no server vault': 'Geen account, geen walletverbinding, geen serverkluis',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool is ontworpen als privéhulpmiddel. Markt-, fee- en exchange-modules gebruiken publieke API’s, maar QR-adressen, labels, presets en logo’s blijven in de browser tenzij je ze kopieert, downloadt, exporteert of deelt.',
+    'Generation is client-side': 'Generatie gebeurt client-side',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'QR-payloadopbouw, validatie, styling, logovoorbeelden en downloads draaien in de browser.',
+    'Local storage only': 'Alleen lokale opslag',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Opgeslagen adressen en gebruikerspresets gebruiken een versiegebonden lokale opslagsleutel en kunnen door de gebruiker worden verwijderd.',
+    'Custom logo handling': 'Omgaan met aangepaste logo’s',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'Geüploade logo’s worden geaccepteerd als PNG, JPEG, SVG of WebP, hebben een groottelimiet en worden alleen opgeslagen in een preset.',
+    'Scannability checks': 'Scanbaarheidscontroles',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Contrast, stille zone, logogrootte en foutcorrectie geven betrouwbare scans prioriteit boven decoratie.',
+    'Privacy and security FAQ': 'FAQ over privacy en beveiliging',
+    'Where are saved addresses stored?': 'Waar worden opgeslagen adressen bewaard?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Opgeslagen adressen staan in lokale browseropslag onder een versiegebonden CryptoQR Tool-sleutel voor dit browserprofiel.',
+    'Are custom logos uploaded?': 'Worden aangepaste logo’s geüpload?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'Nee. Aangepaste logo’s worden in de browser gelezen en bekeken en blijven alleen lokaal als je ze in een preset opslaat.',
+    'Cookies, local storage, and analytics': 'Cookies, lokale opslag en analytics',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool gebruikt geen advertentie- of trackingcookies, accounts, walletverbindingen of serverkluis. QR-generatie draait in de browser en opgeslagen workflowgegevens blijven op je apparaat tenzij je ze exporteert of deelt.',
+    'Cookie use': 'Cookiegebruik',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'CryptoQR Tool plaatst geen cookies voor advertenties, retargeting, accounts of cross-site profilering. Er is geen cookiepopup omdat er geen optionele categorieën zijn.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'De site kan lokale opslag gebruiken voor functies die jij beheert, zoals adressen, presets, thema, valuta en analytics-opt-out.',
+    'Anonymous analytics': 'Anonieme analytics',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'Zelf gehoste Umami-analytics meet paginagebruik en grove productevents. Het gebruikt geen trackingcookies, respecteert Do Not Track en sluit querystrings uit URL’s uit.',
+    'Disable anonymous analytics': 'Anonieme analytics uitschakelen',
+    'Anonymous analytics disabled': 'Anonieme analytics uitgeschakeld',
+    'Saved addresses': 'Opgeslagen adressen',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Publieke ontvangeradressen en labels blijven in dit browserprofiel wanneer je ze opslaat.',
+    'QR style presets': 'QR-stijlpresets',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Kleuren, stille zones, foutcorrectie en optionele logogegevens blijven lokaal voor hergebruik.',
+    Preferences: 'Voorkeuren',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'Thema en weergavevaluta worden lokaal opgeslagen zodat de interface met je voorkeuren opent.',
+    'Analytics opt-out': 'Analytics-opt-out',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Als je anonieme analytics uitschakelt, slaat deze browser een lokale opt-outvlag umami.disabled op.',
+    'What stays in local storage': 'Wat in lokale opslag blijft',
+    'What is not collected': 'Wat niet wordt verzameld',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'Privésleutels, seedphrases, walletverbindingen of exchange-inloggegevens worden niet gevraagd.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'QR-payloads, geplakte publieke adressen, bedragen, labels en logo’s worden niet geüpload naar een adreskluis.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'Opgeslagen gegevens kunnen worden verwijderd door items in de app te wissen of de browseropslag van deze site te legen.',
+    'Data processing summary': 'Samenvatting gegevensverwerking',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'Browserlokale gegevens worden gebruikt voor de generator, adreslijst, QR-styling en voorkeuren. Serverlogs en anonieme analytics kunnen worden gebruikt voor betrouwbaarheid, misbruikpreventie, prestaties en productverbetering. Markt-, fee- en exchangeweergaven kunnen externe API’s gebruiken, maar vereisen geen wallet- of accountgegevens.'
+  },
+  it: {
+    'Browser-local crypto QR utility': 'Utilità QR crypto locale nel browser',
+    'Crypto QR Code Generator': 'Generatore di codici QR crypto',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool genera codici QR di pagamento scansionabili per Monero, Bitcoin, Ethereum, Solana, Litecoin e stablecoin ERC-20 come USDC e USDT senza inviare indirizzi wallet, loghi caricati o preset salvati a un server.',
+    'Your data never leaves your browser': 'I tuoi dati non lasciano mai il browser',
+    'Made with love for privacy and zero data collection.': 'Creato per la privacy e senza raccolta dati.',
+    'Open generator': 'Apri generatore',
+    'Privacy model': 'Modello di privacy',
+    '100% Client-Side Processing': 'Elaborazione 100% lato client',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'Indirizzi, importi, loghi e preset vengono generati nel browser. Non ci sono account né un vault di indirizzi lato server.',
+    'Zero Data Collection': 'Zero raccolta dati',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'Non raccogliamo indirizzi wallet, loghi caricati o preset salvati. Il flusso QR resta sul tuo dispositivo.',
+    'Works Completely Offline': 'Funziona completamente offline',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'Generazione QR, stile, download e preset salvati continuano a funzionare nel browser senza connessione attiva.',
+    'Crypto QR generators by coin': 'Generatori QR crypto per moneta',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'Pagine dedicate per ogni formato di indirizzo wallet e payload di pagamento supportato.',
+    'Popular crypto QR searches': 'Ricerche QR crypto popolari',
+    'Frequently asked questions': 'Domande frequenti',
+    'Does CryptoQR Tool store crypto addresses?': 'CryptoQR Tool memorizza indirizzi crypto?',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'Gli indirizzi salvati e i preset di stile QR restano nello storage locale del browser sul dispositivo e non vengono sincronizzati lato server.',
+    'Which networks are supported?': 'Quali reti sono supportate?',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'CryptoQR Tool supporta Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC e USDT, oltre a codici QR con payload personalizzato.',
+    'Crypto QR Code FAQ': 'FAQ sui codici QR crypto',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'Risposte su generazione sicura di QR crypto, storage locale, analytics anonimi, compatibilità wallet e controlli prima di condividere o scansionare una richiesta di pagamento.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'CryptoQR Tool è sicuro per generare codici QR crypto?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'Il generatore gira nel browser e non richiede connessione wallet, seed phrase, chiavi private, account o credenziali exchange. Verifica comunque ogni indirizzo o fattura nel wallet prima di inviare fondi.',
+    'Does CryptoQR Tool store wallet addresses?': 'CryptoQR Tool memorizza indirizzi wallet?',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'Gli indirizzi salvati restano nello storage locale del browser quando scegli di salvarli. Non vengono sincronizzati con un vault di indirizzi lato server.',
+    'Does the site use cookies?': 'Il sito usa cookie?',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'Il sito non imposta cookie pubblicitari, retargeting, account o tracciamento. Può usare lo storage locale per indirizzi salvati, preset, tema, valuta e opt-out dagli analytics anonimi.',
+    'What analytics are used?': 'Quali analytics vengono usati?',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'Vengono usati analytics Umami self-hosted per uso aggregato delle pagine ed eventi prodotto generali. Sono configurati senza cookie di tracciamento, rispettano Do Not Track ed escludono query string.',
+    'Can a downloaded crypto QR code be changed later?': 'Un QR crypto scaricato può essere cambiato dopo?',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'No. Un’immagine QR scaricata contiene il payload presente al momento dell’esportazione. Se indirizzo, importo, fattura, chain o stile cambiano, genera un nuovo QR.',
+    'What happens if a wallet ignores the amount field?': 'Cosa succede se un wallet ignora il campo importo?',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'Alcuni wallet possono leggere solo la destinazione e ignorare parametri URI opzionali come importo o dettagli token. Conferma sempre destinatario, rete, token e importo nel wallet prima di approvare.',
+    'Can I paste a seed phrase or private key?': 'Posso incollare una seed phrase o chiave privata?',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'No. Lo strumento è solo per indirizzi pubblici, URI di pagamento, fatture Lightning, hash di transazione e payload pubblici personalizzati. Non incollare mai seed phrase o chiavi private.',
+    'Does the tool provide financial advice?': 'Lo strumento fornisce consulenza finanziaria?',
+    'CryptoQR Tool is a utility for generating and checking QR payloads. It does not provide investment, tax, legal, trading, custody, or financial advice.':
+      'CryptoQR Tool è un’utilità per generare e controllare payload QR. Non fornisce consulenza finanziaria, fiscale, legale, di trading, custodia o investimento.',
+    'Still verify in your wallet': 'Verifica comunque nel wallet',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool aiuta a creare payload QR leggibili, ma il wallet è il punto finale per confermare destinazione, chain, token, importo e commissioni. Non approvare mai solo perché un QR è stato scansionato.',
+    'Trust and privacy': 'Fiducia e privacy',
+    'No account, no wallet connection, no server vault': 'Nessun account, nessuna connessione wallet, nessun vault server',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool è progettato come utilità privata. I moduli mercato, fee ed exchange chiamano API pubbliche, ma indirizzi QR, etichette, preset e loghi restano nel browser salvo copia, download, esportazione o condivisione.',
+    'Generation is client-side': 'Generazione lato client',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'Costruzione payload QR, validazione, stile, anteprime logo e download avvengono nel browser.',
+    'Local storage only': 'Solo storage locale',
+    'Saved addresses and user-defined style presets use a versioned local storage key and can be deleted by the user.':
+      'Indirizzi salvati e preset utente usano una chiave di storage locale versionata e possono essere eliminati dall’utente.',
+    'Custom logo handling': 'Gestione loghi personalizzati',
+    'Uploaded logos are accepted as PNG, JPEG, SVG, or WebP, size-limited, and stored only when saved into a preset.':
+      'I loghi caricati sono accettati come PNG, JPEG, SVG o WebP, hanno limite di dimensione e sono salvati solo dentro un preset.',
+    'Scannability checks': 'Controlli di scansione',
+    'Contrast, quiet zone, logo size, and error-correction settings prioritize reliable scanning over decoration.':
+      'Contrasto, quiet zone, dimensione logo e correzione errori privilegiano scansioni affidabili rispetto alla decorazione.',
+    'Privacy and security FAQ': 'FAQ privacy e sicurezza',
+    'Where are saved addresses stored?': 'Dove sono archiviati gli indirizzi salvati?',
+    'Saved addresses are stored in browser local storage under a versioned CryptoQR Tool key for this browser profile only.':
+      'Gli indirizzi salvati sono nello storage locale del browser sotto una chiave CryptoQR Tool versionata solo per questo profilo.',
+    'Are custom logos uploaded?': 'I loghi personalizzati vengono caricati?',
+    'No. Custom logos are read and previewed in the browser and are only kept locally if you save them into a preset.':
+      'No. I loghi personalizzati vengono letti e mostrati nel browser e restano locali solo se salvati in un preset.',
+    'Cookies, local storage, and analytics': 'Cookie, storage locale e analytics',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool non usa cookie pubblicitari o di tracciamento, account, connessioni wallet o vault server. La generazione QR gira nel browser e i dati salvati restano sul dispositivo salvo esportazione o condivisione.',
+    'Cookie use': 'Uso dei cookie',
+    'CryptoQR Tool does not set cookies for advertising, retargeting, user accounts, or cross-site profiling. A cookie settings popup is not shown because there are no optional cookie categories to manage.':
+      'CryptoQR Tool non imposta cookie per pubblicità, retargeting, account o profilazione cross-site. Non viene mostrato un popup cookie perché non ci sono categorie opzionali.',
+    'The site may still use browser local storage for features you control, such as saved addresses, presets, theme, currency, and analytics opt-out status.':
+      'Il sito può usare storage locale per funzioni controllate da te, come indirizzi, preset, tema, valuta e stato opt-out analytics.',
+    'Anonymous analytics': 'Analytics anonimi',
+    'Self-hosted Umami analytics helps measure page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings from page URLs.':
+      'Gli analytics Umami self-hosted misurano uso pagine ed eventi prodotto generali. Sono senza cookie di tracciamento, rispettano Do Not Track ed escludono query string dagli URL.',
+    'Disable anonymous analytics': 'Disattiva analytics anonimi',
+    'Anonymous analytics disabled': 'Analytics anonimi disattivati',
+    'Saved addresses': 'Indirizzi salvati',
+    'Public recipient addresses and labels stay in this browser profile when you choose to save them.':
+      'Indirizzi pubblici del destinatario ed etichette restano in questo profilo browser quando li salvi.',
+    'QR style presets': 'Preset stile QR',
+    'Colors, quiet zones, error correction, and optional custom logo data are kept locally for reuse.':
+      'Colori, quiet zone, correzione errori e dati logo opzionali restano locali per riuso.',
+    Preferences: 'Preferenze',
+    'Theme and display currency are stored locally so the interface opens with your preferred settings.':
+      'Tema e valuta di visualizzazione sono salvati localmente così l’interfaccia apre con le preferenze scelte.',
+    'Analytics opt-out': 'Opt-out analytics',
+    'If you disable anonymous analytics, this browser stores a local opt-out flag named umami.disabled.':
+      'Se disattivi gli analytics anonimi, questo browser salva un flag locale chiamato umami.disabled.',
+    'What stays in local storage': 'Cosa resta nello storage locale',
+    'What is not collected': 'Cosa non viene raccolto',
+    'No private keys, seed phrases, wallet connections, or exchange credentials are requested.':
+      'Non vengono richieste chiavi private, seed phrase, connessioni wallet o credenziali exchange.',
+    'QR payloads, pasted public addresses, amounts, labels, and custom logos are not uploaded to an address vault.':
+      'Payload QR, indirizzi pubblici incollati, importi, etichette e loghi non vengono caricati in un vault indirizzi.',
+    'Saved data can be removed by deleting items in the app or clearing this site browser storage.':
+      'I dati salvati possono essere rimossi eliminando elementi nell’app o pulendo lo storage browser del sito.',
+    'Data processing summary': 'Riepilogo trattamento dati',
+    'Browser-local data is used to provide the generator, saved address list, QR styling, and display preferences. Server logs and anonymous analytics may be used for reliability, abuse prevention, performance monitoring, and aggregate product improvement. Public market, fee, and exchange views may call external data APIs, but those modules do not require wallet connection or account data.':
+      'I dati locali del browser servono per generatore, elenco indirizzi, stile QR e preferenze. Log server e analytics anonimi possono servire per affidabilità, abuso, prestazioni e miglioramento aggregato. Mercati, fee ed exchange possono chiamare API esterne, ma non richiedono wallet o account.'
+  },
+  ar: {
+    'Browser-local crypto QR utility': 'أداة QR للعملات الرقمية داخل المتصفح',
+    'Crypto QR Code Generator': 'مولد رموز QR للعملات الرقمية',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'ينشئ CryptoQR Tool رموز QR قابلة للمسح لمدفوعات Monero وBitcoin وEthereum وSolana وLitecoin والعملات المستقرة ERC-20 مثل USDC وUSDT بدون إرسال عناوين المحافظ أو الشعارات أو الإعدادات المحفوظة إلى خادم.',
+    'Your data never leaves your browser': 'بياناتك لا تغادر متصفحك',
+    'Made with love for privacy and zero data collection.': 'صنع من أجل الخصوصية وبدون جمع بيانات.',
+    'Open generator': 'فتح المولد',
+    'Privacy model': 'نموذج الخصوصية',
+    '100% Client-Side Processing': 'معالجة 100% على جهازك',
+    'Addresses, amounts, logos, and presets are generated in your browser. There is no account and no server-side address vault.':
+      'تُنشأ العناوين والمبالغ والشعارات والإعدادات في متصفحك. لا يوجد حساب ولا خزنة عناوين على الخادم.',
+    'Zero Data Collection': 'لا جمع للبيانات',
+    'We do not collect your wallet addresses, uploaded logos, or saved presets. Your QR workflow stays on your device.':
+      'لا نجمع عناوين المحافظ أو الشعارات المرفوعة أو الإعدادات المحفوظة. يبقى سير عمل QR على جهازك.',
+    'Works Completely Offline': 'يعمل بالكامل دون اتصال',
+    'Core QR generation, styling, downloads, and saved presets keep working in the browser without a live connection.':
+      'تستمر عملية إنشاء QR والتنسيق والتنزيلات والإعدادات المحفوظة في المتصفح بدون اتصال مباشر.',
+    'Crypto QR generators by coin': 'مولدات QR للعملات حسب العملة',
+    'Dedicated pages for each supported wallet address format and payment payload.':
+      'صفحات مخصصة لكل تنسيق عنوان محفظة وحمولة دفع مدعومة.',
+    'Popular crypto QR searches': 'عمليات بحث QR شائعة للعملات الرقمية',
+    'Frequently asked questions': 'الأسئلة الشائعة',
+    'Does CryptoQR Tool store crypto addresses?': 'هل يخزن CryptoQR Tool عناوين العملات الرقمية؟',
+    'Saved addresses and QR style presets stay in browser local storage on your device and are not synced server-side.':
+      'تبقى العناوين المحفوظة وإعدادات نمط QR في التخزين المحلي للمتصفح على جهازك ولا تتم مزامنتها على الخادم.',
+    'Which networks are supported?': 'ما الشبكات المدعومة؟',
+    'CryptoQR Tool supports Monero, Bitcoin, Bitcoin Lightning, Ethereum, Solana, Litecoin, USDC, and USDT, plus custom payload QR codes.':
+      'يدعم CryptoQR Tool Monero وBitcoin وBitcoin Lightning وEthereum وSolana وLitecoin وUSDC وUSDT، إضافة إلى رموز QR بحمولات مخصصة.',
+    'Crypto QR Code FAQ': 'أسئلة شائعة حول رموز QR للعملات الرقمية',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      'إجابات حول إنشاء رموز QR للعملات الرقمية بأمان، والتخزين المحلي، والتحليلات المجهولة، وتوافق المحافظ، والفحوصات قبل مشاركة أو مسح طلب دفع.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'هل CryptoQR Tool آمن لإنشاء رموز QR للعملات الرقمية؟',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      'يعمل المولد في متصفحك ولا يتطلب اتصال محفظة أو عبارات استرداد أو مفاتيح خاصة أو حسابات أو بيانات منصة. ومع ذلك تحقق من كل عنوان أو فاتورة داخل محفظتك قبل إرسال الأموال.',
+    'Does CryptoQR Tool store wallet addresses?': 'هل يخزن CryptoQR Tool عناوين المحافظ؟',
+    'Saved addresses stay in browser local storage on your device when you choose to save them. They are not synced to a server-side address vault.':
+      'تبقى العناوين المحفوظة في التخزين المحلي للمتصفح عندما تختار حفظها. لا تتم مزامنتها مع خزنة عناوين على الخادم.',
+    'Does the site use cookies?': 'هل يستخدم الموقع ملفات تعريف الارتباط؟',
+    'The site does not set advertising, retargeting, account, or tracking cookies. It may use browser local storage for saved addresses, style presets, theme, currency, and the anonymous analytics opt-out setting.':
+      'لا يضع الموقع ملفات تعريف ارتباط للإعلانات أو إعادة الاستهداف أو الحسابات أو التتبع. قد يستخدم التخزين المحلي للعناوين والإعدادات والسمة والعملة وخيار تعطيل التحليلات المجهولة.',
+    'What analytics are used?': 'ما التحليلات المستخدمة؟',
+    'Self-hosted Umami analytics is used for aggregate page usage and coarse product events. It is configured without tracking cookies, respects browser Do Not Track, and excludes query strings.':
+      'تُستخدم تحليلات Umami المستضافة ذاتياً لقياس استخدام الصفحات والأحداث العامة. وهي بلا ملفات تتبع، وتحترم Do Not Track، وتستبعد سلاسل الاستعلام.',
+    'Can a downloaded crypto QR code be changed later?': 'هل يمكن تغيير رمز QR منزّل لاحقاً؟',
+    'No. A downloaded QR image contains the payload that existed when you exported it. If the address, amount, invoice, chain, or style needs to change, generate a new QR code.':
+      'لا. تحتوي صورة QR المنزلة على الحمولة التي كانت موجودة عند التصدير. إذا تغير العنوان أو المبلغ أو الفاتورة أو الشبكة أو النمط، أنشئ رمزاً جديداً.',
+    'What happens if a wallet ignores the amount field?': 'ماذا يحدث إذا تجاهلت المحفظة حقل المبلغ؟',
+    'Some wallets may scan only the destination and ignore optional URI parameters such as amount or token details. Always confirm the recipient, network, token, and amount inside the sending wallet before approving a transaction.':
+      'قد تقرأ بعض المحافظ الوجهة فقط وتتجاهل معاملات URI الاختيارية مثل المبلغ أو تفاصيل الرمز. أكد دائماً المستلم والشبكة والرمز والمبلغ داخل المحفظة قبل الموافقة.',
+    'Can I paste a seed phrase or private key?': 'هل يمكنني لصق عبارة استرداد أو مفتاح خاص؟',
+    'No. The tool is only for public addresses, payment URIs, Lightning invoices, transaction hashes, and custom public payloads. Never paste seed phrases or private keys into any QR generator.':
+      'لا. الأداة مخصصة للعناوين العامة وURI الدفع وفواتير Lightning وهاشات المعاملات والحمولات العامة. لا تلصق عبارات استرداد أو مفاتيح خاصة أبداً.',
+    'Still verify in your wallet': 'تحقق دائماً في محفظتك',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'يساعد CryptoQR Tool على إنشاء حمولات QR قابلة للقراءة، لكن محفظتك هي المكان النهائي لتأكيد الوجهة والشبكة والرمز والمبلغ والرسوم. لا توافق على معاملة فقط لأن QR تم مسحه بنجاح.',
+    'Trust and privacy': 'الثقة والخصوصية',
+    'No account, no wallet connection, no server vault': 'لا حساب، لا اتصال بمحفظة، لا خزنة خادم',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'صُمم CryptoQR Tool كأداة خاصة. تستدعي وحدات السوق والرسوم والمنصات واجهات API عامة، لكن عناوين QR والتسميات والإعدادات والشعارات تبقى في المتصفح إلا إذا نسختها أو نزّلتها أو صدّرتها أو شاركتها.',
+    'Generation is client-side': 'الإنشاء يتم على جهازك',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'إنشاء حمولة QR والتحقق والتنسيق ومعاينات الشعارات والتنزيلات تعمل في المتصفح.',
+    'Local storage only': 'تخزين محلي فقط',
+    'Privacy and security FAQ': 'أسئلة الخصوصية والأمان',
+    'Cookies, local storage, and analytics': 'ملفات تعريف الارتباط والتخزين المحلي والتحليلات',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'لا يستخدم CryptoQR Tool ملفات تعريف ارتباط إعلانية أو ملفات تتبع أو حسابات أو اتصالات محافظ أو خزنة عناوين على الخادم. يعمل إنشاء QR الأساسي في المتصفح وتبقى بيانات سير العمل المحفوظة على جهازك ما لم تصدرها أو تشاركها.',
+    'What stays in local storage': 'ما يبقى في التخزين المحلي',
+    'What is not collected': 'ما لا يتم جمعه',
+    'Data processing summary': 'ملخص معالجة البيانات'
+  },
+  'zh-CN': {
+    'Browser-local crypto QR utility': '浏览器本地加密货币 QR 工具',
+    'Crypto QR Code Generator': '加密货币 QR 码生成器',
+    'Your data never leaves your browser': '你的数据永不离开浏览器',
+    'Made with love for privacy and zero data collection.': '为隐私而建，不收集数据。',
+    'Open generator': '打开生成器',
+    'Privacy model': '隐私模型',
+    'Crypto QR Code FAQ': '加密货币 QR 码常见问题',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      '关于安全生成加密货币 QR 码、浏览器本地存储、匿名分析、钱包兼容性，以及分享或扫描付款请求前需要检查的内容。',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'CryptoQR Tool 用于生成加密货币 QR 码安全吗？',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      '生成器在浏览器中运行，不需要连接钱包、助记词、私钥、账户或交易所凭据。发送资金前仍应在钱包中核对每个目标地址或发票。',
+    'Still verify in your wallet': '仍需在钱包中确认',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool 可帮助创建可读的 QR 载荷，但钱包才是最终确认目标、链、代币、金额和手续费的地方。不要只因为 QR 码扫描成功就批准交易。',
+    'Trust and privacy': '信任与隐私',
+    'No account, no wallet connection, no server vault': '无账户、无钱包连接、无服务器地址库',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool 被设计为隐私工具。行情、费用和交易所模块会调用公共 API，但 QR 地址、保存的标签、样式预设和自定义 logo 会留在浏览器中，除非你复制、下载、导出或分享。',
+    'Generation is client-side': '生成在客户端完成',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'QR 载荷构建、验证、样式、自定义 logo 预览和下载都在浏览器中运行。',
+    'Local storage only': '仅本地存储',
+    'Privacy and security FAQ': '隐私与安全常见问题',
+    'Cookies, local storage, and analytics': 'Cookie、本地存储和分析',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool 不使用广告 cookie、跟踪 cookie、账户、钱包连接或服务器端地址库。核心 QR 生成在浏览器中运行，保存的工作流数据会留在你的设备上，除非你导出或分享。',
+    'Cookie use': 'Cookie 使用',
+    'Anonymous analytics': '匿名分析',
+    'What stays in local storage': '哪些内容留在本地存储',
+    'What is not collected': '不会收集的内容',
+    'Data processing summary': '数据处理摘要',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool 可为 Monero、Bitcoin、Ethereum、Solana、Litecoin 以及 USDC、USDT 等 ERC-20 稳定币生成可扫描的付款 QR 码，不会把钱包地址、上传的 logo 或保存的预设发送到服务器。',
+    'Frequently asked questions': '常见问题',
+    'Crypto QR generators by coin': '按币种划分的加密货币 QR 生成器'
+  },
+  ja: {
+    'Browser-local crypto QR utility': 'ブラウザ内の暗号資産QRツール',
+    'Crypto QR Code Generator': '暗号資産QRコード生成ツール',
+    'Your data never leaves your browser': 'データはブラウザの外へ出ません',
+    'Made with love for privacy and zero data collection.': 'プライバシーとゼロデータ収集のために作られています。',
+    'Open generator': '生成ツールを開く',
+    'Privacy model': 'プライバシーモデル',
+    'Crypto QR Code FAQ': '暗号資産QRコードFAQ',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      '暗号資産QRコードの安全な生成、ブラウザ内保存、匿名分析、ウォレット互換性、支払いリクエストを共有またはスキャンする前の確認事項についての回答です。',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'CryptoQR Toolは暗号資産QRコード生成に安全ですか？',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      '生成ツールはブラウザで動作し、ウォレット接続、シードフレーズ、秘密鍵、アカウント、取引所認証情報を必要としません。送金前には必ずウォレット内で送信先や請求を確認してください。',
+    'Still verify in your wallet': '必ずウォレットで確認',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Toolは読みやすいQRペイロードの作成を助けますが、送信先、チェーン、トークン、金額、手数料の最終確認はウォレットで行います。QRの読み取り成功だけで承認しないでください。',
+    'Trust and privacy': '信頼とプライバシー',
+    'No account, no wallet connection, no server vault': 'アカウント不要、ウォレット接続不要、サーバー保管庫なし',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Toolはプライベートなユーティリティとして設計されています。市場、手数料、取引所モジュールは公開APIを呼び出しますが、QRアドレス、保存ラベル、スタイルプリセット、カスタムロゴはコピー、ダウンロード、エクスポート、共有しない限りブラウザ内に残ります。',
+    'Generation is client-side': '生成はクライアント側',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'QRペイロードの作成、検証、スタイル、カスタムロゴのプレビュー、ダウンロードはブラウザで実行されます。',
+    'Local storage only': 'ローカル保存のみ',
+    'Privacy and security FAQ': 'プライバシーとセキュリティFAQ',
+    'Cookies, local storage, and analytics': 'Cookie、ローカル保存、分析',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Toolは広告Cookie、追跡Cookie、アカウント、ウォレット接続、サーバー側のアドレス保管庫を使用しません。QR生成はブラウザ内で実行され、保存された作業データはエクスポートまたは共有しない限り端末に残ります。',
+    'Cookie use': 'Cookieの使用',
+    'Anonymous analytics': '匿名分析',
+    'What stays in local storage': 'ローカル保存に残るもの',
+    'What is not collected': '収集されないもの',
+    'Data processing summary': 'データ処理の概要',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR ToolはMonero、Bitcoin、Ethereum、Solana、Litecoin、USDCやUSDTなどのERC-20ステーブルコイン向けに、ウォレットアドレス、アップロードロゴ、保存プリセットをサーバーへ送信せず、スキャン可能な支払いQRコードを生成します。',
+    'Frequently asked questions': 'よくある質問',
+    'Crypto QR generators by coin': '通貨別の暗号資産QR生成ツール'
+  },
+  ko: {
+    'Browser-local crypto QR utility': '브라우저 로컬 암호화폐 QR 도구',
+    'Crypto QR Code Generator': '암호화폐 QR 코드 생성기',
+    'Your data never leaves your browser': '데이터는 브라우저를 벗어나지 않습니다',
+    'Made with love for privacy and zero data collection.': '개인정보 보호와 무수집을 위해 만들었습니다.',
+    'Open generator': '생성기 열기',
+    'Privacy model': '개인정보 모델',
+    'Crypto QR Code FAQ': '암호화폐 QR 코드 FAQ',
+    'Answers about generating crypto QR codes safely, browser-local storage, anonymous analytics, wallet compatibility, and the checks to make before sharing or scanning a payment request.':
+      '암호화폐 QR 코드를 안전하게 생성하는 방법, 브라우저 로컬 저장소, 익명 분석, 지갑 호환성, 결제 요청을 공유하거나 스캔하기 전 확인 사항에 대한 답변입니다.',
+    'Is CryptoQR Tool safe for generating crypto QR codes?': 'CryptoQR Tool은 암호화폐 QR 코드 생성에 안전한가요?',
+    'The generator runs in your browser and does not require wallet connection, seed phrases, private keys, accounts, or exchange credentials. You should still verify every destination address or invoice inside your wallet before sending funds.':
+      '생성기는 브라우저에서 실행되며 지갑 연결, 시드 문구, 개인 키, 계정 또는 거래소 인증 정보를 요구하지 않습니다. 자금을 보내기 전에는 지갑에서 모든 수신 주소나 인보이스를 확인해야 합니다.',
+    'Still verify in your wallet': '지갑에서 반드시 확인',
+    'CryptoQR Tool helps create readable QR payloads, but your wallet is the final place to confirm the destination, chain, token, amount, and transaction fees. Never approve a transaction only because a QR code scanned successfully.':
+      'CryptoQR Tool은 읽기 쉬운 QR 페이로드를 만드는 데 도움을 주지만, 목적지, 체인, 토큰, 금액, 수수료의 최종 확인은 지갑에서 해야 합니다. QR 코드가 스캔되었다는 이유만으로 거래를 승인하지 마세요.',
+    'Trust and privacy': '신뢰와 개인정보',
+    'No account, no wallet connection, no server vault': '계정 없음, 지갑 연결 없음, 서버 보관소 없음',
+    'CryptoQR Tool is designed as a private utility. Live market, fee, and exchange modules call public APIs, but QR addresses, saved labels, style presets, and custom logos stay in the browser unless you copy, download, export, or share them.':
+      'CryptoQR Tool은 개인용 유틸리티로 설계되었습니다. 시장, 수수료, 거래소 모듈은 공개 API를 호출하지만 QR 주소, 저장된 라벨, 스타일 프리셋, 사용자 로고는 복사, 다운로드, 내보내기 또는 공유하지 않는 한 브라우저에 남습니다.',
+    'Generation is client-side': '생성은 클라이언트 측에서 수행',
+    'QR payload construction, validation, styling, custom logo previews, and downloads run in the browser.':
+      'QR 페이로드 구성, 검증, 스타일링, 사용자 로고 미리보기, 다운로드는 브라우저에서 실행됩니다.',
+    'Local storage only': '로컬 저장소만 사용',
+    'Privacy and security FAQ': '개인정보 및 보안 FAQ',
+    'Cookies, local storage, and analytics': '쿠키, 로컬 저장소, 분석',
+    'CryptoQR Tool does not use advertising cookies, tracking cookies, accounts, wallet connections, or a server-side address vault. Core QR generation runs in the browser, and saved workflow data remains on your device unless you export or share it.':
+      'CryptoQR Tool은 광고 쿠키, 추적 쿠키, 계정, 지갑 연결 또는 서버 측 주소 보관소를 사용하지 않습니다. 핵심 QR 생성은 브라우저에서 실행되며 저장된 작업 데이터는 내보내거나 공유하지 않는 한 기기에 남습니다.',
+    'Cookie use': '쿠키 사용',
+    'Anonymous analytics': '익명 분석',
+    'What stays in local storage': '로컬 저장소에 남는 것',
+    'What is not collected': '수집하지 않는 것',
+    'Data processing summary': '데이터 처리 요약',
+    'CryptoQR Tool generates scannable payment QR codes for Monero, Bitcoin, Ethereum, Solana, Litecoin, and ERC-20 stablecoins like USDC and USDT without sending wallet addresses, uploaded logos, or saved presets to a server.':
+      'CryptoQR Tool은 Monero, Bitcoin, Ethereum, Solana, Litecoin 및 USDC, USDT 같은 ERC-20 스테이블코인용 스캔 가능한 결제 QR 코드를 생성하며 지갑 주소, 업로드한 로고, 저장된 프리셋을 서버로 보내지 않습니다.',
+    'Frequently asked questions': '자주 묻는 질문',
+    'Crypto QR generators by coin': '코인별 암호화폐 QR 생성기'
+  }
+};
+
 export const phraseTranslations: Partial<Record<Locale, PhraseMap>> = {
-  es,
-  pt,
+  es: { ...es, ...complaintPageExtras.es },
+  pt: { ...pt, ...complaintPageExtras.pt },
   uk: { ...uk, ...ukExtra },
-  nl,
-  de,
-  fr,
-  it,
+  nl: { ...nl, ...complaintPageExtras.nl },
+  de: { ...de, ...complaintPageExtras.de },
+  fr: { ...fr, ...complaintPageExtras.fr },
+  it: { ...it, ...complaintPageExtras.it },
   ru: { ...ru, ...ruExtra },
-  ar,
-  'zh-CN': zh,
-  ja,
-  ko,
+  ar: { ...ar, ...complaintPageExtras.ar },
+  'zh-CN': { ...zh, ...complaintPageExtras['zh-CN'] },
+  ja: { ...ja, ...complaintPageExtras.ja },
+  ko: { ...ko, ...complaintPageExtras.ko },
   'en-GB': {}
 };
 

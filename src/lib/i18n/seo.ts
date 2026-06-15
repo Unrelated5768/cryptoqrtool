@@ -242,6 +242,20 @@ const generatedLandingLabels: Partial<
     }
   >
 > = {
+  pt: {
+    qrGenerator: 'Gerador de códigos QR',
+    qrGuide: 'Guia de códigos QR cripto',
+    checker: 'Verificador',
+    addressChecker: 'Verificador de endereços',
+    transactionChecker: 'Verificador de transações',
+    invoiceChecker: 'Verificador de faturas',
+    paymentTool: 'ferramenta QR de pagamento',
+    guideEyebrow: 'Guia QR cripto',
+    generatorEyebrow: (ticker) => `Ferramenta QR de carteira ${ticker ?? 'cripto'}`,
+    checkerEyebrow: (ticker) => `Verificação ${ticker ?? 'cripto'}`,
+    openGenerator: (name) => `Abrir gerador QR de ${name}`,
+    openChecker: (name) => `Abrir verificador de ${name}`
+  },
   ru: {
     qrGenerator: 'Генератор QR-кодов',
     qrGuide: 'Руководство по крипто QR-кодам',
@@ -269,6 +283,104 @@ const generatedLandingLabels: Partial<
     checkerEyebrow: (ticker) => `Перевірка ${ticker ?? 'крипто'}`,
     openGenerator: (name) => `Відкрити QR-генератор ${name}`,
     openChecker: (name) => `Відкрити перевірку ${name}`
+  },
+  nl: {
+    qrGenerator: 'QR-codegenerator',
+    qrGuide: 'Crypto QR-codegids',
+    checker: 'Checker',
+    addressChecker: 'Adreschecker',
+    transactionChecker: 'Transactiechecker',
+    invoiceChecker: 'Factuurchecker',
+    paymentTool: 'betaal-QR-tool',
+    guideEyebrow: 'Crypto QR-gids',
+    generatorEyebrow: (ticker) => `${ticker ?? 'crypto'} wallet-QR-tool`,
+    checkerEyebrow: (ticker) => `${ticker ?? 'crypto'} verificatie`,
+    openGenerator: (name) => `${name} QR-generator openen`,
+    openChecker: (name) => `${name} checker openen`
+  },
+  de: {
+    qrGenerator: 'QR-Code-Generator',
+    qrGuide: 'Krypto-QR-Code-Leitfaden',
+    checker: 'Prüfer',
+    addressChecker: 'Adressprüfer',
+    transactionChecker: 'Transaktionsprüfer',
+    invoiceChecker: 'Rechnungsprüfer',
+    paymentTool: 'Zahlungs-QR-Tool',
+    guideEyebrow: 'Krypto-QR-Leitfaden',
+    generatorEyebrow: (ticker) => `${ticker ?? 'Krypto'} Wallet-QR-Tool`,
+    checkerEyebrow: (ticker) => `${ticker ?? 'Krypto'} Prüfung`,
+    openGenerator: (name) => `${name}-QR-Generator öffnen`,
+    openChecker: (name) => `${name}-Prüfer öffnen`
+  },
+  it: {
+    qrGenerator: 'Generatore di codici QR',
+    qrGuide: 'Guida ai codici QR crypto',
+    checker: 'Verificatore',
+    addressChecker: 'Verificatore indirizzi',
+    transactionChecker: 'Verificatore transazioni',
+    invoiceChecker: 'Verificatore fatture',
+    paymentTool: 'strumento QR di pagamento',
+    guideEyebrow: 'Guida QR crypto',
+    generatorEyebrow: (ticker) => `Strumento QR wallet ${ticker ?? 'crypto'}`,
+    checkerEyebrow: (ticker) => `Verifica ${ticker ?? 'crypto'}`,
+    openGenerator: (name) => `Apri il generatore QR ${name}`,
+    openChecker: (name) => `Apri il verificatore ${name}`
+  },
+  ar: {
+    qrGenerator: 'مولد رموز QR',
+    qrGuide: 'دليل رموز QR للعملات الرقمية',
+    checker: 'مدقق',
+    addressChecker: 'مدقق العناوين',
+    transactionChecker: 'مدقق المعاملات',
+    invoiceChecker: 'مدقق الفواتير',
+    paymentTool: 'أداة QR للدفع',
+    guideEyebrow: 'دليل QR للعملات الرقمية',
+    generatorEyebrow: (ticker) => `أداة QR لمحفظة ${ticker ?? 'العملات الرقمية'}`,
+    checkerEyebrow: (ticker) => `تحقق ${ticker ?? 'العملات الرقمية'}`,
+    openGenerator: (name) => `فتح مولد QR لـ ${name}`,
+    openChecker: (name) => `فتح مدقق ${name}`
+  },
+  'zh-CN': {
+    qrGenerator: 'QR 码生成器',
+    qrGuide: '加密货币 QR 码指南',
+    checker: '检查器',
+    addressChecker: '地址检查器',
+    transactionChecker: '交易检查器',
+    invoiceChecker: '发票检查器',
+    paymentTool: '付款 QR 工具',
+    guideEyebrow: '加密货币 QR 指南',
+    generatorEyebrow: (ticker) => `${ticker ?? '加密货币'} 钱包 QR 工具`,
+    checkerEyebrow: (ticker) => `${ticker ?? '加密货币'} 验证`,
+    openGenerator: (name) => `打开 ${name} QR 生成器`,
+    openChecker: (name) => `打开 ${name} 检查器`
+  },
+  ja: {
+    qrGenerator: 'QRコード生成ツール',
+    qrGuide: '暗号資産QRコードガイド',
+    checker: 'チェッカー',
+    addressChecker: 'アドレスチェッカー',
+    transactionChecker: 'トランザクションチェッカー',
+    invoiceChecker: '請求書チェッカー',
+    paymentTool: '支払いQRツール',
+    guideEyebrow: '暗号資産QRガイド',
+    generatorEyebrow: (ticker) => `${ticker ?? '暗号資産'}ウォレットQRツール`,
+    checkerEyebrow: (ticker) => `${ticker ?? '暗号資産'}検証`,
+    openGenerator: (name) => `${name} QR生成ツールを開く`,
+    openChecker: (name) => `${name}チェッカーを開く`
+  },
+  ko: {
+    qrGenerator: 'QR 코드 생성기',
+    qrGuide: '암호화폐 QR 코드 가이드',
+    checker: '검사기',
+    addressChecker: '주소 검사기',
+    transactionChecker: '거래 검사기',
+    invoiceChecker: '인보이스 검사기',
+    paymentTool: '결제 QR 도구',
+    guideEyebrow: '암호화폐 QR 가이드',
+    generatorEyebrow: (ticker) => `${ticker ?? '암호화폐'} 지갑 QR 도구`,
+    checkerEyebrow: (ticker) => `${ticker ?? '암호화폐'} 검증`,
+    openGenerator: (name) => `${name} QR 생성기 열기`,
+    openChecker: (name) => `${name} 검사기 열기`
   }
 };
 
