@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { ArrowRight, DatabaseZap, Heart, QrCode, ShieldCheck, WifiOff } from 'lucide-svelte';
+  import { ArrowRight, DatabaseZap, Github, Heart, QrCode, ShieldCheck, WifiOff } from 'lucide-svelte';
+  import { messagesForLocale } from '$lib/i18n/messages';
   import { tr } from '$lib/i18n/phrases';
   import { localizedHref, parseLocalePath } from '$lib/i18n/routing';
   import { localizeLandingPage } from '$lib/i18n/seo';
@@ -26,6 +27,7 @@
 
   $: activeLocale = parseLocalePath($page.url.pathname).locale;
   $: t = (phrase: string) => tr(activeLocale, phrase);
+  $: shellMessages = messagesForLocale(activeLocale).shell;
   $: localizedCoinPages = coinLandingPages.map((item) => localizeLandingPage(item, activeLocale));
   $: localizedSearchPages = searchLandingPages.map((item) => localizeLandingPage(item, activeLocale));
 </script>
@@ -53,6 +55,16 @@
       </p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a class="btn-primary" href={localizedHref('/generate', activeLocale)}>{t('Open generator')} <ArrowRight size={18} /></a>
+        <a
+          class="inline-flex h-11 w-11 items-center justify-center rounded border border-outline-variant bg-surface-high text-on-surface-variant transition hover:border-primary/60 hover:text-primary"
+          href="https://github.com/Unrelated5768/cryptoqrtool"
+          rel="noopener noreferrer"
+          target="_blank"
+          aria-label={shellMessages.viewSource}
+          title={shellMessages.viewSource}
+        >
+          <Github size={18} />
+        </a>
         <a class="btn-secondary" href={localizedHref('/security', activeLocale)}>{t('Privacy model')}</a>
       </div>
     </div>
