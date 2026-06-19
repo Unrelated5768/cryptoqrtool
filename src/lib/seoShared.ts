@@ -8,7 +8,7 @@ export const defaultOgImage = `${siteUrl}/og-image.png`;
 export const defaultOgImageAlt = 'CryptoQR Tool crypto QR code generator';
 export const defaultOgImageWidth = 1200;
 export const defaultOgImageHeight = 630;
-export const contentLastUpdated = '2026-06-12';
+export const contentLastUpdated = '2026-06-19';
 
 export type JsonLd = Record<string, unknown>;
 

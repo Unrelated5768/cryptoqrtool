@@ -1,7 +1,12 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const bitcoinAddress = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080';
 const lightningInvoice = 'lnbc2500u1p3xnhl2pp5qqqsyqcyq5rqwzqfka';
+
+async function gotoReady(page: Page, path: string) {
+  await page.goto(path, { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.readyState === 'complete');
+}
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/markets**', async (route) => {
@@ -101,7 +106,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('generates and copies a payment QR payload', async ({ page }) => {
-  await page.goto('/generate');
+  await gotoReady(page, '/generate');
 
   await expect(page.locator('script[src*="umami"], script[src*="analytics.cryptoqrtool.com"]')).toHaveCount(0);
 
@@ -117,14 +122,14 @@ test('generates and copies a payment QR payload', async ({ page }) => {
 });
 
 test('persists saved addresses locally and opens them from the saved page', async ({ page }) => {
-  await page.goto('/generate');
+  await gotoReady(page, '/generate');
 
   await page.getByTestId('network-select').selectOption('bitcoin');
   await page.getByTestId('address-input').fill(bitcoinAddress);
   await page.getByTestId('label-input').fill('Treasury BTC');
   await page.getByTestId('save-address').click();
 
-  await page.goto('/saved');
+  await gotoReady(page, '/saved');
   await expect(page.getByTestId('saved-address-row')).toContainText('Treasury BTC');
   await page.getByTestId('generate-saved-address').click();
 
@@ -134,7 +139,7 @@ test('persists saved addresses locally and opens them from the saved page', asyn
 });
 
 test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
-  await page.goto('/crypto-qrcode-bitcoin-lightning');
+  await gotoReady(page, '/crypto-qrcode-bitcoin-lightning');
   await expect(page.locator('h1')).toContainText('Bitcoin Lightning');
 
   await page.getByRole('link', { name: /(open|generate) lightning qr (generator|code)/i }).click();
@@ -147,7 +152,7 @@ test('generates a Bitcoin Lightning invoice QR payload', async ({ page }) => {
 });
 
 test('verifies a Bitcoin address with mocked live lookup', async ({ page }) => {
-  await page.goto('/verify');
+  await gotoReady(page, '/verify');
 
   await page.getByTestId('verify-input').fill(bitcoinAddress);
   await page.getByTestId('verify-submit').click();
@@ -159,7 +164,7 @@ test('verifies a Bitcoin address with mocked live lookup', async ({ page }) => {
 
 test('verifies an Ethereum transaction hash with mocked live lookup', async ({ page }) => {
   const txHash = `0x${'a'.repeat(64)}`;
-  await page.goto('/verify');
+  await gotoReady(page, '/verify');
   await page.getByTestId('verify-network').selectOption('ethereum');
   await page.getByTestId('verify-input').fill(txHash);
   await page.getByTestId('verify-submit').click();
@@ -170,7 +175,7 @@ test('verifies an Ethereum transaction hash with mocked live lookup', async ({ p
 });
 
 test('opens generated QR payloads in the verifier', async ({ page }) => {
-  await page.goto('/generate');
+  await gotoReady(page, '/generate');
 
   await page.getByTestId('network-select').selectOption('bitcoin');
   await page.getByTestId('address-input').fill(bitcoinAddress);

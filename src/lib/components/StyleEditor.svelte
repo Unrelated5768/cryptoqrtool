@@ -137,7 +137,7 @@
             {:else if style.logo === 'custom'}
               {t('Custom uploaded logo selected.')}
             {:else if selectedIcon}
-              {selectedIcon.name} ({selectedIcon.symbol.toUpperCase()}) selected.
+              {selectedIcon.name} ({selectedIcon.symbol.toUpperCase()}) {t('Selected')}
             {:else}
               {t('Catalog logo selected.')}
             {/if}
@@ -201,7 +201,7 @@
       <input data-testid="custom-logo-input" class="sr-only" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" on:change={handleLogoUpload} />
     </label>
     {#if fileWarning}
-      <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{fileWarning}</p>
+      <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{t(fileWarning)}</p>
     {/if}
 
     <div class="grid gap-4 md:grid-cols-3">
@@ -305,7 +305,7 @@
     </div>
 
     {#if contrastWarning}
-      <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{contrastWarning}</p>
+      <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{t(contrastWarning)}</p>
     {/if}
   </div>
 </details>

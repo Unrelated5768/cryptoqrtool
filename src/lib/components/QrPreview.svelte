@@ -141,7 +141,7 @@
   </div>
 
   {#if warning}
-    <p class="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{warning}</p>
+    <p class="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">{t(warning)}</p>
   {/if}
 
   <div class="mt-4 rounded-lg border border-outline-variant bg-surface-low p-3">

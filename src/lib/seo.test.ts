@@ -1,8 +1,11 @@
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { getCoinLandingPage, getLocalizedCoinLandingPage, getSitemapEntries, relatedPageLabel, routeMeta } from './seo';
 import { supportedLocales, type Locale } from './i18n/locales';
 import { messagesForLocale } from './i18n/messages';
-import { tr } from './i18n/phrases';
+import { phraseTranslations, tr } from './i18n/phrases';
+import { staticRoutes } from './seoStaticRoutes';
 import type { JsonLd } from './seoShared';
 
 function schemaTypes(pathname: string) {
@@ -11,6 +14,40 @@ function schemaTypes(pathname: string) {
 
 function jsonLdOfType(pathname: string, type: string) {
   return (routeMeta(pathname).jsonLd ?? []).find((item) => item['@type'] === type) as JsonLd | undefined;
+}
+
+function renderedPhraseKeys() {
+  const roots = [
+    'src/routes',
+    'src/lib/components',
+    'src/lib/seoStaticRoutes.ts',
+    'src/lib/networks.ts',
+    'src/lib/verification.ts',
+    'src/lib/qrStyle.ts',
+    'src/lib/liveData.ts'
+  ];
+  const files: string[] = [];
+
+  function walk(path: string) {
+    const stats = statSync(path);
+    if (stats.isDirectory()) {
+      for (const entry of readdirSync(path)) walk(join(path, entry));
+      return;
+    }
+    if (/\.(svelte|ts)$/.test(path)) files.push(path);
+  }
+
+  for (const root of roots) walk(join(process.cwd(), root));
+
+  const keys = new Set<string>();
+  const translationCall = /\b(?:t|tr)\s*\((?:[^,()]+,\s*)?[`"']([^`"'$]+)[`"']/g;
+  const translatedProperty = /\b(?:title|body|question|answer|message|summary):\s*[`"']([^`"'$]+)[`"']/g;
+  for (const file of files) {
+    const source = readFileSync(file, 'utf8');
+    for (const match of source.matchAll(translationCall)) keys.add(match[1]);
+    for (const match of source.matchAll(translatedProperty)) keys.add(match[1]);
+  }
+  return keys;
 }
 
 describe('seo metadata', () => {
@@ -33,6 +70,23 @@ describe('seo metadata', () => {
     expect(routeMeta('/').canonical).toBe('https://cryptoqrtool.com/');
     expect(routeMeta('/bitcoin-qr-code-generator').canonical).toBe('https://cryptoqrtool.com/bitcoin-qr-code-generator');
     expect(routeMeta('/crypto-qrcode-bitcoin').canonical).toBe('https://cryptoqrtool.com/crypto-qrcode-bitcoin');
+  });
+
+  it('targets Monero QR code search intent on the generator page', () => {
+    const page = getCoinLandingPage('monero-qr-code-generator');
+    const meta = routeMeta('/monero-qr-code-generator');
+    const faqSchema = jsonLdOfType('/monero-qr-code-generator', 'FAQPage');
+
+    expect(page).toBeDefined();
+    expect(page?.headline).toBe('Monero QR Code Generator');
+    expect(meta.title).toContain('Monero QR Code Generator');
+    expect(meta.description).toContain('Monero QR code');
+    expect(page?.body).toContain('XMR payments');
+    expect(page?.chips).toContain('Subaddress');
+    expect(page?.chips).toContain('tx_amount');
+    expect(page?.faq.length).toBeGreaterThanOrEqual(6);
+    expect(JSON.stringify(faqSchema)).toContain('subaddress');
+    expect(JSON.stringify(faqSchema)).toContain('XMR QR code');
   });
 
   it('localizes canonicals and alternate links for prefixed routes', () => {
@@ -110,6 +164,34 @@ describe('seo metadata', () => {
       expect(footer, locale).not.toContain('generates QR payloads in the browser');
       expect(landing?.headline, locale).not.toBe('Bitcoin QR Code Generator');
       expect(landing?.body, locale).not.toContain('Generate a scan-ready');
+    }
+  });
+
+  it('has translations for every rendered phrase key in every production locale', () => {
+    const keys = renderedPhraseKeys();
+    const locales = supportedLocales.filter((locale) => locale !== 'en' && locale !== 'en-GB') as Locale[];
+
+    expect(keys.size).toBeGreaterThan(300);
+    for (const locale of locales) {
+      const missing = [...keys].filter((key) => !(key in (phraseTranslations[locale] ?? {})));
+      expect(missing, `${locale}: ${missing.join(', ')}`).toEqual([]);
+    }
+  });
+
+  it('localizes static route metadata for every production locale', () => {
+    const locales = supportedLocales.filter((locale) => locale !== 'en' && locale !== 'en-GB') as Locale[];
+
+    for (const locale of locales) {
+      for (const path of Object.keys(staticRoutes)) {
+        const localizedPath = path === '/' ? `/${locale}` : `/${locale}${path}`;
+        const english = routeMeta(path);
+        const localized = routeMeta(localizedPath);
+        const jsonLd = JSON.stringify(localized.jsonLd ?? []);
+
+        expect(localized.title, `${locale} ${path} title`).not.toBe(english.title);
+        expect(localized.description, `${locale} ${path} description`).not.toBe(english.description);
+        expect(jsonLd, `${locale} ${path} jsonLd`).not.toContain(english.description);
+      }
     }
   });
 

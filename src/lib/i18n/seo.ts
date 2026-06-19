@@ -1,6 +1,7 @@
 import { productName, type FaqItem, type LandingPage, type LandingPageSection, type StaticRouteConfig } from '$lib/seoShared';
 import { defaultLocale, type Locale } from './locales';
 import { tr } from './phrases';
+import { staticSeoTranslations } from './staticSeoTranslations';
 
 type LandingWords = {
   qrGenerator: string;
@@ -590,10 +591,37 @@ function localizeFaq(items: FaqItem[] | undefined, locale: Locale) {
   }));
 }
 
+function localizeStaticText(text: string | undefined, locale: Locale) {
+  if (!text || locale === defaultLocale || locale === 'en-GB') return text;
+
+  const translations = staticSeoTranslations[locale];
+  if (!translations) return text;
+
+  if (text in translations) return translations[text];
+
+  const productSuffix = ` | ${productName}`;
+  if (text.endsWith(productSuffix)) {
+    const base = text.slice(0, -productSuffix.length);
+    return `${translations[base] ?? base}${productSuffix}`;
+  }
+
+  return text;
+}
+
+function localizeStaticFields(route: StaticRouteConfig, locale: Locale): Partial<StaticRouteConfig> {
+  return {
+    title: localizeStaticText(route.title, locale),
+    description: localizeStaticText(route.description, locale),
+    schemaName: localizeStaticText(route.schemaName, locale),
+    breadcrumbLabel: localizeStaticText(route.breadcrumbLabel, locale)
+  };
+}
+
 export function localizeStaticRoute(pathname: string, route: StaticRouteConfig, locale: Locale): StaticRouteConfig {
   const translated = staticTranslations[locale]?.[pathname];
   return {
     ...route,
+    ...localizeStaticFields(route, locale),
     ...translated,
     faq: localizeFaq(route.faq, locale)
   };

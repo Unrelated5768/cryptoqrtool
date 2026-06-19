@@ -19,7 +19,7 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       saved: 'Guardados',
       markets: 'Mercados',
       fees: 'Comisiones',
-      exchanges: 'Exchanges',
+      exchanges: 'Casas de cambio',
       api: 'API',
       faq: 'FAQ',
       security: 'Seguridad',
@@ -39,12 +39,17 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       saved: 'Salvos',
       markets: 'Mercados',
       fees: 'Taxas',
-      exchanges: 'Exchanges',
+      exchanges: 'Corretoras',
+      api: 'API',
       faq: 'FAQ',
       security: 'Segurança',
       privacy: 'Privacidade',
       more: 'Mais',
-      language: 'Idioma'
+      language: 'Idioma',
+      displayCurrency: 'Moeda de exibição',
+      primaryNavigation: 'Navegação principal',
+      mobileNavigation: 'Navegação móvel',
+      defaultCurrency: 'Moeda padrão'
     }
   },
   uk: {
@@ -115,12 +120,17 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       saved: 'Opgeslagen',
       markets: 'Markten',
       fees: 'Kosten',
-      exchanges: 'Exchanges',
+      exchanges: 'Beurzen',
+      api: 'API',
       faq: 'FAQ',
       security: 'Beveiliging',
       privacy: 'Privacy',
       more: 'Meer',
-      language: 'Taal'
+      language: 'Taal',
+      displayCurrency: 'Weergavevaluta',
+      primaryNavigation: 'Primaire navigatie',
+      mobileNavigation: 'Mobiele navigatie',
+      defaultCurrency: 'Standaardvaluta'
     }
   },
   de: {
@@ -131,11 +141,16 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       markets: 'Märkte',
       fees: 'Gebühren',
       exchanges: 'Börsen',
+      api: 'API',
       faq: 'FAQ',
       security: 'Sicherheit',
       privacy: 'Datenschutz',
       more: 'Mehr',
-      language: 'Sprache'
+      language: 'Sprache',
+      displayCurrency: 'Anzeigewährung',
+      primaryNavigation: 'Hauptnavigation',
+      mobileNavigation: 'Mobile Navigation',
+      defaultCurrency: 'Standardwährung'
     }
   },
   fr: {
@@ -145,7 +160,7 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       saved: 'Enregistrés',
       markets: 'Marchés',
       fees: 'Frais',
-      exchanges: 'Exchanges',
+      exchanges: 'Plateformes',
       api: 'API',
       faq: 'FAQ',
       security: 'Sécurité',
@@ -175,11 +190,16 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       markets: 'Mercati',
       fees: 'Commissioni',
       exchanges: 'Exchange',
+      api: 'API',
       faq: 'FAQ',
       security: 'Sicurezza',
       privacy: 'Privacy',
       more: 'Altro',
-      language: 'Lingua'
+      language: 'Lingua',
+      displayCurrency: 'Valuta visualizzata',
+      primaryNavigation: 'Navigazione principale',
+      mobileNavigation: 'Navigazione mobile',
+      defaultCurrency: 'Valuta predefinita'
     }
   },
   ru: {
@@ -280,11 +300,16 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       markets: '市场',
       fees: '费用',
       exchanges: '交易所',
+      api: 'API',
       faq: 'FAQ',
       security: '安全',
       privacy: '隐私',
       more: '更多',
-      language: '语言'
+      language: '语言',
+      displayCurrency: '显示货币',
+      primaryNavigation: '主导航',
+      mobileNavigation: '移动导航',
+      defaultCurrency: '默认货币'
     }
   },
   ja: {
@@ -295,11 +320,16 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       markets: '市場',
       fees: '手数料',
       exchanges: '取引所',
+      api: 'API',
       faq: 'FAQ',
       security: 'セキュリティ',
       privacy: 'プライバシー',
       more: 'その他',
-      language: '言語'
+      language: '言語',
+      displayCurrency: '表示通貨',
+      primaryNavigation: 'メインナビゲーション',
+      mobileNavigation: 'モバイルナビゲーション',
+      defaultCurrency: '既定の通貨'
     }
   },
   ko: {
@@ -310,11 +340,16 @@ const localizedMessages: Partial<Record<Locale, DeepPartial<Messages>>> = {
       markets: '시장',
       fees: '수수료',
       exchanges: '거래소',
+      api: 'API',
       faq: 'FAQ',
       security: '보안',
       privacy: '개인정보',
       more: '더보기',
-      language: '언어'
+      language: '언어',
+      displayCurrency: '표시 통화',
+      primaryNavigation: '기본 탐색',
+      mobileNavigation: '모바일 탐색',
+      defaultCurrency: '기본 통화'
     }
   }
 };

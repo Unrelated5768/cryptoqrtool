@@ -524,7 +524,141 @@ function networkGuidePage(network: (typeof networks)[number]): LandingPage {
   };
 }
 
+function landingSection(title: string, body: string): LandingPageSection {
+  return { title, body };
+}
+
+function landingFaq(question: string, answer: string): FaqItem {
+  return { question, answer };
+}
+
+function moneroGeneratorBenefits(): LandingPageSection[] {
+  return [
+    landingSection(
+      'Monero address format support',
+      'Create QR codes for public Monero primary addresses, subaddresses, integrated addresses, and existing `monero:` payment URI payloads.'
+    ),
+    landingSection(
+      'XMR amount requests',
+      'Add an optional XMR amount so compatible wallets can read a Monero payment URI with `tx_amount` instead of only a bare address.'
+    ),
+    landingSection(
+      'Private browser-local workflow',
+      'Address entry, QR rendering, logo choices, style presets, and downloads run in the browser without a wallet connection or account signup.'
+    )
+  ];
+}
+
+function moneroGeneratorPrimarySections(): LandingPageSection[] {
+  return [
+    landingSection(
+      'How to create a Monero QR code',
+      'Open the generator with Monero selected, paste the public XMR receiving address, add an optional amount, review the preview, then download the QR code for a website, invoice, tip page, or printed payment sign.'
+    ),
+    landingSection(
+      'Monero QR URI format',
+      'A Monero QR code can encode a plain XMR address or a payment URI such as `monero:address?tx_amount=1.25`. Wallet support for optional parameters can vary, so the payer should still verify the final send screen.'
+    ),
+    landingSection(
+      'Subaddresses and integrated addresses',
+      'Monero users often receive funds with subaddresses for better separation between payments. This page is designed around public receiving data and accepts standard Monero address shapes used by common XMR wallets.'
+    ),
+    landingSection(
+      'Why privacy still depends on verification',
+      'A QR code removes typing errors, but it does not prove that the destination belongs to the intended recipient. Check the visible address, amount, and wallet confirmation before sharing or paying any XMR request.'
+    )
+  ];
+}
+
+function moneroGeneratorHowToSteps(): string[] {
+  return [
+    'Copy a public receiving address from Monero GUI, Feather, Cake Wallet, Monerujo, MyMonero, or another trusted XMR wallet.',
+    'Open the Monero QR generator and paste the address or existing Monero payment URI.',
+    'Add an optional XMR amount when you want the QR code to request a specific payment value.',
+    'Adjust contrast, quiet zone, and logo settings while keeping the preview easy to scan.',
+    'Download the Monero QR code and test it with the wallet scanner before placing it on invoices, donation pages, or printed material.'
+  ];
+}
+
+function moneroGeneratorTrustPoints(): string[] {
+  return [
+    `${productName} works from public Monero receiving data and never asks for seed phrases, private keys, wallet files, or exchange credentials.`,
+    'The QR code is generated locally in the browser; saved labels, style presets, and custom logos stay on the device unless you export or share them.',
+    'Use the generated image as a convenience layer, then verify the XMR recipient and amount in the sender wallet before approving payment.'
+  ];
+}
+
+function moneroGeneratorCautions(): string[] {
+  return [
+    'Do not paste a Monero seed phrase, private spend key, private view key, or wallet password into any QR generator.',
+    'Confirm whether the receiving wallet expects a primary address, subaddress, integrated address, or exchange-specific payment instruction.',
+    'If a wallet scans only the address and ignores `tx_amount`, the payer must enter the intended XMR amount manually.'
+  ];
+}
+
+function moneroGeneratorFaq(): FaqItem[] {
+  return [
+    landingFaq(
+      'What is a Monero QR code?',
+      'It is a QR image that encodes a public XMR receiving address or Monero payment URI so a compatible wallet can scan the destination instead of requiring manual typing.'
+    ),
+    landingFaq(
+      'Can I generate a Monero QR code for a subaddress?',
+      'Yes. The generator is intended for public Monero receiving addresses, including subaddresses commonly used to separate incoming XMR payments.'
+    ),
+    landingFaq(
+      'Does the Monero QR code support payment amounts?',
+      'Yes. When you enter an XMR amount, the generated payload can include the Monero `tx_amount` parameter for wallets that read amount requests.'
+    ),
+    landingFaq(
+      'Is this Monero QR code generator private?',
+      `The QR workflow runs in the browser and ${productName} does not connect to a wallet or ask for private keys. Only paste public receiving information.`
+    ),
+    landingFaq(
+      'Which Monero wallets can scan the QR code?',
+      'Wallet behavior varies, but Monero GUI, Feather, Cake Wallet, Monerujo, MyMonero, and other XMR wallets commonly support scanning public address QR codes. Always check the final send screen.'
+    ),
+    landingFaq(
+      'Can I print the generated XMR QR code?',
+      'Yes. Use high contrast, keep the quiet zone visible, and test the printed QR code before using it on invoices, storefront signs, tip cards, or event material.'
+    )
+  ];
+}
+
+function moneroNetworkLandingPage(network: (typeof networks)[number]): LandingPage {
+  const name = networkDisplayName(network);
+
+  return {
+    slug: generatorSlug(network.id),
+    template: 'generator',
+    networkId: network.id,
+    name,
+    ticker: network.ticker,
+    accent: network.accent,
+    title: `Monero QR Code Generator for XMR Payments | ${productName}`,
+    description:
+      'Create a Monero QR code for XMR addresses, subaddresses, integrated addresses, and payment amounts. Browser-local, free, and no wallet connection.',
+    headline: 'Monero QR Code Generator',
+    eyebrow: 'XMR wallet payment QR tool',
+    body:
+      'Create a scan-ready Monero QR code for XMR payments, donations, invoices, and checkout pages. Paste a public address or Monero payment URI, add an optional amount, tune the QR style, and export the result without connecting a wallet.',
+    ctaLabel: 'Generate Monero QR code',
+    ctaHref: coinGenerateHref(network.id),
+    payloadExample: 'monero:84Pq...?tx_amount=1.25',
+    chips: ['Monero QR code', 'XMR address', 'Subaddress', 'Integrated address', 'tx_amount', 'Browser-local'],
+    benefits: moneroGeneratorBenefits(),
+    primarySections: moneroGeneratorPrimarySections(),
+    howToSteps: moneroGeneratorHowToSteps(),
+    trustPoints: moneroGeneratorTrustPoints(),
+    cautionItems: moneroGeneratorCautions(),
+    faq: moneroGeneratorFaq(),
+    lastModified: contentLastUpdated
+  };
+}
+
 function networkLandingPage(network: (typeof networks)[number]): LandingPage {
+  if (network.id === 'monero') return moneroNetworkLandingPage(network);
+
   const name = networkDisplayName(network);
   const isLightning = network.id === 'lightning';
   return {

@@ -1,4 +1,5 @@
 import { defaultLocale, type Locale } from './locales';
+import { generatedPhraseTranslations } from './generatedPhraseTranslations';
 
 type PhraseMap = Record<string, string>;
 
@@ -1917,18 +1918,18 @@ const complaintPageExtras: Partial<Record<Locale, PhraseMap>> = {
 };
 
 export const phraseTranslations: Partial<Record<Locale, PhraseMap>> = {
-  es: { ...es, ...complaintPageExtras.es },
-  pt: { ...pt, ...complaintPageExtras.pt },
-  uk: { ...uk, ...ukExtra },
-  nl: { ...nl, ...complaintPageExtras.nl },
-  de: { ...de, ...complaintPageExtras.de },
-  fr: { ...fr, ...complaintPageExtras.fr },
-  it: { ...it, ...complaintPageExtras.it },
-  ru: { ...ru, ...ruExtra },
-  ar: { ...ar, ...complaintPageExtras.ar },
-  'zh-CN': { ...zh, ...complaintPageExtras['zh-CN'] },
-  ja: { ...ja, ...complaintPageExtras.ja },
-  ko: { ...ko, ...complaintPageExtras.ko },
+  es: { ...es, ...complaintPageExtras.es, ...generatedPhraseTranslations.es },
+  pt: { ...pt, ...complaintPageExtras.pt, ...generatedPhraseTranslations.pt },
+  uk: { ...uk, ...ukExtra, ...generatedPhraseTranslations.uk },
+  nl: { ...nl, ...complaintPageExtras.nl, ...generatedPhraseTranslations.nl },
+  de: { ...de, ...complaintPageExtras.de, ...generatedPhraseTranslations.de },
+  fr: { ...fr, ...complaintPageExtras.fr, ...generatedPhraseTranslations.fr },
+  it: { ...it, ...complaintPageExtras.it, ...generatedPhraseTranslations.it },
+  ru: { ...ru, ...ruExtra, ...generatedPhraseTranslations.ru },
+  ar: { ...ar, ...complaintPageExtras.ar, ...generatedPhraseTranslations.ar },
+  'zh-CN': { ...zh, ...complaintPageExtras['zh-CN'], ...generatedPhraseTranslations['zh-CN'] },
+  ja: { ...ja, ...complaintPageExtras.ja, ...generatedPhraseTranslations.ja },
+  ko: { ...ko, ...complaintPageExtras.ko, ...generatedPhraseTranslations.ko },
   'en-GB': {}
 };
 

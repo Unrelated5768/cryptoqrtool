@@ -8,9 +8,8 @@
   import StyleEditor from '$components/StyleEditor.svelte';
   import { trackEvent } from '$lib/analytics';
   import { defaultCurrency, type FiatCurrency } from '$lib/currency';
-  import { tr } from '$lib/i18n/phrases';
+  import { tr, trStatus } from '$lib/i18n/phrases';
   import { localizedHref, parseLocalePath } from '$lib/i18n/routing';
-  import { productName } from '$lib/seo';
   import { logoForMarketSymbol, logoForNetwork } from '$lib/networkLogos';
   import {
     buildQrPayload,
@@ -74,7 +73,6 @@
   }
   $: selectedTokenChain = getTokenChain(tokenChainId);
   $: caip19AssetOnly = tokenNetworkSelected && tokenPayloadFormat === 'caip19';
-  $: selectedName = selectedMarketAsset?.name ?? (selectedMarketId ? 'Selected market asset' : selectedNetwork.name);
   $: selectedTicker = selectedMarketAsset?.symbol ?? (selectedMarketId ? selectedMarketId.toUpperCase() : selectedNetwork.ticker);
   $: autoLogoKey = selectedMarketAsset
     ? `market:${selectedMarketAsset.symbol}`
@@ -89,28 +87,28 @@
     lastAutoLogoKey = autoLogoKey;
     applyAutoLogoDefault();
   }
-  $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} address` : selectedNetwork.placeholder;
+  $: selectedPlaceholder = selectedMarketId ? `${selectedTicker} ${t('address')}` : selectedNetwork.placeholder;
   $: paymentInputLabel = effectiveNetwork === 'lightning' ? t('Lightning invoice') : t('Recipient address');
   $: amountSupported = mode === 'guided' && !selectedMarketId && selectedNetwork.supportsAmount && !caip19AssetOnly;
   $: validation =
     caip19AssetOnly
       ? {
           status: 'valid' as const,
-          message: `CAIP-19 asset ID for ${selectedTicker} on ${selectedTokenChain.name}.`
+          message: 'CAIP-19 asset ID will be encoded for the selected token chain.'
         }
       : network === 'automatic' && !detectedNetwork
       ? {
           status: address.trim() ? ('warning' as const) : ('warning' as const),
           message: address.trim()
             ? 'Automatic mode could not identify a supported network from this address.'
-            : `Paste an address and ${productName} will select the network automatically.`
+            : 'Paste an address and CryptoQR Tool will select the network automatically.'
         }
       : selectedMarketId
         ? {
             status: address.trim() ? ('valid' as const) : ('warning' as const),
             message: address.trim()
-              ? `${selectedName} address will be encoded as plain text. Address format is not validated.`
-              : `Enter a ${selectedTicker} address to generate an address-only QR code.`
+              ? 'Market asset address will be encoded as plain text. Address format is not validated.'
+              : 'Enter an address to generate an address-only QR code.'
           }
         : validateAddress(effectiveNetwork, address);
   $: customPayloadValidation = customPayload.trim()
@@ -348,7 +346,7 @@
               {t('Automatic mode detects XMR, BTC, BTC Lightning invoices, ETH/EVM, LTC, or SOL from the address format. Select USDC or USDT manually for ERC-20 token payment URIs.')}
             </p>
           </div>
-          <StatusBadge status={activeValidation.status} label={activeValidation.status === 'valid' ? 'Valid' : activeValidation.status} />
+          <StatusBadge status={activeValidation.status} label={activeValidation.status === 'valid' ? t('Valid') : trStatus(activeLocale, activeValidation.status)} />
         </div>
         <ChevronDown size={18} class="shrink-0 text-on-surface-variant transition group-open:rotate-180" />
       </summary>
@@ -432,11 +430,11 @@
               </div>
               <p class="rounded-lg border border-outline-variant bg-surface-low px-3 py-2 text-sm text-on-surface-variant">
                 {#if tokenNetworkSelected && caip19AssetOnly}
-                  The QR code encodes the CAIP-19 asset type for {selectedTicker} on {selectedTokenChain.name}. It does not include a recipient or transfer amount.
+                  {t('The QR code encodes the CAIP-19 asset type for the selected token chain. It does not include a recipient or transfer amount.')}
                 {:else if tokenNetworkSelected}
-                  Payment URI mode uses the selected chain's token contract and EIP-155 chain id for the ERC-20 transfer payload.
+                  {t('Payment URI mode uses the selected chain token contract and EIP-155 chain id for the ERC-20 transfer payload.')}
                 {:else}
-                  Native Ethereum/EVM payment URIs use the selected EIP-155 chain id and encode the value in wei per EIP-681.
+                  {t('Native Ethereum/EVM payment URIs use the selected EIP-155 chain id and encode the value in wei per EIP-681.')}
                 {/if}
               </p>
             {/if}
@@ -445,7 +443,7 @@
               <div>
                 <div class="mb-2 flex items-center justify-between gap-3">
                   <label class="label" for="address">{paymentInputLabel}</label>
-                  <span class="text-xs text-on-surface-variant">{validation.message}</span>
+                  <span class="text-xs text-on-surface-variant">{t(validation.message)}</span>
                 </div>
                 <div class="flex gap-2">
                   <textarea
@@ -466,7 +464,7 @@
               </div>
             {:else}
               <div class="rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
-                {validation.message}
+                {t(validation.message)}
               </div>
             {/if}
 
@@ -479,18 +477,18 @@
               {/if}
               <div>
                 <label class="label mb-2 block" for="label">{t('Local save label')}</label>
-                <input id="label" data-testid="label-input" class="field" placeholder={`${selectedTicker} treasury`} bind:value={label} />
+                <input id="label" data-testid="label-input" class="field" placeholder={`${selectedTicker} ${t('treasury')}`} bind:value={label} />
               </div>
             </div>
             {#if effectiveNetwork === 'lightning'}
               <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                Lightning QR codes encode the BOLT11 invoice directly. Generate a new invoice in your wallet for each payment request.
+                {t('Lightning QR codes encode the BOLT11 invoice directly. Generate a new invoice in your wallet for each payment request.')}
               </p>
             {/if}
             {#if selectedMarketId}
               <p class="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                {selectedName} is available from market data for address-only QR codes. Amounts are used for the fiat estimate only.
-                Local saving is available for supported payment networks.
+                {t('Market assets are available for address-only QR codes. Amounts are used for the fiat estimate only.')}
+                {t('Local saving is available for supported payment networks.')}
               </p>
             {/if}
 
@@ -508,13 +506,13 @@
             <div>
               <div class="mb-2 flex items-center justify-between gap-3">
                 <label class="label" for="custom-payload">{t('Payload')}</label>
-                <span class="text-xs text-on-surface-variant">{customPayloadValidation.message}</span>
+                <span class="text-xs text-on-surface-variant">{t(customPayloadValidation.message)}</span>
               </div>
               <div class="flex gap-2">
                 <textarea
                   id="custom-payload"
                   class="field mono min-h-40"
-                  placeholder="bitcoin:bc1q...?amount=0.01 or any text, URL, JSON, or payment URI"
+                  placeholder={t('bitcoin:bc1q...?amount=0.01 or any text, URL, JSON, or payment URI')}
                   bind:value={customPayload}
                 ></textarea>
                 <div class="flex flex-col gap-2">
@@ -523,7 +521,7 @@
                 </div>
               </div>
               <p class="mt-3 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                Custom mode does not validate addresses or amounts. The QR code encodes exactly the payload you provide.
+                {t('Custom mode does not validate addresses or amounts. The QR code encodes exactly the payload you provide.')}
               </p>
               {#if copied}
                 <p class="mt-2 text-sm text-success">{t('Payload copied.')}</p>

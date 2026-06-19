@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
-  import { tr } from '$lib/i18n/phrases';
+  import { tr, trStatus } from '$lib/i18n/phrases';
   import { parseLocalePath } from '$lib/i18n/routing';
 
   export let data: {
@@ -22,10 +22,10 @@
       <p class="label mb-2">{t('Live fee comparison')}</p>
       <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Network fees')}</h1>
       <p class="mt-3 max-w-3xl text-on-surface-variant">
-        Fee modules show live, configured, stale, rate-limited, and unavailable states explicitly.
+        {t('Fee modules show live, configured, stale, rate-limited, and unavailable states explicitly.')}
       </p>
     </div>
-    <StatusBadge status={data.result.state} label={data.result.state} />
+    <StatusBadge status={data.result.state} label={trStatus(activeLocale, data.result.state)} />
   </div>
 
   <section class="glass-panel overflow-hidden rounded-card">
@@ -37,7 +37,7 @@
               <p class="font-semibold">{row.network}</p>
               <p class="mt-1 text-sm text-on-surface-variant">{row.ticker}</p>
             </div>
-            <StatusBadge status={row.status} label={row.status} />
+            <StatusBadge status={row.status} label={trStatus(activeLocale, row.status)} />
           </div>
 
           <dl class="mt-4 grid gap-3 sm:grid-cols-2">
@@ -72,7 +72,7 @@
         <div class="bg-surface-low p-4">
           <p class="font-semibold">{row.network}</p>
           <div class="mt-3 flex flex-wrap items-center gap-2">
-            <StatusBadge status={row.status} label={row.status} />
+            <StatusBadge status={row.status} label={trStatus(activeLocale, row.status)} />
             <span class="text-sm text-on-surface-variant">{row.ticker}</span>
           </div>
         </div>

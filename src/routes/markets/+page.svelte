@@ -3,7 +3,7 @@
   import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
   import { defaultCurrency, formatCurrency, type FiatCurrency } from '$lib/currency';
-  import { tr } from '$lib/i18n/phrases';
+  import { tr, trStatus } from '$lib/i18n/phrases';
   import { parseLocalePath } from '$lib/i18n/routing';
   import type { LiveResult, MarketAsset } from '$lib/liveData';
   import {
@@ -67,10 +67,10 @@
       <p class="label mb-2">{t('Live market data')}</p>
       <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Market prices')}</h1>
       <p class="mt-3 max-w-3xl text-on-surface-variant">
-        CoinGecko-backed top 50 crypto assets by market cap, including logos, {$defaultCurrency} prices, and 24h movement.
+        {t('CoinGecko-backed top 50 crypto assets by market cap, including logos, display currency prices, and 24h movement.')}
       </p>
     </div>
-    <StatusBadge status={badgeStatus} label={loadingCurrency ? 'loading' : result.state} />
+    <StatusBadge status={badgeStatus} label={loadingCurrency ? t('loading') : trStatus(activeLocale, result.state)} />
   </div>
 
   <div class="grid gap-6 lg:grid-cols-[1fr_0.7fr]">

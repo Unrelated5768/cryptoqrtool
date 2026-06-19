@@ -67,13 +67,27 @@ function webApplicationJsonLd(name: string, description: string, url: string): J
   };
 }
 
-function webSiteJsonLd(): JsonLd {
+const defaultStructuredDataDescription =
+  'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.';
+
+function organizationJsonLdForDescription(description: string = defaultStructuredDataDescription): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: productName,
+    url: siteRootUrl,
+    description,
+    sameAs: []
+  };
+}
+
+function webSiteJsonLd(description: string): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: productName,
     url: siteRootUrl,
-    description: 'Browser-local crypto QR generation tools for public addresses, invoices, and payment requests.'
+    description
   };
 }
 
@@ -91,14 +105,7 @@ function techArticleJsonLd(name: string, description: string, url: string): Json
   };
 }
 
-export const organizationJsonLd: JsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: productName,
-  url: siteRootUrl,
-  description: 'Browser-local crypto QR generation tools for Monero, Bitcoin, Ethereum, Solana, Litecoin, USDC, and USDT.',
-  sameAs: []
-};
+export const organizationJsonLd: JsonLd = organizationJsonLdForDescription();
 
 function landingPageBreadcrumbs(page: LandingPage, locale: Locale): BreadcrumbItem[] {
   const current = { name: page.headline, path: `/${page.slug}` };
@@ -162,7 +169,11 @@ export function staticRouteJsonLd(pathname: string, route: StaticRouteConfig, lo
   const canonical = absoluteUrl(pathname);
 
   if (route.kind === 'home') {
-    const schemas = [organizationJsonLd, webSiteJsonLd(), webApplicationJsonLd(route.schemaName, route.description, canonical)];
+    const schemas = [
+      organizationJsonLdForDescription(route.description),
+      webSiteJsonLd(route.description),
+      webApplicationJsonLd(route.schemaName, route.description, canonical)
+    ];
     if (route.faq?.length) schemas.push(faqJsonLd(route.faq));
     return schemas;
   }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
-  import { tr } from '$lib/i18n/phrases';
+  import { tr, trStatus } from '$lib/i18n/phrases';
   import { parseLocalePath } from '$lib/i18n/routing';
   import {
     defaultVisibleSearchPageSize,
@@ -54,10 +54,10 @@
       <p class="label mb-2">{t('Liquidity sources')}</p>
       <h1 class="text-3xl font-bold text-on-surface md:text-5xl">{t('Exchange directory')}</h1>
       <p class="mt-3 max-w-3xl text-on-surface-variant">
-        CoinGecko exchange directory data with an explicit XMR support filter placeholder where asset-pair data is available.
+        {t('CoinGecko exchange directory data with an explicit XMR support filter placeholder where asset-pair data is available.')}
       </p>
     </div>
-    <StatusBadge status={data.result.state} label={data.result.state} />
+    <StatusBadge status={data.result.state} label={trStatus(activeLocale, data.result.state)} />
   </div>
 
   <div class="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
@@ -77,7 +77,7 @@
   </div>
   {#if xmrFilter}
     <p class="mb-5 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-warning">
-      CoinGecko's exchange list endpoint does not include per-asset support. XMR filtering requires exchange ticker data and is marked unavailable here.
+      {t('CoinGecko exchange list endpoint does not include per-asset support. XMR filtering requires exchange ticker data and is marked unavailable here.')}
     </p>
   {/if}
 

@@ -2,7 +2,7 @@
   import { Clipboard, ExternalLink, Search, ShieldAlert } from 'lucide-svelte';
   import { page } from '$app/stores';
   import StatusBadge from '$components/StatusBadge.svelte';
-  import { tr } from '$lib/i18n/phrases';
+  import { tr, trStatus } from '$lib/i18n/phrases';
   import { parseLocalePath } from '$lib/i18n/routing';
   import { getNetwork, networks, type NetworkId, type ValidationStatus } from '$lib/networks';
   import type { ExplorerLink, LookupState, VerificationInputType, VerificationNetwork } from '$lib/verification';
@@ -43,6 +43,9 @@
   $: selectedNetworkName = network === 'automatic' ? t('Automatic detection') : getNetwork(network).name;
   $: detectedNetworkName = result?.network ? getNetwork(result.network).name : t('Unknown');
   $: detailRows = result?.lookup.details ? Object.entries(result.lookup.details) : [];
+  $: validationMessage = result ? localizeVerificationMessage(result.validation.message, detectedNetworkName) : '';
+  $: lookupSummary = result ? localizeVerificationMessage(result.lookup.summary, detectedNetworkName) : '';
+  $: inputTypeLabel = result ? t(result.inputType.replace('-', ' ')) : '';
 
   async function verify() {
     const value = q.trim();
@@ -75,6 +78,19 @@
   function isVerificationNetwork(value: string): value is VerificationNetwork {
     return value === 'automatic' || networks.some((option) => option.id === value);
   }
+
+  function localizeVerificationMessage(message: string, networkName: string) {
+    if (message.endsWith(' address format is valid. Live data may still be unavailable.')) {
+      return `${networkName} ${t('address format is valid. Live data may still be unavailable.')}`;
+    }
+    if (message.endsWith(' transaction hash format is valid.')) {
+      return `${networkName} ${t('transaction hash format is valid.')}`;
+    }
+    if (/^Valid .+ transaction hash shape\.$/.test(message)) {
+      return `${t('Valid transaction hash shape for')} ${networkName}.`;
+    }
+    return t(message);
+  }
 </script>
 
 <main class="mx-auto max-w-7xl px-5 py-10 md:px-8">
@@ -86,7 +102,7 @@
         {t('Check pasted crypto addresses, transaction hashes, Lightning invoices, and payment URIs before using or sharing a QR code.')}
       </p>
     </div>
-    <StatusBadge status={result?.validation.status ?? 'warning'} label={result?.validation.status ?? t('Ready')} />
+    <StatusBadge status={result?.validation.status ?? 'warning'} label={result ? trStatus(activeLocale, result.validation.status) : t('Ready')} />
   </div>
 
   <div class="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
@@ -113,7 +129,7 @@
               id="verify-input"
               class="field mono min-h-40"
               data-testid="verify-input"
-              placeholder="bc1q..., 0x transaction hash, lnbc1..., bitcoin:bc1q...?amount=0.01"
+              placeholder={t('bc1q..., 0x transaction hash, lnbc1..., bitcoin:bc1q...?amount=0.01')}
               bind:value={q}
             ></textarea>
             <button class="icon-button shrink-0" type="button" title={t('Paste payload')} on:click={pasteInput}>
@@ -154,13 +170,13 @@
             <p class="label mb-2">{t('Local validation')}</p>
             <h2 class="text-2xl font-semibold text-on-surface">{detectedNetworkName}</h2>
           </div>
-          <StatusBadge status={result.validation.status} label={result.validation.status} />
+          <StatusBadge status={result.validation.status} label={trStatus(activeLocale, result.validation.status)} />
         </div>
 
         <div class="grid gap-3 text-sm">
           <div class="rounded-lg border border-outline-variant bg-surface-low p-4">
             <p class="text-on-surface-variant">{t('Detected type')}</p>
-            <p class="mt-1 font-semibold capitalize text-on-surface">{result.inputType.replace('-', ' ')}</p>
+            <p class="mt-1 font-semibold capitalize text-on-surface">{inputTypeLabel}</p>
           </div>
           <div class="rounded-lg border border-outline-variant bg-surface-low p-4">
             <p class="text-on-surface-variant">{t('Normalized value')}</p>
@@ -168,7 +184,7 @@
           </div>
           <div class="rounded-lg border border-outline-variant bg-surface-low p-4">
             <p class="text-on-surface-variant">{t('Validation message')}</p>
-            <p class="mt-1 text-on-surface">{result.validation.message}</p>
+            <p class="mt-1 text-on-surface">{validationMessage}</p>
           </div>
         </div>
       </article>
@@ -179,10 +195,10 @@
             <p class="label mb-2">{t('Live lookup')}</p>
             <h2 class="text-2xl font-semibold text-on-surface">{result.lookup.source}</h2>
           </div>
-          <StatusBadge status={result.lookup.state} label={result.lookup.state} />
+          <StatusBadge status={result.lookup.state} label={trStatus(activeLocale, result.lookup.state)} />
         </div>
 
-        <p class="text-sm leading-6 text-on-surface-variant">{result.lookup.summary}</p>
+        <p class="text-sm leading-6 text-on-surface-variant">{lookupSummary}</p>
 
         {#if detailRows.length}
           <div class="mt-5 grid gap-2">
