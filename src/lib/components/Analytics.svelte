@@ -16,6 +16,7 @@
       data-domains={domains || undefined}
       data-do-not-track="true"
       data-exclude-search="true"
+      data-performance="true"
     ></script>
   {/if}
 </svelte:head>
